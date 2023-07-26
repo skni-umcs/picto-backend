@@ -6,26 +6,27 @@ import java.util.List;
 
 @Service
 public class RoundService {
+    // TODO handle connection with the database
     public List<Round> getRounds(int gameId) {
-        // Get all rounds for given game
+        // TODO Get all rounds for given game
 
         return null;
     }
 
     public List<Round> saveRounds(int gameId, List<Round> rounds) {
-        // Save all rounds for the given game
+        // TODO Save all rounds for the given game
 
         return null;
     }
 
     public Round getRound(int roundId) {
-        // Get data of the round with given id db
+        // TODO Get data of the round with given id db
 
         return null;
     }
 
     public Round saveRound(int roundId, Round round) {
-        // Save data of round with given id to db
+        // TODO Save data of round with given id to db
 
         return null;
     }

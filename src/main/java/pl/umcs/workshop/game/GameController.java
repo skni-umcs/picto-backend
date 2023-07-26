@@ -13,7 +13,6 @@ import java.util.List;
 @RestController
 public class GameController {
     GameService gameService;
-    RoundController roundController;
 
     @Autowired
     public GameController(GameService gameService) {
@@ -21,18 +20,7 @@ public class GameController {
     }
 
     @PostMapping("start")
-    public Game startNewGame(@RequestBody Game game) {
-        GameValidator.validate(game);
-
-        game = gameService.startNewGame(game);
-
-        // Generate rounds
-        roundController.saveRounds(game.getId(), generateRounds(game));
-
-        return game;
-    }
-
-    private List<Round> generateRounds(Game game) {
-        return null;
+    public int startNewGame(@RequestBody Game game) {
+        return gameService.startNewGame(game);
     }
 }
