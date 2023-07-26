@@ -19,9 +19,4 @@ public class GameController {
     public GameController(GameService gameService) {
         this.gameService = gameService;
     }
-
-    @PostMapping("start")
-    public int startNewGame(@RequestBody Game game) {
-        return gameService.startNewGame(game);
-    }
 }

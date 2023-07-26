@@ -14,23 +14,4 @@ public class RoundController {
     public RoundController(RoundService roundService) {
         this.roundService = roundService;
     }
-
-    @GetMapping("/rounds/{gameId}")
-    public List<Round> getRounds(@PathVariable int gameId) {
-        return roundService.getRounds(gameId);
-    }
-
-    public List<Round> saveRounds(int gameId, List<Round> rounds) {
-        return roundService.saveRounds(gameId, rounds);
-    }
-
-    @GetMapping("/round/{roundId}")
-    public Round getRound(@PathVariable int roundId) {
-        return roundService.getRound(roundId);
-    }
-
-    @PostMapping("/round/{roundId}")
-    public Round saveRound(@PathVariable int roundId, Round round) {
-        return roundService.saveRound(roundId, round);
-    }
 }

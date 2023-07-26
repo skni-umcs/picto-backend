@@ -5,7 +5,7 @@ import pl.umcs.workshop.user.User;
 public class Round {
     private int id;
     private int gameId;
-    private int imageChosen;
+    private int topic;
     private int imageSelected;
 
     private User userOne;
