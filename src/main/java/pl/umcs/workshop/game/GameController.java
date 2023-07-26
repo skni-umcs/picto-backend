@@ -14,6 +14,7 @@ import java.util.List;
 public class GameController {
     GameService gameService;
 
+    // TODO change to manual wiring
     @Autowired
     public GameController(GameService gameService) {
         this.gameService = gameService;
