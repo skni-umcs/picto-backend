@@ -17,11 +17,28 @@ public class User {
     @Column(name = "score", nullable = false)
     private int score;
 
-    @Column(name = "last_seen", nullable = false)
+    @Column(name = "last_seen", nullable = true)
     private LocalDate lastSeen;
 
-    @Column(name = "cookie", nullable = false)
+    @Column(name = "cookie", nullable = true)
     private String cookie; // TODO: cookie type
 
-    // TODO make builder for this class
+    public User() {
+
+    }
+
+    public User(int gameId, int score) {
+        this.gameId = gameId;
+        this.score = score;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setGameId(int gameId) {
+        this.gameId = gameId;
+    }
+
+// TODO make builder for this class
 }
