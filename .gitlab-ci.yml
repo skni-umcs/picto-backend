@@ -1,0 +1,74 @@
+stages:
+  - test
+  - build
+  - deploy
+
+test:
+  only:
+    - develop
+    - pushes
+    - merge_requests
+  services:
+    - docker:20.10.16-dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+  stage: test
+
+  image: docker:latest
+  before_script:
+    - ls -la
+    - docker --version
+  script:
+    - docker compose run --rm picto-backend ./mvnw test
+  after_script:
+    - docker compose down --rmi all
+
+  allow_failure: true # temporary allow failure for now
+
+build:
+  services:
+    - docker:20.10.16-dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+
+  stage: build
+  image: docker:latest
+  before_script:
+    - docker --version
+  script:
+    - docker build --no-cache .
+  allow_failure: false
+
+
+deploy:
+  stage: deploy
+  image: debian:latest
+  environment:
+    name: devel
+    url: https://picto.skni.umcs.pl/api/docs
+
+  only:
+    - develop
+    - feature/ci-cd
+  before_script:
+    - "command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )"
+
+    - eval $(ssh-agent -s)
+
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+
+    - ssh-keyscan -p $SSH_PORT $SSH_HOST >> ~/.ssh/known_hosts
+    - ssh -p $SSH_PORT $SSH_USER@$SSH_HOST "echo 'TEST CONENCTION'"
+
+  script:
+    - ssh -p $SSH_PORT $SSH_USER@$SSH_HOST "cd /home/gitlab-deploy/picto/backend && docker compose -f docker-compose.prod.yml down"
+    - ssh -p $SSH_PORT $SSH_USER@$SSH_HOST "cd /home/gitlab-deploy/picto/backend && git pull"
+    - ssh -p $SSH_PORT $SSH_USER@$SSH_HOST "cd /home/gitlab-deploy/picto/backend && docker compose -f docker-compose.prod.yml up --build --force-recreate --no-deps -d"
+  after_script:
+    - rm -rf ~/.ssh
+
+
+  allow_failure: false
