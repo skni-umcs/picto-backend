@@ -19,7 +19,6 @@ test:
     - ls -la
     - docker --version
   script:
-    - docker compose up
     - docker compose run --rm picto-backend ./mvnw test
   after_script:
     - docker compose down --rmi all
