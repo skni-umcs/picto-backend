@@ -1,0 +1,35 @@
+services:
+  picto-backend:
+    build:
+      dockerfile: Dockerfile
+      target: development
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./src:/app/src
+    environment:
+      - PICTO_DB_HOST=db
+      - PICTO_DB_PORT=5432
+      - PICTO_DB_NAME=picto
+      - PICTO_DB_USER=picto
+      - PICTO_DB_PASSWORD=picto
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_PASSWORD: picto
+      POSTGRES_USER: picto
+      POSTGRES_DB: picto
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "picto" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+#    depends_on:
+#      - db
