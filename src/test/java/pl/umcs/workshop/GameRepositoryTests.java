@@ -31,6 +31,9 @@ public class GameRepositoryTests {
 
         assert game != null;
         Assertions.assertThat(game.getId()).isEqualTo(1);
+
+        Assertions.assertThat(game.getCreateDate()).isNotNull();
+        Assertions.assertThat(game.getCreateTime()).isNotNull();
     }
 
     @Test

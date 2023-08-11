@@ -19,7 +19,7 @@ public class GameController {
     }
 
     @PostMapping("create")
-    public Game createGame(@RequestBody Game game) {
+    public @ResponseBody Game createGame(@RequestBody Game game) {
         return gameService.createGame(game);
     }
 

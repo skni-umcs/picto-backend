@@ -2,7 +2,9 @@ package pl.umcs.workshop.user;
 
 import jakarta.persistence.*;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
@@ -18,7 +20,7 @@ public class User {
     private int score;
 
     @Column(name = "last_seen", nullable = true)
-    private LocalDate lastSeen;
+    private Timestamp lastSeen;
 
     @Column(name = "cookie", nullable = true)
     private String cookie; // TODO: cookie type

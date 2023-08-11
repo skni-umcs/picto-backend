@@ -2,7 +2,9 @@ package pl.umcs.workshop.game;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
+import java.sql.Date;
+import java.sql.Time;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "games")
@@ -38,11 +40,20 @@ public class Game {
     @Column(name = "topology_id", nullable = false)
     private int topologyId;
 
+    // TODO fix this later
+    @Column(name = "create_date", nullable = false)
+//    @Column(name = "create_date")
+    private Date createDate;
+
     @Column(name = "create_time", nullable = false)
-    private LocalDate createTime;
+//    @Column(name = "create_time")
+    private Time createTime;
+
+    @Column(name = "end_date")
+    private Date endDate;
 
     @Column(name = "end_time")
-    private LocalDate endTime;
+    private Time endTime;
 
     public Game(int userOneNumberOfImages, int userTwoNumberOfImages, double userOneTime, double userTwoTime, int symbolGroupsAmount, int symbolsInGroupAmount, int correctAnswerPoints, int wrongAnswerPoints, int topologyId) {
         this.userOneNumberOfImages = userOneNumberOfImages;
@@ -54,7 +65,35 @@ public class Game {
         this.correctAnswerPoints = correctAnswerPoints;
         this.wrongAnswerPoints = wrongAnswerPoints;
         this.topologyId = topologyId;
-        this.createTime = LocalDate.now();
+
+        LocalDateTime localDateTime = LocalDateTime.now();
+        this.createDate = Date.valueOf(localDateTime.toLocalDate());
+        this.createTime = Time.valueOf(localDateTime.toLocalTime());
+        this.endDate = null;
+        this.endTime = null;
+
+//        System.out.println(this.createDate + " " + this.createTime);
+    }
+
+    public Game(int id, int userOneNumberOfImages, int userTwoNumberOfImages, double userOneTime, double userTwoTime, int symbolGroupsAmount, int symbolsInGroupAmount, int correctAnswerPoints, int wrongAnswerPoints, int topologyId) {
+        this.id = id;
+        this.userOneNumberOfImages = userOneNumberOfImages;
+        this.userTwoNumberOfImages = userTwoNumberOfImages;
+        this.userOneTime = userOneTime;
+        this.userTwoTime = userTwoTime;
+        this.symbolGroupsAmount = symbolGroupsAmount;
+        this.symbolsInGroupAmount = symbolsInGroupAmount;
+        this.correctAnswerPoints = correctAnswerPoints;
+        this.wrongAnswerPoints = wrongAnswerPoints;
+        this.topologyId = topologyId;
+
+        LocalDateTime localDateTime = LocalDateTime.now();
+        this.createDate = Date.valueOf(localDateTime.toLocalDate());
+        this.createTime = Time.valueOf(localDateTime.toLocalTime());
+        this.endDate = null;
+        this.endTime = null;
+
+//        System.out.println(this.createDate + " " + this.createTime);
     }
 
     public Game() {
@@ -67,6 +106,14 @@ public class Game {
 
     public void setUserOneNumberOfImages(int numberOfImages) {
         this.userOneNumberOfImages = numberOfImages;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public Time getCreateTime() {
+        return createTime;
     }
 
     // TODO make a builder for this class
