@@ -26,7 +26,7 @@ public class RoundRepositoryTests {
     }
 
     @Test
-    public void getUserTest() {
+    public void getRoundTest() {
         Round round = roundRepository.findById(1).orElse(null);
 
         assert round != null;
@@ -34,7 +34,7 @@ public class RoundRepositoryTests {
     }
 
     @Test
-    public void updateUserTest() {
+    public void updateRoundTest() {
         Round round = roundRepository.findById(1).orElse(null);
 
         assert round != null;
@@ -42,7 +42,7 @@ public class RoundRepositoryTests {
     }
 
     @Test
-    public void deleteUserTest() {
+    public void deleteRoundTest() {
         Round round = roundRepository.findById(1).orElse(null);
 
         roundRepository.delete(round);
