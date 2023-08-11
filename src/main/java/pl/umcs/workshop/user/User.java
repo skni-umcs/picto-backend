@@ -40,5 +40,5 @@ public class User {
         this.gameId = gameId;
     }
 
-// TODO make builder for this class
+    // TODO make builder for this class
 }
