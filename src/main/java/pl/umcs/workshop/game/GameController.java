@@ -19,8 +19,7 @@ public class GameController {
     }
 
     @PostMapping("create")
-    // Returns game id
-    public int createGame(@RequestBody Game game) {
+    public Game createGame(@RequestBody Game game) {
         return gameService.createGame(game);
     }
 

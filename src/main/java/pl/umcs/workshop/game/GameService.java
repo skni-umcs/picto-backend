@@ -1,19 +1,19 @@
 package pl.umcs.workshop.game;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class GameService {
-    // TODO handle database connection
+    @Autowired
+    private GameRepository gameRepository;
 
-    public int createGame(Game game) {
-        // Put game config into the db
-        // Get back game id
-        // Set create time
+    public Game createGame(Game game) {
+        gameRepository.save(game);
 
-        return 0;
+        return game;
     }
 
     public List<Integer> beginGame(int gameId) {
