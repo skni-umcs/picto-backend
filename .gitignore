@@ -1,5 +1,6 @@
 /target/
 !.mvn/wrapper/maven-wrapper.jar
+/.mvn/
 
 ### STS ###
 .apt_generated
@@ -24,4 +25,6 @@
 /nbdist/
 /.nb-gradle/
 
-db_data/
+### Misc ###
+/db-schematic/
+/.run/
