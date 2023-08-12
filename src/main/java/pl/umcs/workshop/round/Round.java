@@ -1,9 +1,15 @@
 package pl.umcs.workshop.round;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "rounds")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Round {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,28 +38,4 @@ public class Round {
 
     @Column(name = "image_selected", nullable = false)
     private int imageSelected;
-
-    // TODO make builder instead of whatever this is
-    public Round(int gameId, int generation, int userOneId, int userTwoId, double userOneAnswerTime, double userTwoAnswerTime, int topic, int imageSelected) {
-        this.gameId = gameId;
-        this.generation = generation;
-        this.userOneId = userOneId;
-        this.userTwoId = userTwoId;
-        this.userOneAnswerTime = userOneAnswerTime;
-        this.userTwoAnswerTime = userTwoAnswerTime;
-        this.topic = topic;
-        this.imageSelected = imageSelected;
-    }
-
-    public Round() {
-
-    }
-
-    public int getId() {
-        return this.id;
-    }
-
-    public void setGameId(int gameId) {
-        this.gameId = gameId;
-    }
 }

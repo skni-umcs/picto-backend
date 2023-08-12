@@ -1,13 +1,17 @@
 package pl.umcs.workshop.user;
 
 import jakarta.persistence.*;
+import lombok.*;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,27 +24,8 @@ public class User {
     private int score;
 
     @Column(name = "last_seen", nullable = true)
-    private Timestamp lastSeen;
+    private LocalDateTime lastSeen;
 
     @Column(name = "cookie", nullable = true)
     private String cookie; // TODO: cookie type
-
-    public User() {
-
-    }
-
-    public User(int gameId, int score) {
-        this.gameId = gameId;
-        this.score = score;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setGameId(int gameId) {
-        this.gameId = gameId;
-    }
-
-    // TODO make builder for this class
 }

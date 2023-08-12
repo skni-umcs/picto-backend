@@ -40,7 +40,7 @@ public class GameService {
         return userId;
     }
 
-    public List<Integer> generateSummary() {
+    public List<Integer> generateGameSummary() {
         // Summarize data from the game using config given as the parameter
         // (e.g. number of generations, players to exclude etc.)
         // Generate points to use in chart

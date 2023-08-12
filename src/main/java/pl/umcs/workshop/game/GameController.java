@@ -2,9 +2,6 @@ package pl.umcs.workshop.game;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import pl.umcs.workshop.round.Round;
-import pl.umcs.workshop.round.RoundController;
-import pl.umcs.workshop.round.RoundService;
 
 import java.util.List;
 
@@ -43,8 +40,8 @@ public class GameController {
 
     @PostMapping("summary")
     // TODO create summary config entity to pass as a parameter
-    public List<Integer> generateSummary() {
-        return gameService.generateSummary();
+    public List<Integer> generateGameSummary() {
+        return gameService.generateGameSummary();
     }
 
     // @GetMapping("game-data/{gameId}")
