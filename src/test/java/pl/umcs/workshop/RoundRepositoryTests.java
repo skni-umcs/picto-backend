@@ -11,6 +11,7 @@ import org.springframework.test.annotation.Rollback;
 import pl.umcs.workshop.round.Round;
 import pl.umcs.workshop.round.RoundRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @DataJpaTest
@@ -50,6 +51,27 @@ public class RoundRepositoryTests {
 
     @Test
     @Order(value = 3)
+    public void getListOfRoundsTest() {
+        Round round = Round.builder()
+                .gameId(1)
+                .generation(4)
+                .userOneId(8)
+                .userTwoId(4)
+                .userOneAnswerTime(6.17)
+                .userTwoAnswerTime(1.53)
+                .topic(3)
+                .imageSelected(7)
+                .build();
+
+        roundRepository.save(round);
+
+        List<Round> rounds = roundRepository.findAll();
+
+        Assertions.assertThat(rounds.size()).isEqualTo(2);
+    }
+
+    @Test
+    @Order(value = 4)
     public void updateRoundTest() {
         Round round = roundRepository.findById(1).orElse(null);
 
@@ -58,7 +80,7 @@ public class RoundRepositoryTests {
     }
 
     @Test
-    @Order(value = 4)
+    @Order(value = 5)
     public void deleteRoundTest() {
         Round round = roundRepository.findById(1).orElse(null);
 

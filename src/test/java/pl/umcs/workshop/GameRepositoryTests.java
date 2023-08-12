@@ -12,6 +12,7 @@ import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.game.GameRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @DataJpaTest
@@ -54,6 +55,29 @@ public class GameRepositoryTests {
 
     @Test
     @Order(value = 3)
+    public void getListOfGamesTest() {
+        Game game = Game.builder()
+                .userOneNumberOfImages(3)
+                .userTwoNumberOfImages(5)
+                .userOneTime(7)
+                .userTwoTime(4)
+                .symbolGroupsAmount(4)
+                .symbolsInGroupAmount(2)
+                .correctAnswerPoints(2)
+                .wrongAnswerPoints(-1)
+                .topologyId(3)
+                .createDateTime(LocalDateTime.now())
+                .build();
+
+        gameRepository.save(game);
+
+        List<Game> games = gameRepository.findAll();
+
+        Assertions.assertThat(games.size()).isEqualTo(2);
+    }
+
+    @Test
+    @Order(value = 4)
     public void updateGameTest() {
         Game game = gameRepository.findById(1).orElse(null);
 
@@ -62,7 +86,7 @@ public class GameRepositoryTests {
     }
 
     @Test
-    @Order(value = 4)
+    @Order(value = 5)
     public void deleteGameTest() {
         Game game = gameRepository.findById(1).orElse(null);
 

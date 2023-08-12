@@ -12,6 +12,7 @@ import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @DataJpaTest
@@ -47,6 +48,40 @@ public class UserRepositoryTests {
 
     @Test
     @Order(value = 3)
+    public void getListOfUsersTest() {
+        User user = User.builder()
+                .gameId(2)
+                .score(11)
+                .lastSeen(LocalDateTime.now())
+                .cookie("Second user's cookie")
+                .build();
+
+        userRepository.save(user);
+
+        List<User> users = userRepository.findAll();
+
+        Assertions.assertThat(users.size()).isEqualTo(2);
+    }
+
+    @Test
+    @Order(value = 4)
+    public void getListOfUsersByGameIdTest() {
+        User user = User.builder()
+                .gameId(1)
+                .score(17)
+                .lastSeen(LocalDateTime.now())
+                .cookie("Third user")
+                .build();
+
+        userRepository.save(user);
+
+        List<User> users = userRepository.findAllByGameId(1);
+
+        Assertions.assertThat(users.size()).isEqualTo(2);
+    }
+
+    @Test
+    @Order(value = 5)
     public void updateUserTest() {
         User user = userRepository.findById(1).orElse(null);
 
@@ -55,7 +90,7 @@ public class UserRepositoryTests {
     }
 
     @Test
-    @Order(value = 4)
+    @Order(value = 6)
     public void deleteUserTest() {
         User user = userRepository.findById(1).orElse(null);
 
