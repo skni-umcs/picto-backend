@@ -34,7 +34,7 @@ public class RoundController {
         return roundService.saveRoundListenerInfo(roundId);
     }
 
-    @GetMapping("result/{roundId}")
+    @GetMapping("round/result/{roundId}")
     // true if got a point, false otherwise
     // TODO check if this should return points gotten
     public boolean getRoundResult(@PathVariable int roundId) {
