@@ -33,6 +33,7 @@ public class GameController {
         return gameService.endGame(gameId);
     }
 
+    // TODO: what happens after switching computers to a given user
     @PostMapping("game/join/{gameId}")
     public User joinGame(@PathVariable int gameId) throws Exception {
         return gameService.joinGame(gameId);

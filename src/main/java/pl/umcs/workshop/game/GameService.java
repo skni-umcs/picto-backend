@@ -1,9 +1,12 @@
 package pl.umcs.workshop.game;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.topology.TopologyRepository;
+import pl.umcs.workshop.topology.TopologyService;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserRepository;
 
@@ -20,6 +23,9 @@ public class GameService {
 
     @Autowired
     private TopologyRepository topologyRepository;
+
+    @Autowired
+    private TopologyService topologyService;
 
     public Game createGame(Game game) {
         return gameRepository.save(game);
@@ -49,12 +55,12 @@ public class GameService {
 
         // TODO: throw custom exception (game doesn't exist)
         if (game == null) {
-            throw new Exception("Game doesn't exist");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game doesn't exist");
         }
 
         // TODO: throw custom exception (game has ended)
         if (game.getEndDateTime() == null) {
-            throw new Exception("Game has ended");
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game has ended");
         }
 
         // TODO: figure out cookies
