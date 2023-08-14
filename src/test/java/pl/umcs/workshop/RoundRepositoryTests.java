@@ -8,6 +8,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
+import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.round.Round;
 import pl.umcs.workshop.round.RoundRepository;
 
@@ -51,7 +52,7 @@ public class RoundRepositoryTests {
 
     @Test
     @Order(value = 3)
-    public void getListOfRoundsTest() {
+    public void getListOfAllRoundsTest() {
         Round round = Round.builder()
                 .gameId(1)
                 .generation(4)
@@ -76,7 +77,12 @@ public class RoundRepositoryTests {
         Round round = roundRepository.findById(1).orElse(null);
 
         assert round != null;
-        round.setGameId(15);
+        round.setImageSelected(4);
+
+        Round savedRound = roundRepository.save(round);
+
+        Assertions.assertThat(savedRound.getImageSelected()).isEqualTo(4);
+        Assertions.assertThat(round.getId()).isEqualTo(savedRound.getId());
     }
 
     @Test

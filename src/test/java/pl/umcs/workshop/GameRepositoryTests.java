@@ -38,9 +38,9 @@ public class GameRepositoryTests {
                 .createDateTime(LocalDateTime.now())
                 .build();
 
-        gameRepository.save(game);
+        Game savedGame = gameRepository.save(game);
 
-        Assertions.assertThat(game.getId()).isGreaterThan(0);
+        Assertions.assertThat(savedGame.getId()).isGreaterThan(0);
     }
 
     @Test
@@ -55,7 +55,7 @@ public class GameRepositoryTests {
 
     @Test
     @Order(value = 3)
-    public void getListOfGamesTest() {
+    public void getListOfAllGamesTest() {
         Game game = Game.builder()
                 .userOneNumberOfImages(3)
                 .userTwoNumberOfImages(5)
@@ -83,6 +83,11 @@ public class GameRepositoryTests {
 
         assert game != null;
         game.setUserOneNumberOfImages(4);
+
+        Game savedGame = gameRepository.save(game);
+
+        Assertions.assertThat(savedGame.getUserOneNumberOfImages()).isEqualTo(4);
+        Assertions.assertThat(game.getId()).isEqualTo(savedGame.getId());
     }
 
     @Test

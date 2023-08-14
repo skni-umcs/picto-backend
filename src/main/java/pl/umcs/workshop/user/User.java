@@ -23,9 +23,9 @@ public class User {
     @Column(name = "score", nullable = false)
     private int score;
 
-    @Column(name = "last_seen", nullable = true)
+    @Column(name = "last_seen", nullable = false)
     private LocalDateTime lastSeen;
 
-    @Column(name = "cookie", nullable = true)
+    @Column(name = "cookie")
     private String cookie; // TODO: cookie type
 }
