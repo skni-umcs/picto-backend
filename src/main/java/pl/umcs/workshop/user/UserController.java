@@ -18,7 +18,7 @@ public class UserController {
     }
 
     @PostMapping("user/remove/{userId}")
-    public User removeUser(@PathVariable int userId) {
-        return userService.removeUser(userId);
+    public void deleteUser(@PathVariable int userId) {
+        userService.deleteUser(userId);
     }
 }
