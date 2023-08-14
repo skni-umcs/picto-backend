@@ -2,6 +2,7 @@ package pl.umcs.workshop.round;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pl.umcs.workshop.user.UserInfo;
 
 @RestController
 public class RoundController {
@@ -13,31 +14,32 @@ public class RoundController {
         this.roundService = roundService;
     }
 
-    @GetMapping("round/{roundId}/speaker")
+    // TODO
+    @GetMapping("round/speaker/get/{roundId}")
     public Round getRoundSpeakerInfo(@PathVariable int roundId) {
         return roundService.getRoundSpeakerInfo(roundId);
     }
 
-    @GetMapping("round/{roundId}/listener")
+    // TODO
+    @GetMapping("round/listener/get/{roundId}")
     public Round getRoundListenerInfo(@PathVariable int roundId) {
         return roundService.getRoundListenerInfo(roundId);
     }
 
     // TODO what should these return
-    @PostMapping("round/{roundId}/speaker")
-    public Round saveRoundSpeakerInfo(@PathVariable int roundId) {
-        return roundService.saveRoundSpeakerInfo(roundId);
+    @PostMapping("round/speaker/save")
+    public Round saveRoundSpeakerInfo(@RequestBody UserInfo userInfo) {
+        return roundService.saveRoundSpeakerInfo(userInfo);
     }
 
-    @PostMapping("round/{roundId}/listener")
-    public Round saveRoundListenerInfo(@PathVariable int roundId) {
-        return roundService.saveRoundListenerInfo(roundId);
+    // TODO
+    @PostMapping("round/listener/save")
+    public Round saveRoundListenerInfo(@RequestBody UserInfo userInfo) {
+        return roundService.saveRoundListenerInfo(userInfo);
     }
 
     @GetMapping("round/result/{roundId}")
-    // true if got a point, false otherwise
-    // TODO check if this should return points gotten
-    public boolean getRoundResult(@PathVariable int roundId) {
+    public int getRoundResult(@PathVariable int roundId) {
         return roundService.getRoundResult(roundId);
     }
 }

@@ -1,5 +1,6 @@
 package pl.umcs.workshop;
 
+import jakarta.servlet.http.Cookie;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
+import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserRepository;
 
@@ -29,7 +31,7 @@ public class UserRepositoryTests {
                 .gameId(1)
                 .score(6)
                 .lastSeen(LocalDateTime.now())
-                .cookie("Hello guys :D")
+                .cookie(new Cookie("FirstUser", "value"))
                 .build();
 
         userRepository.save(user);
@@ -53,7 +55,7 @@ public class UserRepositoryTests {
                 .gameId(2)
                 .score(11)
                 .lastSeen(LocalDateTime.now())
-                .cookie("Second user's cookie")
+                .cookie(new Cookie("SecondUser", "this_is_a_value"))
                 .build();
 
         userRepository.save(user);
@@ -70,7 +72,7 @@ public class UserRepositoryTests {
                 .gameId(1)
                 .score(17)
                 .lastSeen(LocalDateTime.now())
-                .cookie("Third user")
+                .cookie(new Cookie("ThirdUser", "this_is_a_different_value"))
                 .build();
 
         userRepository.save(user);
@@ -83,10 +85,18 @@ public class UserRepositoryTests {
     @Test
     @Order(value = 5)
     public void updateUserTest() {
-        User user = userRepository.findById(1).orElse(null);
+        User user = userRepository.findById(3).orElse(null);
 
         assert user != null;
-        user.setGameId(15);
+        Assertions.assertThat(user.getScore()).isEqualTo(17);
+
+        user.setScore(user.getScore() + -2);
+
+        User savedUser = userRepository.save(user);
+
+        Assertions.assertThat(user.getScore()).isEqualTo(15);
+        Assertions.assertThat(savedUser.getScore()).isEqualTo(15);
+        Assertions.assertThat(user.getId()).isEqualTo(savedUser.getId());
     }
 
     @Test

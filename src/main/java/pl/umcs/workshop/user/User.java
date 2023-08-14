@@ -1,6 +1,7 @@
 package pl.umcs.workshop.user;
 
 import jakarta.persistence.*;
+import jakarta.servlet.http.Cookie;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -27,5 +28,5 @@ public class User {
     private LocalDateTime lastSeen;
 
     @Column(name = "cookie")
-    private String cookie; // TODO: cookie type
+    private Cookie cookie;
 }

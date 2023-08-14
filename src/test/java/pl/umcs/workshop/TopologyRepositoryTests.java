@@ -66,10 +66,13 @@ public class TopologyRepositoryTests {
         Topology topology = topologyRepository.findById(1).orElse(null);
 
         assert topology != null;
+        Assertions.assertThat(topology.getNumberOfSets()).isEqualTo(3);
+
         topology.setNumberOfSets(4);
 
         Topology savedTopology = topologyRepository.save(topology);
 
+        Assertions.assertThat(topology.getNumberOfSets()).isEqualTo(4);
         Assertions.assertThat(savedTopology.getNumberOfSets()).isEqualTo(4);
         Assertions.assertThat(topology.getId()).isEqualTo(savedTopology.getId());
     }

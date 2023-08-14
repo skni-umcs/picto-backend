@@ -1,5 +1,6 @@
 package pl.umcs.workshop.game;
 
+import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -64,7 +65,7 @@ public class GameService {
         }
 
         // TODO: figure out cookies
-        String cookie = "This will be a cookie I hope";
+        Cookie cookie = new Cookie("ThisIsACookie", "eh");
 
         User user = User.builder()
                 .gameId(gameId)
@@ -80,7 +81,7 @@ public class GameService {
         Game game = gameRepository.findById(gameId).orElse(null);
 
         if (game == null) {
-            throw new Exception("Game doesn't exist");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game doesn't exist");
         }
         game.setEndDateTime(LocalDateTime.now());
 

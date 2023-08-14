@@ -27,15 +27,15 @@ public class Round {
     @Column(name = "user_2_id", nullable = false)
     private int userTwoId;
 
-    @Column(name = "user_1_answer_time", nullable = false)
+    @Column(name = "user_1_answer_time")
     private double userOneAnswerTime;
 
-    @Column(name = "user_2_answer_time", nullable = false)
+    @Column(name = "user_2_answer_time")
     private double userTwoAnswerTime;
 
     @Column(name = "topic", nullable = false)
     private int topic;
 
-    @Column(name = "image_selected", nullable = false)
+    @Column(name = "image_selected")
     private int imageSelected;
 }

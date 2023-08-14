@@ -77,11 +77,14 @@ public class RoundRepositoryTests {
         Round round = roundRepository.findById(1).orElse(null);
 
         assert round != null;
-        round.setImageSelected(4);
+        Assertions.assertThat(round.getImageSelected()).isEqualTo(4);
+
+        round.setImageSelected(7);
 
         Round savedRound = roundRepository.save(round);
 
-        Assertions.assertThat(savedRound.getImageSelected()).isEqualTo(4);
+        Assertions.assertThat(round.getImageSelected()).isEqualTo(7);
+        Assertions.assertThat(savedRound.getImageSelected()).isEqualTo(7);
         Assertions.assertThat(round.getId()).isEqualTo(savedRound.getId());
     }
 

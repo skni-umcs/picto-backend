@@ -61,7 +61,7 @@ deploy:
     - chmod 700 ~/.ssh
 
     - ssh-keyscan -p $SSH_PORT $SSH_HOST >> ~/.ssh/known_hosts
-    - ssh -p $SSH_PORT $SSH_USER@$SSH_HOST "echo 'TEST CONENCTION'"
+    - ssh -p $SSH_PORT $SSH_USER@$SSH_HOST "echo 'TEST CONNECTION'"
 
   script:
     - ssh -p $SSH_PORT $SSH_USER@$SSH_HOST "cd /home/gitlab-deploy/picto/backend && docker compose -f docker-compose.prod.yml down"
