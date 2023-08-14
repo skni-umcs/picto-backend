@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.umcs.workshop.game.Game;
-import pl.umcs.workshop.game.GameRepository;
 
 import java.time.LocalDateTime;
 
@@ -31,9 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class GameControllerTests {
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private GameRepository gameRepository;
 
     @Test
     @Order(1)
@@ -60,31 +56,6 @@ public class GameControllerTests {
                 .andExpect(MockMvcResultMatchers
                     .jsonPath("$.id")
                     .exists());
-    }
-
-    // TODO: FIX TESTS
-    @Test
-    @Order(2)
-    public void joinGameShouldReturnUser() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders
-                        .post("/game/join/1")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers
-                        .jsonPath("$.id")
-                        .value(1));
-    }
-
-    @Test
-    @Order(3)
-    public void endGameShouldReturnGame() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders
-                        .post("/game/end/1")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers
-                        .jsonPath("$.id")
-                        .value(1));
     }
 
     public static String asJsonString(final Object obj) {

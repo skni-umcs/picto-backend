@@ -48,7 +48,7 @@ public class UserRepositoryTests {
 
     @Test
     @Order(value = 3)
-    public void getListOfUsersTest() {
+    public void getListOfAllUsersTest() {
         User user = User.builder()
                 .gameId(2)
                 .score(11)
@@ -65,7 +65,7 @@ public class UserRepositoryTests {
 
     @Test
     @Order(value = 4)
-    public void getListOfUsersByGameIdTest() {
+    public void getListOfAllUsersByGameIdTest() {
         User user = User.builder()
                 .gameId(1)
                 .score(17)

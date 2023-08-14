@@ -2,12 +2,13 @@ package pl.umcs.workshop.game;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.umcs.workshop.topology.Topology;
+import pl.umcs.workshop.topology.TopologyRepository;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class GameService {
@@ -16,6 +17,9 @@ public class GameService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private TopologyRepository topologyRepository;
 
     public Game createGame(Game game) {
         return gameRepository.save(game);
@@ -28,12 +32,15 @@ public class GameService {
 
         // Get game config
         // TODO: throw exception if game doesn't exist
-        Optional<Game> game = gameRepository.findById(gameId);
+        Game game = gameRepository.findById(gameId).orElse(null);
 
-        // Generate brackets (generations and rounds)
-        // TODO separate class to generate brackets based on topology
+        // Generate brackets (generations and rounds) based on topology (topologyId)
+        assert game != null;
+        Topology topology = topologyRepository.findById(game.getTopologyId()).orElse(null);
 
-        return null;
+        assert topology != null;
+
+        return topology.generateBrackets(users);
     }
 
     public User joinGame(int gameId) throws Exception {
@@ -71,7 +78,6 @@ public class GameService {
         }
         game.setEndDateTime(LocalDateTime.now());
 
-        // TODO: write tests to see if this works
         List<User> users = userRepository.findAllByGameId(gameId);
         for (User user : users) {
             user.setCookie(null);

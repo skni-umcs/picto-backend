@@ -55,7 +55,7 @@ public class GameRepositoryTests {
 
     @Test
     @Order(value = 3)
-    public void getListOfGamesTest() {
+    public void getListOfAllGamesTest() {
         Game game = Game.builder()
                 .userOneNumberOfImages(3)
                 .userTwoNumberOfImages(5)
