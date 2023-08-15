@@ -44,8 +44,7 @@ public class UserServiceTests {
     @Test
     public void givenUserId_whenGetUser_thenReturnUserObject() {
         // given
-        given(userRepository.findById(1))
-                .willReturn(Optional.of(user));
+        given(userRepository.findById(1)).willReturn(Optional.of(user));
 
         // when
         User foundUser = userService.getUser(user.getId());
@@ -58,8 +57,7 @@ public class UserServiceTests {
     @Test
     public void givenUserObjectAndId_whenUpdateUser_thenReturnUserObject() {
         // given
-        given(userRepository.findById(user.getId()))
-                .willReturn(Optional.of(user));
+        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
 
         given(userRepository.save(user)).willReturn(user);
 

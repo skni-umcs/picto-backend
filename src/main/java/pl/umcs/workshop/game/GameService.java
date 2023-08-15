@@ -38,33 +38,33 @@ public class GameService {
         List<User> users = userRepository.findAllByGameId(gameId);
 
         // Get game config
-        // TODO: throw exception if game doesn't exist
         Game game = gameRepository.findById(gameId).orElse(null);
 
-        // Generate brackets (generations and rounds) based on topology (topologyId)
-        assert game != null;
-        Topology topology = topologyRepository.findById(game.getTopologyId()).orElse(null);
-
-        assert topology != null;
-
-        return topology.generateBrackets(users);
-    }
-
-    public User joinGame(int gameId) throws Exception {
-        // Check if game exists and if it's active
-        Game game = gameRepository.findById(gameId).orElse(null);
-
-        // TODO: throw custom exception (game doesn't exist)
         if (game == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game doesn't exist");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
         }
 
-        // TODO: throw custom exception (game has ended)
-        if (game.getEndDateTime() == null) {
+        // Generate brackets (generations and rounds) based on topology (topologyId)
+        Topology topology = topologyRepository.findById(game.getTopologyId()).orElse(null);
+
+        if (topology == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Topology not found");
+        }
+
+        return topologyService.generateBrackets(users);
+    }
+
+    public User joinGame(int gameId) {
+        Game game = gameRepository.findById(gameId).orElse(null);
+
+        if (game == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
+        }
+
+        if (game.getEndDateTime() != null) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game has ended");
         }
 
-        // TODO: figure out cookies
         Cookie cookie = new Cookie("ThisIsACookie", "eh");
 
         User user = User.builder()
@@ -77,11 +77,11 @@ public class GameService {
         return userRepository.save(user);
     }
 
-    public Game endGame(int gameId) throws Exception {
+    public Game endGame(int gameId) {
         Game game = gameRepository.findById(gameId).orElse(null);
 
         if (game == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game doesn't exist");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
         }
         game.setEndDateTime(LocalDateTime.now());
 

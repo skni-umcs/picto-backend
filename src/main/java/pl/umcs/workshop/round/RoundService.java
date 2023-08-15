@@ -2,7 +2,9 @@ package pl.umcs.workshop.round;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.game.GameRepository;
 import pl.umcs.workshop.user.UserInfo;
@@ -17,23 +19,24 @@ public class RoundService {
 
     public Round getRoundSpeakerInfo(int roundId) {
         // Get and return round speaker data from the database
-        Round round = null;
 
-        return round;
+        return null;
     }
 
     public Round getRoundListenerInfo(int roundId) {
         // Get and return round listener data from the database
-        Round round = null;
 
-        return round;
+        return null;
     }
 
     // Speaker is always user_1
     public Round saveRoundSpeakerInfo(@NotNull UserInfo userInfo) {
         Round round = roundRepository.findById(userInfo.getRoundId()).orElse(null);
 
-        assert round != null;
+        if (round == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Round not found");
+        }
+
         round.setUserOneAnswerTime(userInfo.getAnswerTime());
 
         return roundRepository.save(round);
@@ -42,7 +45,9 @@ public class RoundService {
     public Round saveRoundListenerInfo(@NotNull UserInfo userInfo) {
         Round round = roundRepository.findById(userInfo.getRoundId()).orElse(null);
 
-        assert round != null;
+        if (round == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Round not found");
+        }
 
         round.setUserTwoAnswerTime(userInfo.getAnswerTime());
         round.setImageSelected(userInfo.getImageSelected());
@@ -53,10 +58,16 @@ public class RoundService {
     public int getRoundResult(int roundId) {
         Round round = roundRepository.findById(roundId).orElse(null);
 
-        assert round != null;
+        if (round == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Round not found");
+        }
+
         Game game = gameRepository.findById(round.getGameId()).orElse(null);
 
-        assert game != null;
+        if (game == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
+        }
+
         if (round.getImageSelected() == round.getTopic()) {
             return game.getCorrectAnswerPoints();
         }

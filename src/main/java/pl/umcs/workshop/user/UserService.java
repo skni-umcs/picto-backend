@@ -14,7 +14,7 @@ public class UserService {
         User user = userRepository.findById(userId).orElse(null);
 
         if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User doesn't exist");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
 
         return user;
@@ -25,7 +25,7 @@ public class UserService {
         User user = userRepository.findById(userId).orElse(null);
 
         if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User doesn't exist");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
 
         if (user.getId() != userToUpdate.getId()) {
