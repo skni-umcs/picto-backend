@@ -92,7 +92,7 @@ public class GameServiceTests {
 //        Assertions.assertThat(savedUser.getId()).isEqualTo(1);
 //    }
 
-        @Test
+    @Test
     public void givenGameId_whenJoinGame_thenReturnUserObject() {
         List<User> usersList = List.of(new User[]{
                 User.builder()

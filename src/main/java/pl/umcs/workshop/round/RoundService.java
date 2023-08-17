@@ -88,12 +88,11 @@ public class RoundService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
         }
 
-        // TODO: return points as well?
         if (isImageCorrect(round)) {
-            return RoundResult.CORRECT;
+            return new RoundResult(RoundResult.Result.CORRECT, game.getCorrectAnswerPoints());
         }
 
-        return RoundResult.WRONG;
+        return new RoundResult(RoundResult.Result.WRONG, game.getWrongAnswerPoints());
     }
 
     public boolean isImageCorrect(@NotNull Round round) {

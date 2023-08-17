@@ -105,10 +105,11 @@ public class RoundServiceTests {
         given(roundRepository.findById(1)).willReturn(Optional.of(round));
 
         // when
-        RoundResult pointsGotten = roundService.getRoundResult(round.getId());
+        RoundResult roundResult = roundService.getRoundResult(round.getId());
 
         // then
-        Assertions.assertThat(pointsGotten).isEqualTo(RoundResult.CORRECT);
+        Assertions.assertThat(roundResult.getResult()).isEqualTo(RoundResult.Result.CORRECT);
+        Assertions.assertThat(roundResult.getPoints()).isEqualTo(1);
     }
 
     @Test
@@ -130,9 +131,10 @@ public class RoundServiceTests {
         given(roundRepository.findById(2)).willReturn(Optional.of(round));
 
         // when
-        RoundResult pointsGotten = roundService.getRoundResult(round.getId());
+        RoundResult roundResult = roundService.getRoundResult(round.getId());
 
         // then
-        Assertions.assertThat(pointsGotten).isEqualTo(RoundResult.WRONG);
+        Assertions.assertThat(roundResult.getResult()).isEqualTo(RoundResult.Result.WRONG);
+        Assertions.assertThat(roundResult.getPoints()).isEqualTo(-1);
     }
 }
