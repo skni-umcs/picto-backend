@@ -39,6 +39,8 @@ public class GameControllerTests {
                 .correctAnswerPoints(1)
                 .wrongAnswerPoints(-1)
                 .topologyId(1)
+                .probabilityOfEdgeRedrawing(0.2)
+                .maxVertexDegree(2)
                 .createDateTime(LocalDateTime.now())
                 .build();
 

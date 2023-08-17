@@ -1,6 +1,7 @@
 package pl.umcs.workshop.game;
 
 import jakarta.servlet.http.Cookie;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -86,12 +87,7 @@ public class GameService {
         }
         game.setEndDateTime(LocalDateTime.now());
 
-        List<User> users = userRepository.findAllByGameId(gameId);
-        for (User user : users) {
-            user.setCookie(null);
-        }
-
-        userRepository.saveAll(users);
+        deleteUserCookies(gameId);
 
         return gameRepository.save(game);
     }
@@ -103,5 +99,14 @@ public class GameService {
         // Generate points to use in chart
 
         return null;
+    }
+
+    public @NotNull List<User> deleteUserCookies(int gameId) {
+        List<User> users = userRepository.findAllByGameId(gameId);
+        for (User user : users) {
+            user.setCookie(null);
+        }
+
+        return userRepository.saveAll(users);
     }
 }

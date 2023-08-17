@@ -35,6 +35,8 @@ public class GameRepositoryTests {
                 .correctAnswerPoints(1)
                 .wrongAnswerPoints(-1)
                 .topologyId(1)
+                .probabilityOfEdgeRedrawing(0.25)
+                .maxVertexDegree(4)
                 .createDateTime(LocalDateTime.now())
                 .build();
 

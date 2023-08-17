@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -46,6 +47,8 @@ public class GameServiceTests {
                 .correctAnswerPoints(1)
                 .wrongAnswerPoints(-1)
                 .topologyId(1)
+                .probabilityOfEdgeRedrawing(0.3)
+                .maxVertexDegree(3)
                 .createDateTime(LocalDateTime.now())
                 .build();
     }
@@ -94,50 +97,56 @@ public class GameServiceTests {
 
     @Test
     public void givenGameId_whenJoinGame_thenReturnUserObject() {
-        List<User> usersList = List.of(new User[]{
-                User.builder()
-                        .id(1)
-                        .gameId(1)
-                        .score(11)
-                        .generation(3)
-                        .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
-                        .cookie(new Cookie("cookieOne", "valueOfCookieOne"))
-                        .build(),
-                User.builder()
-                        .id(2)
-                        .gameId(1)
-                        .score(13)
-                        .generation(1)
-                        .lastSeen(LocalDateTime.of(2023, 4, 13, 17, 6))
-                        .cookie(new Cookie("cookieTwo", "valueOfCookieTwo"))
-                        .build(),
-                User.builder()
-                        .id(3)
-                        .gameId(1)
-                        .score(7)
-                        .generation(1)
-                        .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 21))
-                        .cookie(new Cookie("cookieThree", "valueOfCookieThree"))
-                        .build()
-        });
-
         given(gameRepository.findById(1)).willReturn(Optional.of(game));
         given(gameRepository.save(game)).willReturn(game);
-        given(userRepository.findAllByGameId(1)).willReturn(usersList);
-        // TODO: fix this to return users will null cookies (modified by endGame method)
-//        given(userRepository.saveAll(usersList).willReturn();
 
         // when
         Game endedGame = gameService.endGame(1);
-        List<User> users = userRepository.findAllByGameId(1);
 
         // then
         Assertions.assertThat(endedGame).isNotNull();
         Assertions.assertThat(endedGame.getId()).isEqualTo(1);
         Assertions.assertThat(endedGame.getEndDateTime()).isNotNull();
-
-        Assertions.assertThat(users.size()).isEqualTo(3);
-        // TODO: enable when former TODO is done
-//        Assertions.assertThat(users.get(0).getCookie()).isNull();
     }
+
+    // TODO: think this through
+//    @Test
+//    public void givenGameId_whenDeleteUserCookies_thenReturnListOfUsers() {
+//        List<User> users = List.of(new User[]{
+//                User.builder()
+//                        .id(1)
+//                        .gameId(1)
+//                        .score(11)
+//                        .generation(3)
+//                        .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
+//                        .cookie(new Cookie("cookieOne", "valueOfCookieOne"))
+//                        .build(),
+//                User.builder()
+//                        .id(2)
+//                        .gameId(1)
+//                        .score(13)
+//                        .generation(1)
+//                        .lastSeen(LocalDateTime.of(2023, 4, 13, 17, 6))
+//                        .cookie(new Cookie("cookieTwo", "valueOfCookieTwo"))
+//                        .build(),
+//                User.builder()
+//                        .id(3)
+//                        .gameId(1)
+//                        .score(7)
+//                        .generation(1)
+//                        .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 21))
+//                        .cookie(new Cookie("cookieThree", "valueOfCookieThree"))
+//                        .build()
+//        });
+//
+//        given(userRepository.findAllByGameId(1)).willReturn(users);
+//        given(userRepository.saveAll(users)).willReturn();
+//
+//        // when
+//        List<User> returnedUsers = gameService.deleteUserCookies(1);
+//
+//        // then
+//        Assertions.assertThat(returnedUsers.size()).isEqualTo(3);
+//
+//    }
 }

@@ -44,6 +44,12 @@ public class Game {
     @Column(name = "topology_id", nullable = false)
     private int topologyId;
 
+    @Column(name = "probability_of_edge_redrawing")
+    private double probabilityOfEdgeRedrawing;
+
+    @Column(name = "max_vertex_degree")
+    private int maxVertexDegree;
+
     @Column(name = "create_date_time", nullable = false)
     private LocalDateTime createDateTime;
 
