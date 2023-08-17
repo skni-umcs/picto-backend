@@ -24,6 +24,9 @@ public class User {
     @Column(name = "score", nullable = false)
     private int score;
 
+    @Column(name = "generation", nullable = false)
+    private int generation;
+
     @Column(name = "last_seen", nullable = false)
     private LocalDateTime lastSeen;
 

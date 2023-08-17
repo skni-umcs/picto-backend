@@ -70,6 +70,7 @@ public class GameService {
         User user = User.builder()
                 .gameId(gameId)
                 .score(0)
+                .generation(0)
                 .lastSeen(LocalDateTime.now())
                 .cookie(cookie)
                 .build();

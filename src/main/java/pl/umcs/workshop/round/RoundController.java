@@ -14,19 +14,24 @@ public class RoundController {
         this.roundService = roundService;
     }
 
+    @GetMapping("round/next/{userId}")
+    public Round getNextRound(@PathVariable int userId) {
+        return roundService.getNextRound(userId);
+    }
+
     // TODO
-    @GetMapping("round/speaker/get/{roundId}")
+    @GetMapping("round/{roundId}/speaker/get")
     public Round getRoundSpeakerInfo(@PathVariable int roundId) {
         return roundService.getRoundSpeakerInfo(roundId);
     }
 
     // TODO
-    @GetMapping("round/listener/get/{roundId}")
+    @GetMapping("round/{roundId}/listener/get")
     public Round getRoundListenerInfo(@PathVariable int roundId) {
         return roundService.getRoundListenerInfo(roundId);
     }
 
-    // TODO what should these return
+    // TODO
     @PostMapping("round/speaker/save")
     public Round saveRoundSpeakerInfo(@RequestBody UserInfo userInfo) {
         return roundService.saveRoundSpeakerInfo(userInfo);
@@ -38,8 +43,8 @@ public class RoundController {
         return roundService.saveRoundListenerInfo(userInfo);
     }
 
-    @GetMapping("round/result/{roundId}")
-    public int getRoundResult(@PathVariable int roundId) {
+    @GetMapping("round/{roundId}/result")
+    public RoundResult getRoundResult(@PathVariable int roundId) {
         return roundService.getRoundResult(roundId);
     }
 }

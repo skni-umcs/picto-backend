@@ -11,6 +11,7 @@ import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.game.GameRepository;
 import pl.umcs.workshop.round.Round;
 import pl.umcs.workshop.round.RoundRepository;
+import pl.umcs.workshop.round.RoundResult;
 import pl.umcs.workshop.round.RoundService;
 
 import java.time.LocalDateTime;
@@ -104,10 +105,10 @@ public class RoundServiceTests {
         given(roundRepository.findById(1)).willReturn(Optional.of(round));
 
         // when
-        int pointsGotten = roundService.getRoundResult(round.getId());
+        RoundResult pointsGotten = roundService.getRoundResult(round.getId());
 
         // then
-        Assertions.assertThat(pointsGotten).isEqualTo(1);
+        Assertions.assertThat(pointsGotten).isEqualTo(RoundResult.CORRECT);
     }
 
     @Test
@@ -129,9 +130,9 @@ public class RoundServiceTests {
         given(roundRepository.findById(2)).willReturn(Optional.of(round));
 
         // when
-        int pointsGotten = roundService.getRoundResult(round.getId());
+        RoundResult pointsGotten = roundService.getRoundResult(round.getId());
 
         // then
-        Assertions.assertThat(pointsGotten).isEqualTo(-1);
+        Assertions.assertThat(pointsGotten).isEqualTo(RoundResult.WRONG);
     }
 }

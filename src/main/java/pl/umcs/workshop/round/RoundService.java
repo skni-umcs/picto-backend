@@ -7,7 +7,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.game.GameRepository;
+import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserInfo;
+import pl.umcs.workshop.user.UserRepository;
+
+import java.util.List;
+
+import static org.springframework.data.jpa.domain.Specification.where;
 
 @Service
 public class RoundService {
@@ -16,6 +22,20 @@ public class RoundService {
 
     @Autowired
     private GameRepository gameRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public Round getNextRound(int userId) {
+        // Check what generation the user is on
+        User user = userRepository.findById(userId).orElse(null);
+
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+
+        return roundRepository.getNextRound(user.getGameId(), userId, user.getGeneration() + 1);
+    }
 
     public Round getRoundSpeakerInfo(int roundId) {
         // Get and return round speaker data from the database
@@ -55,7 +75,7 @@ public class RoundService {
         return roundRepository.save(round);
     }
 
-    public int getRoundResult(int roundId) {
+    public RoundResult getRoundResult(int roundId) {
         Round round = roundRepository.findById(roundId).orElse(null);
 
         if (round == null) {
@@ -68,10 +88,15 @@ public class RoundService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
         }
 
-        if (round.getImageSelected() == round.getTopic()) {
-            return game.getCorrectAnswerPoints();
+        // TODO: return points as well?
+        if (isImageCorrect(round)) {
+            return RoundResult.CORRECT;
         }
 
-        return game.getWrongAnswerPoints();
+        return RoundResult.WRONG;
+    }
+
+    public boolean isImageCorrect(@NotNull Round round) {
+        return round.getImageSelected() == round.getTopic();
     }
 }

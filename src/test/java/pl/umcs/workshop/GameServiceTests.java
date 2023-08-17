@@ -99,6 +99,7 @@ public class GameServiceTests {
                         .id(1)
                         .gameId(1)
                         .score(11)
+                        .generation(3)
                         .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
                         .cookie(new Cookie("cookieOne", "valueOfCookieOne"))
                         .build(),
@@ -106,6 +107,7 @@ public class GameServiceTests {
                         .id(2)
                         .gameId(1)
                         .score(13)
+                        .generation(1)
                         .lastSeen(LocalDateTime.of(2023, 4, 13, 17, 6))
                         .cookie(new Cookie("cookieTwo", "valueOfCookieTwo"))
                         .build(),
@@ -113,6 +115,7 @@ public class GameServiceTests {
                         .id(3)
                         .gameId(1)
                         .score(7)
+                        .generation(1)
                         .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 21))
                         .cookie(new Cookie("cookieThree", "valueOfCookieThree"))
                         .build()

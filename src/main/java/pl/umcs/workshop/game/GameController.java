@@ -16,37 +16,37 @@ public class GameController {
         this.gameService = gameService;
     }
 
-    @PostMapping("game/create")
+    @PostMapping("game/admin/create")
     public @ResponseBody Game createGame(@RequestBody Game game) {
         return gameService.createGame(game);
     }
 
     // TODO: begin game method
-    @PostMapping("game/begin/{gameId}")
+    @PostMapping("game/admin/begin/{gameId}")
     // Returns list of round ids
     public List<Integer> beginGame(@PathVariable int gameId) {
         return gameService.beginGame(gameId);
     }
 
-    @PostMapping("game/end/{gameId}")
-    public Game endGame(@PathVariable int gameId) throws Exception {
+    @PostMapping("game/admin/end/{gameId}")
+    public Game endGame(@PathVariable int gameId) {
         return gameService.endGame(gameId);
     }
 
     // TODO: what happens after switching computers to a given user
     @PostMapping("game/join/{gameId}")
-    public User joinGame(@PathVariable int gameId) throws Exception {
+    public User joinGame(@PathVariable int gameId) {
         return gameService.joinGame(gameId);
     }
 
     // TODO
-    @PostMapping("game/summary/{gameId}")
+    @PostMapping("game/admin/summary/{gameId}")
     // TODO: create summary config entity to pass as a parameter
     public List<Integer> generateGameSummary(@PathVariable int gameId) {
         return gameService.generateGameSummary(gameId);
     }
 
-    // @GetMapping("game/live-data/{gameId}")
+    // @GetMapping("game/admin/live-data/{gameId}")
     // Used for admin panel live monitoring
     // Contains: userId, score, generation, answer history [x+xx+++]
     // TODO: PlayerProfile class to store this info, return list of profiles

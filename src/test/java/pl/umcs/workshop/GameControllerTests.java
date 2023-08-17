@@ -43,7 +43,7 @@ public class GameControllerTests {
                 .build();
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                    .post("/game/create")
+                    .post("/game/admin/create")
                     .content(asJsonString(game))
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
