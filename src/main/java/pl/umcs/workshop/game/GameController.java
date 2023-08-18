@@ -22,25 +22,30 @@ public class GameController {
     }
 
     // TODO: begin game method
-    @PostMapping("game/admin/begin/{gameId}")
+    @PostMapping("game/{gameId}/admin/begin")
     // Returns list of round ids
     public List<Integer> beginGame(@PathVariable int gameId) {
         return gameService.beginGame(gameId);
     }
 
-    @PostMapping("game/admin/end/{gameId}")
+    @PostMapping("game/{gameId}/admin/end")
     public Game endGame(@PathVariable int gameId) {
         return gameService.endGame(gameId);
     }
 
     // TODO: what happens after switching computers to a given user
-    @PostMapping("game/join/{gameId}")
+    @PostMapping("game/{gameId}/join")
     public User joinGame(@PathVariable int gameId) {
         return gameService.joinGame(gameId);
     }
 
+    @PostMapping("game/{gameId}/join/{userId}")
+    public User joinGameAsUser(@PathVariable int gameId, @PathVariable int userId) {
+        return gameService.joinGameAsUser(gameId, userId);
+    }
+
     // TODO
-    @PostMapping("game/admin/summary/{gameId}")
+    @PostMapping("game/{gameId}/admin/summary")
     // TODO: create summary config entity to pass as a parameter
     public List<Integer> generateGameSummary(@PathVariable int gameId) {
         return gameService.generateGameSummary(gameId);

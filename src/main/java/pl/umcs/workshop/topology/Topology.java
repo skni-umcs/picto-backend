@@ -2,10 +2,6 @@ package pl.umcs.workshop.topology;
 
 import jakarta.persistence.*;
 import lombok.*;
-import pl.umcs.workshop.user.User;
-
-import java.util.List;
-import java.util.stream.Stream;
 
 @Entity
 @Table(name = "topologies")

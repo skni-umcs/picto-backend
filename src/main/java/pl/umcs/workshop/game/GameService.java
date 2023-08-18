@@ -79,6 +79,28 @@ public class GameService {
         return userRepository.save(user);
     }
 
+    public User joinGameAsUser(int gameId, int userId) {
+        User user = userRepository.findById(userId).orElse(null);
+
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+
+        Game game = gameRepository.findById(gameId).orElse(null);
+
+        if (game == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
+        }
+
+        if (game.getEndDateTime() != null) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game has ended");
+        }
+
+        user.setCookie(new Cookie("name", "value"));
+
+        return userRepository.save(user);
+    }
+
     public Game endGame(int gameId) {
         Game game = gameRepository.findById(gameId).orElse(null);
 

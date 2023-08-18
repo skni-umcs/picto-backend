@@ -96,7 +96,29 @@ public class GameServiceTests {
 //    }
 
     @Test
-    public void givenGameId_whenJoinGame_thenReturnUserObject() {
+    public void givenGameIdAndUserId_whenJoinGameAsUser_thenReturnUserObject() {
+        given(gameRepository.findById(1)).willReturn(Optional.of(game));
+        given(userRepository.findById(1)).willReturn(
+                Optional.of(User.builder()
+                        .id(1)
+                        .gameId(1)
+                        .score(11)
+                        .generation(3)
+                        .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
+                        .cookie(new Cookie("cookieOne", "valueOfCookieOne"))
+                        .build()));
+
+        // when
+        Game endedGame = gameService.endGame(1);
+
+        // then
+        Assertions.assertThat(endedGame).isNotNull();
+        Assertions.assertThat(endedGame.getId()).isEqualTo(1);
+        Assertions.assertThat(endedGame.getEndDateTime()).isNotNull();
+    }
+
+    @Test
+    public void givenGameId_whenEndGame_thenReturnUserObject() {
         given(gameRepository.findById(1)).willReturn(Optional.of(game));
         given(gameRepository.save(game)).willReturn(game);
 

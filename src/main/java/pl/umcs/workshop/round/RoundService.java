@@ -11,10 +11,6 @@ import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserInfo;
 import pl.umcs.workshop.user.UserRepository;
 
-import java.util.List;
-
-import static org.springframework.data.jpa.domain.Specification.where;
-
 @Service
 public class RoundService {
     @Autowired

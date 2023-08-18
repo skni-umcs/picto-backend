@@ -14,12 +14,12 @@ public class UserController {
     }
 
     // TODO
-    @PostMapping("user/update/{userId}")
+    @PutMapping("user/{userId}")
     public User updateUser(@PathVariable int userId, @RequestBody User user) {
         return userService.updateUser(userId, user);
     }
 
-    @PostMapping("user/remove/{userId}")
+    @DeleteMapping("user/{userId}")
     public void deleteUser(@PathVariable int userId) {
         userService.deleteUser(userId);
     }

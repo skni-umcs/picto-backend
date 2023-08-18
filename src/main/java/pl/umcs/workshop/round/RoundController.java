@@ -20,25 +20,25 @@ public class RoundController {
     }
 
     // TODO
-    @GetMapping("round/{roundId}/speaker/get")
+    @GetMapping("round/{roundId}/speaker")
     public Round getRoundSpeakerInfo(@PathVariable int roundId) {
         return roundService.getRoundSpeakerInfo(roundId);
     }
 
     // TODO
-    @GetMapping("round/{roundId}/listener/get")
+    @GetMapping("round/{roundId}/listener")
     public Round getRoundListenerInfo(@PathVariable int roundId) {
         return roundService.getRoundListenerInfo(roundId);
     }
 
     // TODO
-    @PostMapping("round/speaker/save")
+    @PostMapping("round/{roundId}/speaker")
     public Round saveRoundSpeakerInfo(@RequestBody UserInfo userInfo) {
         return roundService.saveRoundSpeakerInfo(userInfo);
     }
 
     // TODO
-    @PostMapping("round/listener/save")
+    @PostMapping("round/{roundId}/listener")
     public Round saveRoundListenerInfo(@RequestBody UserInfo userInfo) {
         return roundService.saveRoundListenerInfo(userInfo);
     }

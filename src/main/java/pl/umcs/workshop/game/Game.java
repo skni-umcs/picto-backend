@@ -54,5 +54,5 @@ public class Game {
     private LocalDateTime createDateTime;
 
     @Column(name = "end_date_time")
-    private LocalDateTime endDateTime = null;
+    private LocalDateTime endDateTime;
 }
