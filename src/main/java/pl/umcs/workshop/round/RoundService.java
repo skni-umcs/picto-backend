@@ -30,6 +30,17 @@ public class RoundService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
 
+        // Check if the game exists and is still in progress
+        Game game = gameRepository.findById(user.getGameId()).orElse(null);
+
+        if (game == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
+        }
+
+        if (game.getEndDateTime() != null) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game has ended");
+        }
+
         return roundRepository.getNextRound(user.getGameId(), userId, user.getGeneration() + 1);
     }
 
