@@ -204,27 +204,35 @@ public class RoundServiceTests {
     @Test
     public void givenRoundId_whenGetRoundResult_thenReturnPointsGottenOnWrong() {
         // given
-        Round round = Round.builder()
-                .id(2)
-                .gameId(1)
-                .generation(4)
-                .userOneId(5)
-                .userTwoId(6)
-                .userTwoAnswerTime(7)
-                .userTwoAnswerTime(8)
-                .topic(10)
-                .imageSelected(9)
-                .build();
-
-        given(gameRepository.findById(1)).willReturn(Optional.of(game));
-        given(roundRepository.findById(2)).willReturn(Optional.of(round));
-
-        // when
-        RoundResult roundResult = roundService.getRoundResult(round.getId());
+        given(gameRepository.findById(1)).willReturn(Optional.empty());
+        given(roundRepository.findById(1)).willReturn(Optional.of(round));
 
         // then
-        Assertions.assertThat(roundResult.getResult()).isEqualTo(RoundResult.Result.WRONG);
-        Assertions.assertThat(roundResult.getPoints()).isEqualTo(-1);
+        Assertions.assertThatThrownBy(() -> roundService.getRoundResult(1))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("Game not found");
+    }
+
+    @Test
+    public void givenInvalidRoundId_whenGetRoundResult_thenThrowRoundNotFound() {
+        // given
+        given(roundRepository.findById(1)).willReturn(Optional.empty());
+
+        // then
+        Assertions.assertThatThrownBy(() -> roundService.getRoundResult(1))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("Round not found");
+    }
+
+    @Test
+    public void givenRoundIdForInvalidGame_whenGetRoundResult_thenThrowGameNotFound() {
+        // given
+        given(roundRepository.findById(1)).willReturn(Optional.empty());
+
+        // then
+        Assertions.assertThatThrownBy(() -> roundService.getRoundResult(1))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("Round not found");
     }
 
     @Test
