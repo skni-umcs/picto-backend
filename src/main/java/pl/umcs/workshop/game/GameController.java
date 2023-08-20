@@ -6,6 +6,7 @@ import pl.umcs.workshop.user.User;
 
 import java.util.List;
 
+// TODO: refactor /game to entire controller mapping
 @RestController
 public class GameController {
     GameService gameService;
@@ -24,7 +25,7 @@ public class GameController {
     // TODO: begin game method
     @PostMapping("game/{gameId}/admin/begin")
     // Returns list of round ids
-    public List<Integer> beginGame(@PathVariable int gameId) {
+    public Game beginGame(@PathVariable int gameId) {
         return gameService.beginGame(gameId);
     }
 
@@ -33,7 +34,6 @@ public class GameController {
         return gameService.endGame(gameId);
     }
 
-    // TODO: what happens after switching computers to a given user
     @PostMapping("game/{gameId}/join")
     public User joinGame(@PathVariable int gameId) {
         return gameService.joinGame(gameId);

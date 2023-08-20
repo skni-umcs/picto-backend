@@ -34,7 +34,7 @@ public class GameService {
     }
 
     // TODO: begin game method
-    public List<Integer> beginGame(int gameId) {
+    public Game beginGame(int gameId) {
         // Get all users for given game
         List<User> users = userRepository.findAllByGameId(gameId);
 
@@ -45,6 +45,7 @@ public class GameService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
         }
 
+        // TODO: if topologyId is not present, use p and k from config to generate new topology (and return id)
         // Generate brackets (generations and rounds) based on topology (topologyId)
         Topology topology = topologyRepository.findById(game.getTopologyId()).orElse(null);
 
@@ -52,7 +53,8 @@ public class GameService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Topology not found");
         }
 
-        return topologyService.generateBrackets(users);
+        // return Game object with topology info present (saved game with this info)
+        return null;
     }
 
     public User joinGame(int gameId) {

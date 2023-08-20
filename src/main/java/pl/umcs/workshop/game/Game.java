@@ -41,7 +41,7 @@ public class Game {
     @Column(name = "wrong_answer_points", nullable = false)
     private int wrongAnswerPoints;
 
-    @Column(name = "topology_id", nullable = false)
+    @Column(name = "topology_id")
     private int topologyId;
 
     @Column(name = "probability_of_edge_redrawing")
