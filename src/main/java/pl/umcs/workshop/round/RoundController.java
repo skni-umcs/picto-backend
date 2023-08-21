@@ -22,15 +22,9 @@ public class RoundController {
         return roundService.getNextRound(userId);
     }
 
-    @GetMapping("{roundId}/speaker")
-    public List<Image> getRoundSpeakerInfo(@PathVariable Long roundId) {
-        return roundService.getSpeakerImages(roundId);
-    }
-
-    // TODO
-    @GetMapping("{roundId}/listener")
-    public Round getRoundListenerInfo(@PathVariable Long roundId) {
-        return roundService.getRoundListenerInfo(roundId);
+    @GetMapping("{roundId}/images/{userId}")
+    public List<Image> getImages(@PathVariable Long roundId, @PathVariable Long userId) {
+        return roundService.getImages(roundId, userId);
     }
 
     // TODO

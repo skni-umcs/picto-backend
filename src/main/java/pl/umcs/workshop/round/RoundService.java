@@ -8,6 +8,7 @@ import org.springframework.web.server.ResponseStatusException;
 import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.game.GameRepository;
 import pl.umcs.workshop.image.Image;
+import pl.umcs.workshop.image.ImageRepository;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserInfo;
 import pl.umcs.workshop.user.UserRepository;
@@ -25,6 +26,9 @@ public class RoundService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ImageRepository imageRepository;
 
     public Round getNextRound(Long userId) {
         // Check what generation the user is on
@@ -48,19 +52,18 @@ public class RoundService {
         return roundRepository.getNextRound(user.getGameId(), userId, user.getGeneration() + 1);
     }
 
-    public List<Image> getSpeakerImages(Long roundId) {
-        
+    public List<Image> getImages(Long roundId, Long userId) {
+        Round round = roundRepository.findById(roundId).orElse(null);
+
+        if (round == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Round not found");
+        }
+
+        // SELECT * FROM images INNER JOIN rounds ON images.id = rounds.id WHERE rounds.id = `roundId` AND rounds.user_id = `userId`;
 
         return null;
     }
 
-    public Round getRoundListenerInfo(Long roundId) {
-        // Get and return round listener data from the database
-
-        return null;
-    }
-
-    // Speaker is always user_1
     public Round saveRoundSpeakerInfo(@NotNull UserInfo userInfo) {
         Round round = roundRepository.findById(userInfo.getRoundId()).orElse(null);
 
@@ -69,6 +72,8 @@ public class RoundService {
         }
 
         round.setUserOneAnswerTime(userInfo.getAnswerTime());
+
+        // TODO: updateUserLastSeen from UserService validity
 
         return roundRepository.save(round);
     }
@@ -82,6 +87,8 @@ public class RoundService {
 
         round.setUserTwoAnswerTime(userInfo.getAnswerTime());
         round.setImageSelected(userInfo.getImageSelected());
+
+        // TODO: updateUserLastSeen from UserService validity
 
         return roundRepository.save(round);
     }
