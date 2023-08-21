@@ -58,7 +58,6 @@ public class UserServiceTests {
     public void givenUserObjectAndId_whenUpdateUser_thenReturnUserObject() {
         // given
         given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
-
         given(userRepository.save(user)).willReturn(user);
 
         // TODO: make this unique or figure out how we want to update users
@@ -75,8 +74,7 @@ public class UserServiceTests {
     @Test
     public void givenUserId_whenRemoveUser_thenNothing() {
         // given
-        int userId = 1;
-        willDoNothing().given(userRepository).deleteById(userId);
+        willDoNothing().given(userRepository).deleteById(1);
 
         // when
         userService.deleteUser(user.getId());

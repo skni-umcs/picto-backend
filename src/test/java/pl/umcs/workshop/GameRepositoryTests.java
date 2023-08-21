@@ -50,7 +50,7 @@ public class GameRepositoryTests {
     public void getGameTest() {
         Game game = gameRepository.findById(1).orElse(null);
 
-        assert game != null;
+        Assertions.assertThat(game).isNotNull();
         Assertions.assertThat(game.getId()).isEqualTo(1);
         Assertions.assertThat(game.getCreateDateTime()).isNotNull();
     }
@@ -83,7 +83,7 @@ public class GameRepositoryTests {
     public void updateGameTest() {
         Game game = gameRepository.findById(1).orElse(null);
 
-        assert game != null;
+        Assertions.assertThat(game).isNotNull();
         game.setUserOneNumberOfImages(4);
 
         Game savedGame = gameRepository.save(game);
@@ -97,7 +97,7 @@ public class GameRepositoryTests {
     public void deleteGameTest() {
         Game game = gameRepository.findById(1).orElse(null);
 
-        assert game != null;
+        Assertions.assertThat(game).isNotNull();
         gameRepository.delete(game);
 
         Game gameCheck = null;

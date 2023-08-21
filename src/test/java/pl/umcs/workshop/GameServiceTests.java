@@ -112,8 +112,8 @@ public class GameServiceTests {
                 .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
                 .cookie(new Cookie("cookieOne", "valueOfCookieOne"))
                 .build();
-        given(userRepository.findById(1)).willReturn(
-                Optional.of(user));
+
+        given(userRepository.findById(1)).willReturn(Optional.of(user));
         given(gameRepository.findById(1)).willReturn(Optional.of(game));
         given(userRepository.save(user)).willReturn(user);
 

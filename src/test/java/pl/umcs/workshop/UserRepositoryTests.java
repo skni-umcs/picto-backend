@@ -44,7 +44,7 @@ public class UserRepositoryTests {
     public void getUserTest() {
         User user = userRepository.findById(1).orElse(null);
 
-        assert user != null;
+        Assertions.assertThat(user).isNotNull();
         Assertions.assertThat(user.getId()).isEqualTo(1);
     }
 
@@ -87,7 +87,7 @@ public class UserRepositoryTests {
     public void updateUserTest() {
         User user = userRepository.findById(3).orElse(null);
 
-        assert user != null;
+        Assertions.assertThat(user).isNotNull();
         Assertions.assertThat(user.getScore()).isEqualTo(17);
 
         user.setScore(user.getScore() + -2);
@@ -104,7 +104,7 @@ public class UserRepositoryTests {
     public void deleteUserTest() {
         User user = userRepository.findById(1).orElse(null);
 
-        assert user != null;
+        Assertions.assertThat(user).isNotNull();
         userRepository.delete(user);
 
         User userCheck = null;

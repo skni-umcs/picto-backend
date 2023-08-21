@@ -5,45 +5,45 @@ import org.springframework.web.bind.annotation.*;
 import pl.umcs.workshop.user.UserInfo;
 
 @RestController
+@RequestMapping("round/")
 public class RoundController {
     RoundService roundService;
 
-    // TODO change to manual wiring
     @Autowired
     public RoundController(RoundService roundService) {
         this.roundService = roundService;
     }
 
-    @GetMapping("round/next/{userId}")
+    @GetMapping("next/{userId}")
     public Round getNextRound(@PathVariable int userId) {
         return roundService.getNextRound(userId);
     }
 
     // TODO
-    @GetMapping("round/{roundId}/speaker")
+    @GetMapping("{roundId}/speaker")
     public Round getRoundSpeakerInfo(@PathVariable int roundId) {
         return roundService.getRoundSpeakerInfo(roundId);
     }
 
     // TODO
-    @GetMapping("round/{roundId}/listener")
+    @GetMapping("{roundId}/listener")
     public Round getRoundListenerInfo(@PathVariable int roundId) {
         return roundService.getRoundListenerInfo(roundId);
     }
 
     // TODO
-    @PostMapping("round/{roundId}/speaker")
+    @PostMapping("{roundId}/speaker")
     public Round saveRoundSpeakerInfo(@RequestBody UserInfo userInfo) {
         return roundService.saveRoundSpeakerInfo(userInfo);
     }
 
     // TODO
-    @PostMapping("round/{roundId}/listener")
+    @PostMapping("{roundId}/listener")
     public Round saveRoundListenerInfo(@RequestBody UserInfo userInfo) {
         return roundService.saveRoundListenerInfo(userInfo);
     }
 
-    @GetMapping("round/{roundId}/result")
+    @GetMapping("{roundId}/result")
     public RoundResult getRoundResult(@PathVariable int roundId) {
         return roundService.getRoundResult(roundId);
     }

@@ -41,7 +41,7 @@ public class TopologyRepositoryTests {
     public void getTopologyTest() {
         Topology topology = topologyRepository.findById(1).orElse(null);
 
-        assert topology != null;
+        Assertions.assertThat(topology).isNotNull();
         Assertions.assertThat(topology.getId()).isEqualTo(1);
     }
 
@@ -65,7 +65,7 @@ public class TopologyRepositoryTests {
     public void updateTopologyTest() {
         Topology topology = topologyRepository.findById(1).orElse(null);
 
-        assert topology != null;
+        Assertions.assertThat(topology).isNotNull();
         Assertions.assertThat(topology.getNumberOfSets()).isEqualTo(3);
 
         topology.setNumberOfSets(4);
@@ -82,7 +82,7 @@ public class TopologyRepositoryTests {
     public void deleteTopologyTest() {
         Topology topology = topologyRepository.findById(1).orElse(null);
 
-        assert topology != null;
+        Assertions.assertThat(topology).isNotNull();
         topologyRepository.delete(topology);
 
         Topology topologyCheck = null;
