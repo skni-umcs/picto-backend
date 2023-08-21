@@ -16,10 +16,10 @@ import java.time.LocalDateTime;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(name = "game_id", nullable = false)
-    private int gameId;
+    private Long gameId;
 
     @Column(name = "score", nullable = false)
     private int score;

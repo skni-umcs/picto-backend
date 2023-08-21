@@ -25,14 +25,14 @@ public class RoundRepositoryTests {
     @Order(value = 1)
     public void saveRoundTest() {
         Round round = Round.builder()
-                .gameId(3)
+                .gameId(3L)
                 .generation(15)
-                .userOneId(34)
-                .userTwoId(17)
+                .userOneId(34L)
+                .userTwoId(17L)
                 .userOneAnswerTime(3.52)
                 .userTwoAnswerTime(2.61)
-                .topic(4)
-                .imageSelected(4)
+                .topic(4L)
+                .imageSelected(4L)
                 .build();
 
         roundRepository.save(round);
@@ -43,7 +43,7 @@ public class RoundRepositoryTests {
     @Test
     @Order(value = 2)
     public void getRoundTest() {
-        Round round = roundRepository.findById(1).orElse(null);
+        Round round = roundRepository.findById(1L).orElse(null);
 
         Assertions.assertThat(round).isNotNull();
         Assertions.assertThat(round.getId()).isEqualTo(1);
@@ -53,14 +53,14 @@ public class RoundRepositoryTests {
     @Order(value = 3)
     public void getListOfAllRoundsTest() {
         Round round = Round.builder()
-                .gameId(1)
+                .gameId(1L)
                 .generation(4)
-                .userOneId(8)
-                .userTwoId(4)
+                .userOneId(8L)
+                .userTwoId(4L)
                 .userOneAnswerTime(6.17)
                 .userTwoAnswerTime(1.53)
-                .topic(3)
-                .imageSelected(7)
+                .topic(3L)
+                .imageSelected(7L)
                 .build();
 
         roundRepository.save(round);
@@ -73,12 +73,12 @@ public class RoundRepositoryTests {
     @Test
     @Order(value = 4)
     public void updateRoundTest() {
-        Round round = roundRepository.findById(1).orElse(null);
+        Round round = roundRepository.findById(1L).orElse(null);
 
         assert round != null;
         Assertions.assertThat(round.getImageSelected()).isEqualTo(4);
 
-        round.setImageSelected(7);
+        round.setImageSelected(7L);
 
         Round savedRound = roundRepository.save(round);
 
@@ -90,13 +90,13 @@ public class RoundRepositoryTests {
     @Test
     @Order(value = 5)
     public void deleteRoundTest() {
-        Round round = roundRepository.findById(1).orElse(null);
+        Round round = roundRepository.findById(1L).orElse(null);
 
         Assertions.assertThat(round).isNotNull();
         roundRepository.delete(round);
 
         Round roundCheck = null;
-        Optional<Round> roundOptional = roundRepository.findById(1);
+        Optional<Round> roundOptional = roundRepository.findById(1L);
 
         if (roundOptional.isPresent()) {
             roundCheck = roundOptional.get();

@@ -28,7 +28,7 @@ public class UserRepositoryTests {
     @Order(value = 1)
     public void saveUserTest() {
         User user = User.builder()
-                .gameId(1)
+                .gameId(1L)
                 .score(6)
                 .lastSeen(LocalDateTime.now())
                 .cookie(new Cookie("FirstUser", "value"))
@@ -42,7 +42,7 @@ public class UserRepositoryTests {
     @Test
     @Order(value = 2)
     public void getUserTest() {
-        User user = userRepository.findById(1).orElse(null);
+        User user = userRepository.findById(1L).orElse(null);
 
         Assertions.assertThat(user).isNotNull();
         Assertions.assertThat(user.getId()).isEqualTo(1);
@@ -52,7 +52,7 @@ public class UserRepositoryTests {
     @Order(value = 3)
     public void getListOfAllUsersTest() {
         User user = User.builder()
-                .gameId(2)
+                .gameId(2L)
                 .score(11)
                 .lastSeen(LocalDateTime.now())
                 .cookie(new Cookie("SecondUser", "this_is_a_value"))
@@ -69,7 +69,7 @@ public class UserRepositoryTests {
     @Order(value = 4)
     public void getListOfAllUsersByGameIdTest() {
         User user = User.builder()
-                .gameId(1)
+                .gameId(1L)
                 .score(17)
                 .lastSeen(LocalDateTime.now())
                 .cookie(new Cookie("ThirdUser", "this_is_a_different_value"))
@@ -77,7 +77,7 @@ public class UserRepositoryTests {
 
         userRepository.save(user);
 
-        List<User> users = userRepository.findAllByGameId(1);
+        List<User> users = userRepository.findAllByGameId(1L);
 
         Assertions.assertThat(users.size()).isEqualTo(2);
     }
@@ -85,7 +85,7 @@ public class UserRepositoryTests {
     @Test
     @Order(value = 5)
     public void updateUserTest() {
-        User user = userRepository.findById(3).orElse(null);
+        User user = userRepository.findById(3L).orElse(null);
 
         Assertions.assertThat(user).isNotNull();
         Assertions.assertThat(user.getScore()).isEqualTo(17);
@@ -102,13 +102,13 @@ public class UserRepositoryTests {
     @Test
     @Order(value = 6)
     public void deleteUserTest() {
-        User user = userRepository.findById(1).orElse(null);
+        User user = userRepository.findById(1L).orElse(null);
 
         Assertions.assertThat(user).isNotNull();
         userRepository.delete(user);
 
         User userCheck = null;
-        Optional<User> userOptional = userRepository.findById(1);
+        Optional<User> userOptional = userRepository.findById(1L);
 
         if (userOptional.isPresent()) {
             userCheck = userOptional.get();

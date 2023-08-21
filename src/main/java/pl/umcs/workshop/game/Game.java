@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class Game {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(name = "user_1_number_of_images", nullable = false)
     private int userOneNumberOfImages;
@@ -42,7 +42,7 @@ public class Game {
     private int wrongAnswerPoints;
 
     @Column(name = "topology_id")
-    private int topologyId;
+    private Long topologyId;
 
     @Column(name = "probability_of_edge_redrawing")
     private double probabilityOfEdgeRedrawing;

@@ -38,7 +38,7 @@ public class GameControllerTests {
                 .symbolsInGroupAmount(4)
                 .correctAnswerPoints(1)
                 .wrongAnswerPoints(-1)
-                .topologyId(1)
+                .topologyId(1L)
                 .probabilityOfEdgeRedrawing(0.2)
                 .maxVertexDegree(2)
                 .createDateTime(LocalDateTime.now())

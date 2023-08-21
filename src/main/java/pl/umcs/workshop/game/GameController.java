@@ -6,7 +6,6 @@ import pl.umcs.workshop.user.User;
 
 import java.util.List;
 
-// TODO: refactor /game to entire controller mapping
 @RestController
 @RequestMapping("game/")
 public class GameController {
@@ -26,29 +25,29 @@ public class GameController {
     // TODO: begin game method
     @PostMapping("{gameId}/admin/begin")
     // Returns list of round ids
-    public Game beginGame(@PathVariable int gameId) {
+    public Game beginGame(@PathVariable Long gameId) {
         return gameService.beginGame(gameId);
     }
 
-    @PostMapping("{gameId}/admin/end")
-    public Game endGame(@PathVariable int gameId) {
-        return gameService.endGame(gameId);
-    }
-
     @PostMapping("{gameId}/join")
-    public User joinGame(@PathVariable int gameId) {
+    public User joinGame(@PathVariable Long gameId) {
         return gameService.joinGame(gameId);
     }
 
     @PostMapping("{gameId}/join/{userId}")
-    public User joinGameAsUser(@PathVariable int gameId, @PathVariable int userId) {
+    public User joinGameAsUser(@PathVariable Long gameId, @PathVariable Long userId) {
         return gameService.joinGameAsUser(gameId, userId);
+    }
+
+    @PostMapping("{gameId}/admin/end")
+    public Game endGame(@PathVariable Long gameId) {
+        return gameService.endGame(gameId);
     }
 
     // TODO
     @PostMapping("{gameId}/admin/summary")
     // TODO: create summary config entity to pass as a parameter
-    public List<Integer> generateGameSummary(@PathVariable int gameId) {
+    public List<Integer> generateGameSummary(@PathVariable Long gameId) {
         return gameService.generateGameSummary(gameId);
     }
 

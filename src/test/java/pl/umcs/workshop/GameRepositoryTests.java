@@ -34,7 +34,7 @@ public class GameRepositoryTests {
                 .symbolsInGroupAmount(4)
                 .correctAnswerPoints(1)
                 .wrongAnswerPoints(-1)
-                .topologyId(1)
+                .topologyId(1L)
                 .probabilityOfEdgeRedrawing(0.25)
                 .maxVertexDegree(4)
                 .createDateTime(LocalDateTime.now())
@@ -48,7 +48,7 @@ public class GameRepositoryTests {
     @Test
     @Order(value = 2)
     public void getGameTest() {
-        Game game = gameRepository.findById(1).orElse(null);
+        Game game = gameRepository.findById(1L).orElse(null);
 
         Assertions.assertThat(game).isNotNull();
         Assertions.assertThat(game.getId()).isEqualTo(1);
@@ -67,7 +67,7 @@ public class GameRepositoryTests {
                 .symbolsInGroupAmount(2)
                 .correctAnswerPoints(2)
                 .wrongAnswerPoints(-1)
-                .topologyId(3)
+                .topologyId(3L)
                 .createDateTime(LocalDateTime.now())
                 .build();
 
@@ -81,7 +81,7 @@ public class GameRepositoryTests {
     @Test
     @Order(value = 4)
     public void updateGameTest() {
-        Game game = gameRepository.findById(1).orElse(null);
+        Game game = gameRepository.findById(1L).orElse(null);
 
         Assertions.assertThat(game).isNotNull();
         game.setUserOneNumberOfImages(4);
@@ -95,13 +95,13 @@ public class GameRepositoryTests {
     @Test
     @Order(value = 5)
     public void deleteGameTest() {
-        Game game = gameRepository.findById(1).orElse(null);
+        Game game = gameRepository.findById(1L).orElse(null);
 
         Assertions.assertThat(game).isNotNull();
         gameRepository.delete(game);
 
         Game gameCheck = null;
-        Optional<Game> gameOptional = gameRepository.findById(1);
+        Optional<Game> gameOptional = gameRepository.findById(1L);
 
         if (gameOptional.isPresent()) {
             gameCheck = gameOptional.get();

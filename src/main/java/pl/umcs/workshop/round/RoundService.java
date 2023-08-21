@@ -7,9 +7,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.game.GameRepository;
+import pl.umcs.workshop.image.Image;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserInfo;
 import pl.umcs.workshop.user.UserRepository;
+
+import java.util.List;
+import java.util.Objects;
 
 @Service
 public class RoundService {
@@ -22,7 +26,7 @@ public class RoundService {
     @Autowired
     private UserRepository userRepository;
 
-    public Round getNextRound(int userId) {
+    public Round getNextRound(Long userId) {
         // Check what generation the user is on
         User user = userRepository.findById(userId).orElse(null);
 
@@ -44,13 +48,13 @@ public class RoundService {
         return roundRepository.getNextRound(user.getGameId(), userId, user.getGeneration() + 1);
     }
 
-    public Round getRoundSpeakerInfo(int roundId) {
-        // Get and return round speaker data from the database
+    public List<Image> getSpeakerImages(Long roundId) {
+        
 
         return null;
     }
 
-    public Round getRoundListenerInfo(int roundId) {
+    public Round getRoundListenerInfo(Long roundId) {
         // Get and return round listener data from the database
 
         return null;
@@ -82,7 +86,7 @@ public class RoundService {
         return roundRepository.save(round);
     }
 
-    public RoundResult getRoundResult(int roundId) {
+    public RoundResult getRoundResult(Long roundId) {
         Round round = roundRepository.findById(roundId).orElse(null);
 
         if (round == null) {
@@ -103,6 +107,6 @@ public class RoundService {
     }
 
     public boolean isImageCorrect(@NotNull Round round) {
-        return round.getImageSelected() == round.getTopic();
+        return Objects.equals(round.getImageSelected(), round.getTopic());
     }
 }

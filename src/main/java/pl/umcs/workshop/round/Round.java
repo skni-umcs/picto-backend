@@ -13,19 +13,19 @@ import lombok.*;
 public class Round {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(name = "game_id", nullable = false)
-    private int gameId;
+    private Long gameId;
 
     @Column(name = "generation", nullable = false)
     private int generation;
 
     @Column(name = "user_1_id", nullable = false)
-    private int userOneId;
+    private Long userOneId;
 
     @Column(name = "user_2_id", nullable = false)
-    private int userTwoId;
+    private Long userTwoId;
 
     @Column(name = "user_1_answer_time")
     private double userOneAnswerTime;
@@ -34,8 +34,8 @@ public class Round {
     private double userTwoAnswerTime;
 
     @Column(name = "topic", nullable = false)
-    private int topic;
+    private Long topic;
 
     @Column(name = "image_selected")
-    private int imageSelected;
+    private Long imageSelected;
 }

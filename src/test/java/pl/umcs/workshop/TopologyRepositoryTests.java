@@ -39,7 +39,7 @@ public class TopologyRepositoryTests {
     @Test
     @Order(value = 2)
     public void getTopologyTest() {
-        Topology topology = topologyRepository.findById(1).orElse(null);
+        Topology topology = topologyRepository.findById(1L).orElse(null);
 
         Assertions.assertThat(topology).isNotNull();
         Assertions.assertThat(topology.getId()).isEqualTo(1);
@@ -63,7 +63,7 @@ public class TopologyRepositoryTests {
     @Test
     @Order(value = 4)
     public void updateTopologyTest() {
-        Topology topology = topologyRepository.findById(1).orElse(null);
+        Topology topology = topologyRepository.findById(1L).orElse(null);
 
         Assertions.assertThat(topology).isNotNull();
         Assertions.assertThat(topology.getNumberOfSets()).isEqualTo(3);
@@ -80,13 +80,13 @@ public class TopologyRepositoryTests {
     @Test
     @Order(value = 5)
     public void deleteTopologyTest() {
-        Topology topology = topologyRepository.findById(1).orElse(null);
+        Topology topology = topologyRepository.findById(1L).orElse(null);
 
         Assertions.assertThat(topology).isNotNull();
         topologyRepository.delete(topology);
 
         Topology topologyCheck = null;
-        Optional<Topology> topologyOptional = topologyRepository.findById(1);
+        Optional<Topology> topologyOptional = topologyRepository.findById(1L);
 
         if (topologyOptional.isPresent()) {
             topologyCheck = topologyOptional.get();

@@ -44,7 +44,7 @@ public class RoundServiceTests {
     @BeforeEach
     public void setup() {
         game = Game.builder()
-                .id(1)
+                .id(1L)
                 .userOneNumberOfImages(4)
                 .userTwoNumberOfImages(4)
                 .userOneTime(5)
@@ -53,39 +53,39 @@ public class RoundServiceTests {
                 .symbolsInGroupAmount(4)
                 .correctAnswerPoints(1)
                 .wrongAnswerPoints(-1)
-                .topologyId(1)
+                .topologyId(1L)
                 .createDateTime(LocalDateTime.now())
                 .build();
 
         round = Round.builder()
-                .id(1)
-                .gameId(1)
+                .id(1L)
+                .gameId(1L)
                 .generation(4)
-                .userOneId(1)
-                .userTwoId(6)
+                .userOneId(1L)
+                .userTwoId(6L)
                 .userTwoAnswerTime(7)
                 .userTwoAnswerTime(8)
-                .topic(9)
-                .imageSelected(9)
+                .topic(9L)
+                .imageSelected(9L)
                 .build();
     }
 
     @Test
     public void givenUserId_whenGetNextRound_thenReturnRoundObject() {
         // given
-        given(userRepository.findById(1)).willReturn(Optional.of(User.builder()
-                .id(1)
-                .gameId(1)
+        given(userRepository.findById(1L)).willReturn(Optional.of(User.builder()
+                .id(1L)
+                .gameId(1L)
                 .score(11)
                 .generation(3)
                 .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
                 .cookie(new Cookie("cookieOne", "valueOfCookieOne"))
                 .build()));
-        given(gameRepository.findById(1)).willReturn(Optional.of(game));
-        given(roundRepository.getNextRound(1, 1, 4)).willReturn(round);
+        given(gameRepository.findById(1L)).willReturn(Optional.of(game));
+        given(roundRepository.getNextRound(1L, 1L, 4)).willReturn(round);
 
         // when
-        Round nextRound = roundService.getNextRound(1);
+        Round nextRound = roundService.getNextRound(1L);
 
         // then
         Assertions.assertThat(nextRound).isNotNull();
@@ -96,10 +96,10 @@ public class RoundServiceTests {
     @Test
     public void givenUserId_whenGetNextRoundForInvalidUser_thenThrowUserNotFound() {
         // given
-        given(userRepository.findById(1)).willReturn(Optional.empty());
+        given(userRepository.findById(1L)).willReturn(Optional.empty());
 
         // then (with when)
-        Assertions.assertThatThrownBy(() -> roundService.getNextRound(1))
+        Assertions.assertThatThrownBy(() -> roundService.getNextRound(1L))
                 .isInstanceOf(ResponseStatusException.class)
                 .hasMessageContaining("User not found");
     }
@@ -107,18 +107,18 @@ public class RoundServiceTests {
     @Test
     public void givenUserId_whenGetNextRoundForInvalidGame_thenThrowGameNotFound() {
         // given
-        given(userRepository.findById(1)).willReturn(Optional.of(User.builder()
-                .id(1)
-                .gameId(2)
+        given(userRepository.findById(1L)).willReturn(Optional.of(User.builder()
+                .id(1L)
+                .gameId(2L)
                 .score(11)
                 .generation(3)
                 .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
                 .cookie(new Cookie("cookieOne", "valueOfCookieOne"))
                 .build()));
-        given(gameRepository.findById(2)).willReturn(Optional.empty());
+        given(gameRepository.findById(2L)).willReturn(Optional.empty());
 
         // then (with when)
-        Assertions.assertThatThrownBy(() -> roundService.getNextRound(1))
+        Assertions.assertThatThrownBy(() -> roundService.getNextRound(1L))
                 .isInstanceOf(ResponseStatusException.class)
                 .hasMessageContaining("Game not found");
     }
@@ -126,16 +126,16 @@ public class RoundServiceTests {
     @Test
     public void givenUserId_whenGetNextRoundForEndedGame_thenThrowGameHasEnded() {
         // given
-        given(userRepository.findById(1)).willReturn(Optional.of(User.builder()
-                .id(1)
-                .gameId(2)
+        given(userRepository.findById(1L)).willReturn(Optional.of(User.builder()
+                .id(1L)
+                .gameId(2L)
                 .score(11)
                 .generation(3)
                 .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
                 .cookie(new Cookie("cookieOne", "valueOfCookieOne"))
                 .build()));
-        given(gameRepository.findById(2)).willReturn(Optional.of(Game.builder()
-                .id(1)
+        given(gameRepository.findById(2L)).willReturn(Optional.of(Game.builder()
+                .id(1L)
                 .userOneNumberOfImages(4)
                 .userTwoNumberOfImages(4)
                 .userOneTime(5)
@@ -144,13 +144,13 @@ public class RoundServiceTests {
                 .symbolsInGroupAmount(4)
                 .correctAnswerPoints(1)
                 .wrongAnswerPoints(-1)
-                .topologyId(1)
+                .topologyId(1L)
                 .createDateTime(LocalDateTime.of(2023, 4, 13, 16, 53))
                 .endDateTime(LocalDateTime.now())
                 .build()));
 
         // then (with when)
-        Assertions.assertThatThrownBy(() -> roundService.getNextRound(1))
+        Assertions.assertThatThrownBy(() -> roundService.getNextRound(1L))
                 .isInstanceOf(ResponseStatusException.class)
                 .hasMessageContaining("Game has ended");
     }
@@ -190,8 +190,8 @@ public class RoundServiceTests {
     @Test
     public void givenRoundId_whenGetRoundResult_thenReturnPointsGottenOnCorrect() {
         // given
-        given(gameRepository.findById(1)).willReturn(Optional.of(game));
-        given(roundRepository.findById(1)).willReturn(Optional.of(round));
+        given(gameRepository.findById(1L)).willReturn(Optional.of(game));
+        given(roundRepository.findById(1L)).willReturn(Optional.of(round));
 
         // when
         RoundResult roundResult = roundService.getRoundResult(round.getId());
@@ -204,11 +204,11 @@ public class RoundServiceTests {
     @Test
     public void givenRoundId_whenGetRoundResult_thenReturnPointsGottenOnWrong() {
         // given
-        given(gameRepository.findById(1)).willReturn(Optional.empty());
-        given(roundRepository.findById(1)).willReturn(Optional.of(round));
+        given(gameRepository.findById(1L)).willReturn(Optional.empty());
+        given(roundRepository.findById(1L)).willReturn(Optional.of(round));
 
         // then
-        Assertions.assertThatThrownBy(() -> roundService.getRoundResult(1))
+        Assertions.assertThatThrownBy(() -> roundService.getRoundResult(1L))
                 .isInstanceOf(ResponseStatusException.class)
                 .hasMessageContaining("Game not found");
     }
@@ -216,10 +216,10 @@ public class RoundServiceTests {
     @Test
     public void givenInvalidRoundId_whenGetRoundResult_thenThrowRoundNotFound() {
         // given
-        given(roundRepository.findById(1)).willReturn(Optional.empty());
+        given(roundRepository.findById(1L)).willReturn(Optional.empty());
 
         // then
-        Assertions.assertThatThrownBy(() -> roundService.getRoundResult(1))
+        Assertions.assertThatThrownBy(() -> roundService.getRoundResult(1L))
                 .isInstanceOf(ResponseStatusException.class)
                 .hasMessageContaining("Round not found");
     }
@@ -227,10 +227,10 @@ public class RoundServiceTests {
     @Test
     public void givenRoundIdForInvalidGame_whenGetRoundResult_thenThrowGameNotFound() {
         // given
-        given(roundRepository.findById(1)).willReturn(Optional.empty());
+        given(roundRepository.findById(1L)).willReturn(Optional.empty());
 
         // then
-        Assertions.assertThatThrownBy(() -> roundService.getRoundResult(1))
+        Assertions.assertThatThrownBy(() -> roundService.getRoundResult(1L))
                 .isInstanceOf(ResponseStatusException.class)
                 .hasMessageContaining("Round not found");
     }
@@ -248,15 +248,15 @@ public class RoundServiceTests {
     public void givenRoundObject_whenIsImageCorrect_thenReturnBooleanOnWrong() {
         // given
         Round round = Round.builder()
-                .id(2)
-                .gameId(1)
+                .id(2L)
+                .gameId(1L)
                 .generation(3)
-                .userOneId(5)
-                .userTwoId(6)
+                .userOneId(5L)
+                .userTwoId(6L)
                 .userTwoAnswerTime(7)
                 .userTwoAnswerTime(8)
-                .topic(7)
-                .imageSelected(11)
+                .topic(7L)
+                .imageSelected(11L)
                 .build();
 
         // when

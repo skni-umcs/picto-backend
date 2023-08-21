@@ -10,18 +10,18 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("{userId}")
-    public User getUser(@PathVariable int userId) {
+    public User getUser(@PathVariable Long userId) {
         return userService.getUser(userId);
     }
 
     // TODO
     @PutMapping("{userId}")
-    public User updateUser(@PathVariable int userId, @RequestBody User user) {
+    public User updateUser(@PathVariable Long userId, @RequestBody User user) {
         return userService.updateUser(userId, user);
     }
 
     @DeleteMapping("{userId}")
-    public void deleteUser(@PathVariable int userId) {
+    public void deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);
     }
 }

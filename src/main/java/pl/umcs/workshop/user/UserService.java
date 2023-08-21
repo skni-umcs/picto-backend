@@ -10,7 +10,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User getUser(int userId) {
+    public User getUser(Long userId) {
         User user = userRepository.findById(userId).orElse(null);
 
         if (user == null) {
@@ -21,7 +21,7 @@ public class UserService {
     }
 
     // TODO
-    public User updateUser(int userId, User userToUpdate) {
+    public User updateUser(Long userId, User userToUpdate) {
         User user = userRepository.findById(userId).orElse(null);
 
         if (user == null) {
@@ -38,7 +38,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void deleteUser(int userId) {
+    public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
     }
 }

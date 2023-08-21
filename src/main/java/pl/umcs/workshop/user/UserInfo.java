@@ -11,9 +11,9 @@ import java.util.List;
 @Builder
 // TODO: this as a parent and SpeakerInfo and ListenerInfo children?
 public class UserInfo {
-    private int userId;
-    private int roundId;
+    private Long userId;
+    private Long roundId;
     private int answerTime;
-    private int imageSelected;
-    private List<Integer> symbolsSelected;
+    private Long imageSelected;
+    private List<Long> symbolsSelected;
 }

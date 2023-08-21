@@ -33,8 +33,8 @@ public class UserServiceTests {
     @BeforeEach
     public void setup() {
         user = User.builder()
-                .id(1)
-                .gameId(1)
+                .id(1L)
+                .gameId(1L)
                 .score(11)
                 .lastSeen(LocalDateTime.now())
                 .cookie(new Cookie("cookieOne", "valueOfCookieOne"))
@@ -44,7 +44,7 @@ public class UserServiceTests {
     @Test
     public void givenUserId_whenGetUser_thenReturnUserObject() {
         // given
-        given(userRepository.findById(1)).willReturn(Optional.of(user));
+        given(userRepository.findById(1L)).willReturn(Optional.of(user));
 
         // when
         User foundUser = userService.getUser(user.getId());
@@ -74,7 +74,7 @@ public class UserServiceTests {
     @Test
     public void givenUserId_whenRemoveUser_thenNothing() {
         // given
-        willDoNothing().given(userRepository).deleteById(1);
+        willDoNothing().given(userRepository).deleteById(1L);
 
         // when
         userService.deleteUser(user.getId());

@@ -34,7 +34,7 @@ public class GameService {
     }
 
     // TODO: begin game method
-    public Game beginGame(int gameId) {
+    public Game beginGame(Long gameId) {
         // Get all users for given game
         List<User> users = userRepository.findAllByGameId(gameId);
 
@@ -57,7 +57,7 @@ public class GameService {
         return null;
     }
 
-    public User joinGame(int gameId) {
+    public User joinGame(Long gameId) {
         Game game = gameRepository.findById(gameId).orElse(null);
 
         if (game == null) {
@@ -81,7 +81,7 @@ public class GameService {
         return userRepository.save(user);
     }
 
-    public User joinGameAsUser(int gameId, int userId) {
+    public User joinGameAsUser(Long gameId, Long userId) {
         User user = userRepository.findById(userId).orElse(null);
 
         if (user == null) {
@@ -103,11 +103,15 @@ public class GameService {
         return userRepository.save(user);
     }
 
-    public Game endGame(int gameId) {
+    public Game endGame(Long gameId) {
         Game game = gameRepository.findById(gameId).orElse(null);
 
         if (game == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
+        }
+
+        if (game.getEndDateTime() != null) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game has already ended");
         }
         game.setEndDateTime(LocalDateTime.now());
 
@@ -117,7 +121,7 @@ public class GameService {
     }
 
     // TODO: generate game summary method
-    public List<Integer> generateGameSummary(int gameId) {
+    public List<Integer> generateGameSummary(Long gameId) {
         // Summarize data from the game using config given as the parameter
         // (e.g. number of generations, players to exclude etc.)
         // Generate points to use in chart
@@ -125,7 +129,7 @@ public class GameService {
         return null;
     }
 
-    public @NotNull List<User> deleteUserCookies(int gameId) {
+    public @NotNull List<User> deleteUserCookies(Long gameId) {
         List<User> users = userRepository.findAllByGameId(gameId);
         for (User user : users) {
             user.setCookie(null);
