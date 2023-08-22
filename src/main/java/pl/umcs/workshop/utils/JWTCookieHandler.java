@@ -15,7 +15,7 @@ public class JWTCookieHandler {
     static Algorithm algorithm = Algorithm.HMAC256(secret);
     static JWTVerifier verifier = JWT.require(algorithm)
             .withIssuer("picto")
-            .build();;
+            .build();
 
 //    JWTCookieHandler() {
 //        algorithm = Algorithm.HMAC256(secret);
