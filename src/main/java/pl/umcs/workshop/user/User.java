@@ -30,6 +30,6 @@ public class User {
     @Column(name = "last_seen", nullable = false)
     private LocalDateTime lastSeen;
 
-    @Column(name = "cookie")
-    private Cookie cookie;
+    @Column(name = "cookie", length = 512)
+    private String cookie;
 }

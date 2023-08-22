@@ -11,6 +11,7 @@ import pl.umcs.workshop.topology.TopologyRepository;
 import pl.umcs.workshop.topology.TopologyService;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserRepository;
+import pl.umcs.workshop.utils.JWTCookieHandler;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -68,15 +69,14 @@ public class GameService {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game has ended");
         }
 
-        Cookie cookie = new Cookie("ThisIsACookie", "eh");
-
         User user = User.builder()
                 .gameId(gameId)
                 .score(0)
                 .generation(0)
                 .lastSeen(LocalDateTime.now())
-                .cookie(cookie)
                 .build();
+
+        user.setCookie(JWTCookieHandler.createToken(user.getId()));
 
         return userRepository.save(user);
     }
@@ -98,7 +98,7 @@ public class GameService {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game has ended");
         }
 
-        user.setCookie(new Cookie("name", "value"));
+        user.setCookie(JWTCookieHandler.createToken(user.getId()));
 
         return userRepository.save(user);
     }

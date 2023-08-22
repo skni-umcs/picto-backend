@@ -27,13 +27,11 @@ public class RoundController {
         return roundService.getImages(roundId, userId);
     }
 
-    // TODO
     @PostMapping("{roundId}/speaker")
     public Round saveRoundSpeakerInfo(@RequestBody UserInfo userInfo) {
         return roundService.saveRoundSpeakerInfo(userInfo);
     }
 
-    // TODO
     @PostMapping("{roundId}/listener")
     public Round saveRoundListenerInfo(@RequestBody UserInfo userInfo) {
         return roundService.saveRoundListenerInfo(userInfo);

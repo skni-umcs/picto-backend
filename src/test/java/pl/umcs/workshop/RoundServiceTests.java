@@ -17,6 +17,7 @@ import pl.umcs.workshop.round.RoundResult;
 import pl.umcs.workshop.round.RoundService;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserRepository;
+import pl.umcs.workshop.utils.JWTCookieHandler;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -40,6 +41,8 @@ public class RoundServiceTests {
     private Game game;
 
     private Round round;
+
+    private String cookie;
 
     @BeforeEach
     public void setup() {
@@ -68,6 +71,8 @@ public class RoundServiceTests {
                 .topic(9L)
                 .imageSelected(9L)
                 .build();
+
+        cookie = JWTCookieHandler.createToken(1L);
     }
 
     @Test
@@ -79,7 +84,7 @@ public class RoundServiceTests {
                 .score(11)
                 .generation(3)
                 .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
-                .cookie(new Cookie("cookieOne", "valueOfCookieOne"))
+                .cookie(cookie)
                 .build()));
         given(gameRepository.findById(1L)).willReturn(Optional.of(game));
         given(roundRepository.getNextRound(1L, 1L, 4)).willReturn(round);
@@ -113,7 +118,7 @@ public class RoundServiceTests {
                 .score(11)
                 .generation(3)
                 .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
-                .cookie(new Cookie("cookieOne", "valueOfCookieOne"))
+                .cookie(cookie)
                 .build()));
         given(gameRepository.findById(2L)).willReturn(Optional.empty());
 
@@ -132,7 +137,7 @@ public class RoundServiceTests {
                 .score(11)
                 .generation(3)
                 .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
-                .cookie(new Cookie("cookieOne", "valueOfCookieOne"))
+                .cookie(cookie)
                 .build()));
         given(gameRepository.findById(2L)).willReturn(Optional.of(Game.builder()
                 .id(1L)

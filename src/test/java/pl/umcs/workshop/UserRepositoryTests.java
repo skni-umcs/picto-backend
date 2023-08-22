@@ -12,6 +12,7 @@ import org.springframework.test.annotation.Rollback;
 import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserRepository;
+import pl.umcs.workshop.utils.JWTCookieHandler;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,7 +32,7 @@ public class UserRepositoryTests {
                 .gameId(1L)
                 .score(6)
                 .lastSeen(LocalDateTime.now())
-                .cookie(new Cookie("FirstUser", "value"))
+                .cookie(JWTCookieHandler.createToken(1L))
                 .build();
 
         userRepository.save(user);
@@ -55,7 +56,7 @@ public class UserRepositoryTests {
                 .gameId(2L)
                 .score(11)
                 .lastSeen(LocalDateTime.now())
-                .cookie(new Cookie("SecondUser", "this_is_a_value"))
+                .cookie(JWTCookieHandler.createToken(2L))
                 .build();
 
         userRepository.save(user);
@@ -69,10 +70,11 @@ public class UserRepositoryTests {
     @Order(value = 4)
     public void getListOfAllUsersByGameIdTest() {
         User user = User.builder()
+                .id(3L)
                 .gameId(1L)
                 .score(17)
                 .lastSeen(LocalDateTime.now())
-                .cookie(new Cookie("ThirdUser", "this_is_a_different_value"))
+                .cookie(JWTCookieHandler.createToken(3L))
                 .build();
 
         userRepository.save(user);

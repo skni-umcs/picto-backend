@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserRepository;
 import pl.umcs.workshop.user.UserService;
+import pl.umcs.workshop.utils.JWTCookieHandler;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -37,7 +38,7 @@ public class UserServiceTests {
                 .gameId(1L)
                 .score(11)
                 .lastSeen(LocalDateTime.now())
-                .cookie(new Cookie("cookieOne", "valueOfCookieOne"))
+                .cookie(JWTCookieHandler.createToken(1L))
                 .build();
     }
 
