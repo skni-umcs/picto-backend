@@ -10,24 +10,18 @@ import java.util.Date;
 import java.util.UUID;
 
 public class JWTCookieHandler {
-    // TODO: move this to env for security
+    // TODO: get this from env
     private static final String secret = "test";
     static Algorithm algorithm = Algorithm.HMAC256(secret);
     static JWTVerifier verifier = JWT.require(algorithm)
             .withIssuer("picto")
             .build();
 
-//    JWTCookieHandler() {
-//        algorithm = Algorithm.HMAC256(secret);
-//        verifier = JWT.require(algorithm)
-//                .withIssuer("picto")
-//                .build();
-//    }
-
-    public static String createToken(Long userId) {
+    public static String createToken(Long gameId, Long userId) {
         return JWT.create()
                 .withIssuer("picto")
                 .withSubject("User cookie")
+                .withClaim("gameId", gameId)
                 .withClaim("userId", userId)
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 43200000L))
@@ -36,7 +30,6 @@ public class JWTCookieHandler {
                 .sign(algorithm);
     }
 
-    // TODO: should these be static
     public static DecodedJWT verifyToken(String token) {
         try {
             return verifier.verify(token);

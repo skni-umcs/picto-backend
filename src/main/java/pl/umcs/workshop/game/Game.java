@@ -2,6 +2,7 @@ package pl.umcs.workshop.game;
 
 import jakarta.persistence.*;
 import lombok.*;
+import pl.umcs.workshop.topology.Topology;
 
 import java.time.LocalDateTime;
 
@@ -41,18 +42,14 @@ public class Game {
     @Column(name = "wrong_answer_points", nullable = false)
     private int wrongAnswerPoints;
 
-    @Column(name = "topology_id")
-    private Long topologyId;
-
-    @Column(name = "probability_of_edge_redrawing")
-    private double probabilityOfEdgeRedrawing;
-
-    @Column(name = "max_vertex_degree")
-    private int maxVertexDegree;
-
     @Column(name = "create_date_time", nullable = false)
     private LocalDateTime createDateTime;
 
     @Column(name = "end_date_time")
     private LocalDateTime endDateTime;
+
+    // Relations
+    @ManyToOne
+    @JoinColumn(name = "topology_id")
+    private Topology topology;
 }

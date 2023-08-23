@@ -23,5 +23,7 @@ public class UserController {
     @DeleteMapping("{userId}")
     public void deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);
+
+        // TODO: return response no content
     }
 }

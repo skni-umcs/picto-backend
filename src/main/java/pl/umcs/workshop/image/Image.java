@@ -2,6 +2,9 @@ package pl.umcs.workshop.image;
 
 import jakarta.persistence.*;
 import lombok.*;
+import pl.umcs.workshop.round.Round;
+
+import java.util.Set;
 
 @Entity
 @Table(name = "images")
@@ -18,6 +21,13 @@ public class Image {
     @Column(name = "path", nullable = false)
     private String path;
 
-    @Column(name = "value")
-    private String value;
+    @Column(name = "group_id")
+    private Long groupId;
+
+    // Relations
+    @OneToMany(mappedBy = "image")
+    private Set<ImageUserRoundRelation> imageUserRoundRelations;
+
+    @ManyToMany
+    private Set<Group> groups;
 }

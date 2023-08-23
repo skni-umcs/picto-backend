@@ -46,9 +46,9 @@ public class GameService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
         }
 
-        // TODO: if topologyId is not present, use p and k from config to generate new topology (and return id)
-        // Generate brackets (generations and rounds) based on topology (topologyId)
-        Topology topology = topologyRepository.findById(game.getTopologyId()).orElse(null);
+        // TODO: if topology(topology) is not present, use p and k from config to generate new topology (and return id)
+        // Generate brackets (generations and rounds) based on topology (topology(topology))
+        Topology topology = topologyRepository.findById(game.getTopology().getId()).orElse(null);
 
         if (topology == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Topology not found");
@@ -76,7 +76,7 @@ public class GameService {
                 .lastSeen(LocalDateTime.now())
                 .build();
 
-        user.setCookie(JWTCookieHandler.createToken(user.getId()));
+        user.setCookie(JWTCookieHandler.createToken(game.getId(), user.getId()));
 
         return userRepository.save(user);
     }
@@ -98,7 +98,7 @@ public class GameService {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game has ended");
         }
 
-        user.setCookie(JWTCookieHandler.createToken(user.getId()));
+        user.setCookie(JWTCookieHandler.createToken(game.getId(), user.getId()));
 
         return userRepository.save(user);
     }

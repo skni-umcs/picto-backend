@@ -3,8 +3,11 @@ package pl.umcs.workshop.user;
 import jakarta.persistence.*;
 import jakarta.servlet.http.Cookie;
 import lombok.*;
+import pl.umcs.workshop.image.ImageUserRoundRelation;
+import pl.umcs.workshop.round.Round;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -32,4 +35,8 @@ public class User {
 
     @Column(name = "cookie", length = 512)
     private String cookie;
+
+    // Relations
+    @OneToMany(mappedBy = "user")
+    private Set<ImageUserRoundRelation> imageUserRoundRelations;
 }

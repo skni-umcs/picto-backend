@@ -9,7 +9,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-// TODO: this as a parent and SpeakerInfo and ListenerInfo children?
 public class UserInfo {
     private Long userId;
     private Long roundId;

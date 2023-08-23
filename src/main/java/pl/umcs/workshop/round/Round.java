@@ -2,6 +2,10 @@ package pl.umcs.workshop.round;
 
 import jakarta.persistence.*;
 import lombok.*;
+import pl.umcs.workshop.image.Image;
+import pl.umcs.workshop.image.ImageUserRoundRelation;
+
+import java.util.Set;
 
 @Entity
 @Table(name = "rounds")
@@ -38,4 +42,8 @@ public class Round {
 
     @Column(name = "image_selected")
     private Long imageSelected;
+
+    // Relations
+    @OneToMany(mappedBy = "round")
+    private Set<ImageUserRoundRelation> imageUserRoundRelations;
 }

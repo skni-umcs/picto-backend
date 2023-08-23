@@ -2,6 +2,9 @@ package pl.umcs.workshop.topology;
 
 import jakarta.persistence.*;
 import lombok.*;
+import pl.umcs.workshop.game.Game;
+
+import java.util.Set;
 
 @Entity
 @Table(name = "topologies")
@@ -15,12 +18,13 @@ public class Topology {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "probability_of_edge_redrawing")
+    private double probabilityOfEdgeRedrawing;
 
-    @Column(name = "number_of_sets")
-    private int numberOfSets;
+    @Column(name = "max_vertex_degree")
+    private int maxVertexDegree;
 
-    @Column(name = "users_in_set")
-    private int usersInSet;
+    // Relations
+    @OneToMany(mappedBy = "topology")
+    private Set<Game> games;
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Service
 public class UserService {
@@ -23,24 +24,20 @@ public class UserService {
     }
 
     // TODO
-    public User updateUser(Long userId, User userToUpdate) {
+    public User updateUser(Long userId, User updatedUser) {
         User user = userRepository.findById(userId).orElse(null);
 
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
 
-        if (user.getId() != userToUpdate.getId()) {
+        if (!Objects.equals(user.getId(), updatedUser.getId())) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "User id's don't match");
         }
 
-        // TODO: figure out what methodology we need to update this user
-        // e.g. if we need to save field by field or implement operation codes
-
-        return userRepository.save(user);
+        return userRepository.save(updatedUser);
     }
 
-    // TODO: should we call this level from RoundService to update user
     public void updateUserLastSeen(Long userId) {
         User user = userRepository.findById(userId).orElse(null);
 

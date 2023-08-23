@@ -13,13 +13,14 @@ services:
       - PICTO_DB_NAME=picto
       - PICTO_DB_USER=picto
       - PICTO_DB_PASSWORD=picto
+      - PICTO_JWT_SECRET=7oC8ha8+GIn+GUeuGJwZ1WacjA9ZLX5Q80SFyFiS
     depends_on:
       db:
         condition: service_healthy
   db:
     image: postgres
     ports:
-      - "5433:5432"
+      - "5432:5432"
     environment:
       POSTGRES_PASSWORD: picto
       POSTGRES_USER: picto
