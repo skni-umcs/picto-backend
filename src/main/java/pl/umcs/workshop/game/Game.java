@@ -2,9 +2,11 @@ package pl.umcs.workshop.game;
 
 import jakarta.persistence.*;
 import lombok.*;
+import pl.umcs.workshop.round.Round;
 import pl.umcs.workshop.topology.Topology;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "games")
@@ -49,6 +51,9 @@ public class Game {
     private LocalDateTime endDateTime;
 
     // Relations
+    @OneToMany(mappedBy = "game")
+    private Set<Round> rounds;
+
     @ManyToOne
     @JoinColumn(name = "topology_id")
     private Topology topology;

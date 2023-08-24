@@ -32,7 +32,7 @@ public class UserRepositoryTests {
                 .gameId(1L)
                 .score(6)
                 .lastSeen(LocalDateTime.now())
-                .cookie(JWTCookieHandler.createToken(1L))
+                .cookie(JWTCookieHandler.createToken(1L, 1L))
                 .build();
 
         userRepository.save(user);
@@ -56,7 +56,7 @@ public class UserRepositoryTests {
                 .gameId(2L)
                 .score(11)
                 .lastSeen(LocalDateTime.now())
-                .cookie(JWTCookieHandler.createToken(2L))
+                .cookie(JWTCookieHandler.createToken(2L, 2L))
                 .build();
 
         userRepository.save(user);
@@ -74,7 +74,7 @@ public class UserRepositoryTests {
                 .gameId(1L)
                 .score(17)
                 .lastSeen(LocalDateTime.now())
-                .cookie(JWTCookieHandler.createToken(3L))
+                .cookie(JWTCookieHandler.createToken(3L, 3L))
                 .build();
 
         userRepository.save(user);

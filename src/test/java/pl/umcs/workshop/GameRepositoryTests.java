@@ -1,6 +1,7 @@
 package pl.umcs.workshop;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
 import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.game.GameRepository;
+import pl.umcs.workshop.topology.Topology;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,6 +23,13 @@ import java.util.Optional;
 public class GameRepositoryTests {
     @Autowired
     private GameRepository gameRepository;
+
+    private Topology topology;
+
+    @BeforeEach
+    public void setup() {
+        topology = Topology.builder().build();
+    }
 
     @Test
     @Order(value = 1)
@@ -34,7 +43,7 @@ public class GameRepositoryTests {
                 .symbolsInGroupAmount(4)
                 .correctAnswerPoints(1)
                 .wrongAnswerPoints(-1)
-                .topologyId(1L)
+                .topology(topology)
                 .probabilityOfEdgeRedrawing(0.25)
                 .maxVertexDegree(4)
                 .createDateTime(LocalDateTime.now())
@@ -67,7 +76,7 @@ public class GameRepositoryTests {
                 .symbolsInGroupAmount(2)
                 .correctAnswerPoints(2)
                 .wrongAnswerPoints(-1)
-                .topologyId(3L)
+                .topology(topology)
                 .createDateTime(LocalDateTime.now())
                 .build();
 

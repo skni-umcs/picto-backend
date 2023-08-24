@@ -38,7 +38,7 @@ public class UserServiceTests {
                 .gameId(1L)
                 .score(11)
                 .lastSeen(LocalDateTime.now())
-                .cookie(JWTCookieHandler.createToken(1L))
+                .cookie(JWTCookieHandler.createToken(1L, 1L))
                 .build();
     }
 

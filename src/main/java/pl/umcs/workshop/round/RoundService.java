@@ -39,7 +39,7 @@ public class RoundService {
         }
 
         // Check if the game exists and is still in progress
-        Game game = gameRepository.findById(user.getGameId()).orElse(null);
+        Game game = gameRepository.findById(user.getGame().getId()).orElse(null);
 
         if (game == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
@@ -49,7 +49,7 @@ public class RoundService {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game has ended");
         }
 
-        return roundRepository.getNextRound(user.getGameId(), userId, user.getGeneration() + 1);
+        return roundRepository.getNextRound(user.getGame().getId(), userId, user.getGeneration() + 1);
     }
 
     public List<Image> getImages(Long roundId, Long userId) {
@@ -100,7 +100,7 @@ public class RoundService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Round not found");
         }
 
-        Game game = gameRepository.findById(round.getGameId()).orElse(null);
+        Game game = gameRepository.findById(round.getGame().getId()).orElse(null);
 
         if (game == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");

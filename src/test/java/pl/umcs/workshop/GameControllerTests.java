@@ -2,7 +2,10 @@ package pl.umcs.workshop;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.umcs.workshop.game.Game;
+import pl.umcs.workshop.topology.Topology;
 
 import java.time.LocalDateTime;
 
@@ -25,6 +29,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class GameControllerTests {
     @Autowired
     private MockMvc mockMvc;
+
+    private Topology topology;
+
+    @BeforeEach
+    public void setup() {
+        topology = Topology.builder().build();
+    }
 
     @Test
     @Order(1)
@@ -38,7 +49,7 @@ public class GameControllerTests {
                 .symbolsInGroupAmount(4)
                 .correctAnswerPoints(1)
                 .wrongAnswerPoints(-1)
-                .topologyId(1L)
+                .topology(topology)
                 .probabilityOfEdgeRedrawing(0.2)
                 .maxVertexDegree(2)
                 .createDateTime(LocalDateTime.now())

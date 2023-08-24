@@ -3,6 +3,7 @@ package pl.umcs.workshop.user;
 import jakarta.persistence.*;
 import jakarta.servlet.http.Cookie;
 import lombok.*;
+import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.image.ImageUserRoundRelation;
 import pl.umcs.workshop.round.Round;
 
@@ -21,8 +22,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "game_id", nullable = false)
-    private Long gameId;
+//    @Column(name = "game_id", nullable = false)
+//    private Long gameId;
 
     @Column(name = "score", nullable = false)
     private int score;
@@ -39,4 +40,14 @@ public class User {
     // Relations
     @OneToMany(mappedBy = "user")
     private Set<ImageUserRoundRelation> imageUserRoundRelations;
+
+    @OneToMany(mappedBy = "userOne")
+    private Set<Round> userOneRounds;
+
+    @OneToMany(mappedBy = "userTwo")
+    private Set<Round> userTwoRounds;
+
+    @ManyToOne
+    @JoinColumn(name = "game_id")
+    private Game game;
 }

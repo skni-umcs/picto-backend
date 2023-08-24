@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.game.GameRepository;
 import pl.umcs.workshop.game.GameService;
+import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserRepository;
 import pl.umcs.workshop.utils.JWTCookieHandler;
@@ -35,9 +36,12 @@ public class GameServiceTests {
     private GameService gameService;
 
     private Game game;
+    private Topology topology;
 
     @BeforeEach
     public void setup() {
+        topology = Topology.builder().build();
+
         game = Game.builder()
                 .id(1L)
                 .userOneNumberOfImages(4)
@@ -48,7 +52,7 @@ public class GameServiceTests {
                 .symbolsInGroupAmount(4)
                 .correctAnswerPoints(1)
                 .wrongAnswerPoints(-1)
-                .topologyId(1L)
+                .topology(topology)
                 .probabilityOfEdgeRedrawing(0.3)
                 .maxVertexDegree(3)
                 .createDateTime(LocalDateTime.now())
@@ -82,7 +86,6 @@ public class GameServiceTests {
 //        Assertions.assertThat(createdGame.getId()).isEqualTo(1);
 //    }
 
-    // TODO: almost done; how to return the user object created inside the method
     @Test
     public void givenGameId_whenJoinGame_thenReturnUserObject() {
         given(gameRepository.findById(1L)).willReturn(Optional.of(game));
@@ -92,7 +95,7 @@ public class GameServiceTests {
                 .score(0)
                 .generation(0)
                 .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
-                .cookie(JWTCookieHandler.createToken(1L))
+                .cookie(JWTCookieHandler.createToken(1L, 1L))
                 .build());
 
         // when
@@ -111,7 +114,7 @@ public class GameServiceTests {
                 .score(11)
                 .generation(3)
                 .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
-                .cookie(JWTCookieHandler.createToken(1L))
+                .cookie(JWTCookieHandler.createToken(1L, 1L))
                 .build();
 
         given(userRepository.findById(1L)).willReturn(Optional.of(user));
@@ -149,7 +152,7 @@ public class GameServiceTests {
                         .score(11)
                         .generation(3)
                         .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
-                        .cookie(JWTCookieHandler.createToken(1L))
+                        .cookie(JWTCookieHandler.createToken(1L, 1L))
                         .build(),
                 User.builder()
                         .id(2L)
@@ -157,7 +160,7 @@ public class GameServiceTests {
                         .score(13)
                         .generation(1)
                         .lastSeen(LocalDateTime.of(2023, 4, 13, 17, 6))
-                        .cookie(JWTCookieHandler.createToken(2L))
+                        .cookie(JWTCookieHandler.createToken(2L, 1L))
                         .build(),
                 User.builder()
                         .id(3L)
@@ -165,7 +168,7 @@ public class GameServiceTests {
                         .score(7)
                         .generation(1)
                         .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 21))
-                        .cookie(JWTCookieHandler.createToken(3L))
+                        .cookie(JWTCookieHandler.createToken(3L, 1L))
                         .build()
         });
 

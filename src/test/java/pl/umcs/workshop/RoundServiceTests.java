@@ -56,7 +56,7 @@ public class RoundServiceTests {
                 .symbolsInGroupAmount(4)
                 .correctAnswerPoints(1)
                 .wrongAnswerPoints(-1)
-                .topologyId(1L)
+                .topology(topology)
                 .createDateTime(LocalDateTime.now())
                 .build();
 
@@ -72,7 +72,7 @@ public class RoundServiceTests {
                 .imageSelected(9L)
                 .build();
 
-        cookie = JWTCookieHandler.createToken(1L);
+        cookie = JWTCookieHandler.createToken(1L, 1L);
     }
 
     @Test
@@ -95,7 +95,7 @@ public class RoundServiceTests {
         // then
         Assertions.assertThat(nextRound).isNotNull();
         Assertions.assertThat(nextRound.getGeneration()).isEqualTo(4);
-        Assertions.assertThat(nextRound.getGameId()).isEqualTo(1);
+        Assertions.assertThat(nextRound.getGame().getId()).isEqualTo(1);
     }
 
     @Test
@@ -149,7 +149,7 @@ public class RoundServiceTests {
                 .symbolsInGroupAmount(4)
                 .correctAnswerPoints(1)
                 .wrongAnswerPoints(-1)
-                .topologyId(1L)
+                .topology(topology)
                 .createDateTime(LocalDateTime.of(2023, 4, 13, 16, 53))
                 .endDateTime(LocalDateTime.now())
                 .build()));
@@ -159,34 +159,6 @@ public class RoundServiceTests {
                 .isInstanceOf(ResponseStatusException.class)
                 .hasMessageContaining("Game has ended");
     }
-
-    // Get speaker
-//    @Test
-//    public void givenRoundId_whenGetRoundSpeakerInfo_thenReturnRoundObject() {
-//        // given
-//        given(roundRepository.findById(1)).willReturn(Optional.of(round));
-//
-//        // when
-//        Round foundRound = roundService.getRound(round.getId());
-//
-//        // then
-//        Assertions.assertThat(foundRound).isNotNull();
-//        Assertions.assertThat(foundRound.getId()).isEqualTo(round.getId());
-//    }
-
-    // Get listener
-//    @Test
-//    public void givenRoundId_whenGetRoundListenerInfo_thenReturnRoundObject() {
-//        // given
-//        given(roundRepository.findById(1)).willReturn(Optional.of(round));
-//
-//        // when
-//        Round foundRound = roundService.getRound(round.getId());
-//
-//        // then
-//        Assertions.assertThat(foundRound).isNotNull();
-//        Assertions.assertThat(foundRound.getId()).isEqualTo(round.getId());
-//    }
 
     // Save speaker
 
