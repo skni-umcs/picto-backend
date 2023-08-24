@@ -21,17 +21,17 @@ public class ImageService {
         for (int i = 0; i < numberOfImages; i++) {
             Image generatedImage = images.get(rand.nextInt(images.size()));
 
-            if (!generatedImages.contains(generatedImage)) {
-                generatedImages.add(generatedImage);
-            } else {
-                i--;
-            }
+            generatedImages.add(generatedImage);
+            images.remove(generatedImage);
         }
 
         return generatedImages;
     }
 
-    public Image generateTopic(List<Image> images) {
-        return null;
+    public Image generateTopic(Long groupId) {
+        List<Image> images = imageRepository.findAllByGroupsId(groupId);
+        Random rand = new Random();
+
+        return images.get(rand.nextInt(images.size()));
     }
 }
