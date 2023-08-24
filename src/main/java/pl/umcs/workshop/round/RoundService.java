@@ -59,9 +59,7 @@ public class RoundService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Round not found");
         }
 
-        // SELECT * FROM images INNER JOIN rounds ON images.id = rounds.id WHERE rounds.id = `roundId` AND rounds.user_id = `userId`;
-
-        return null;
+        return imageRepository.findAllByImageUserRoundRelationsRoundId(roundId);
     }
 
     public Round saveRoundSpeakerInfo(@NotNull UserInfo userInfo) {

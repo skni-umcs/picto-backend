@@ -36,11 +36,11 @@ public class GameService {
 
     // TODO: begin game method
     public Game beginGame(Long gameId) {
-        // Get all users for given game
-        List<User> users = userRepository.findAllByGameId(gameId);
-
         // Get game config
         Game game = gameRepository.findById(gameId).orElse(null);
+
+        // Get all users for given game
+        List<User> users = userRepository.findAllByGame(game);
 
         if (game == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
@@ -54,8 +54,9 @@ public class GameService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Topology not found");
         }
 
-        // return Game object with topology info present (saved game with this info)
-        return null;
+        topologyService.generateBrackets(users);
+
+        return game;
     }
 
     public User joinGame(Long gameId) {
