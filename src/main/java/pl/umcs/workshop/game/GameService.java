@@ -1,6 +1,5 @@
 package pl.umcs.workshop.game;
 
-import jakarta.servlet.http.Cookie;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,39 +35,23 @@ public class GameService {
 
     // TODO: begin game method
     public Game beginGame(Long gameId) {
-        // Get game config
-        Game game = gameRepository.findById(gameId).orElse(null);
+        Game game = getGame(gameId);
 
         // Get all users for given game
         List<User> users = userRepository.findAllByGame(game);
 
-        if (game == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
-        }
-
-        // TODO: if topology(topology) is not present, use p and k from config to generate new topology (and return id)
-        // Generate brackets (generations and rounds) based on topology (topology(topology))
+        // TODO: if topology is not present, use p and k from config to generate new topology (and return id)
         Topology topology = topologyRepository.findById(game.getTopology().getId()).orElse(null);
 
         if (topology == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Topology not found");
+            // Generate topology
         }
-
-        topologyService.generateBrackets(users);
 
         return game;
     }
 
     public User joinGame(Long gameId) {
-        Game game = gameRepository.findById(gameId).orElse(null);
-
-        if (game == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
-        }
-
-        if (game.getEndDateTime() != null) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game has ended");
-        }
+        Game game = getGame(gameId);
 
         User user = User.builder()
                 .game(game)
@@ -89,6 +72,33 @@ public class GameService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
 
+        Game game = getGame(gameId);
+
+        user.setCookie(JWTCookieHandler.createToken(game.getId(), user.getId()));
+
+        return userRepository.save(user);
+    }
+
+    public Game endGame(Long gameId) {
+        Game game = getGame(gameId);
+        game.setEndDateTime(LocalDateTime.now());
+
+        deleteUserCookies(gameId);
+
+        return gameRepository.save(game);
+    }
+
+    // TODO
+    public List<Integer> generateGameSummary(Long gameId) {
+        // Summarize data from the game using config given as the parameter
+        // (e.g. number of generations, players to exclude etc.)
+        // Generate points to use in chart
+
+        return null;
+    }
+
+    @NotNull
+    private Game getGame(Long gameId) {
         Game game = gameRepository.findById(gameId).orElse(null);
 
         if (game == null) {
@@ -99,35 +109,7 @@ public class GameService {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game has ended");
         }
 
-        user.setCookie(JWTCookieHandler.createToken(game.getId(), user.getId()));
-
-        return userRepository.save(user);
-    }
-
-    public Game endGame(Long gameId) {
-        Game game = gameRepository.findById(gameId).orElse(null);
-
-        if (game == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
-        }
-
-        if (game.getEndDateTime() != null) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game has already ended");
-        }
-        game.setEndDateTime(LocalDateTime.now());
-
-        deleteUserCookies(gameId);
-
-        return gameRepository.save(game);
-    }
-
-    // TODO: generate game summary method
-    public List<Integer> generateGameSummary(Long gameId) {
-        // Summarize data from the game using config given as the parameter
-        // (e.g. number of generations, players to exclude etc.)
-        // Generate points to use in chart
-
-        return null;
+        return game;
     }
 
     public @NotNull List<User> deleteUserCookies(Long gameId) {

@@ -53,8 +53,6 @@ public class GameServiceTests {
                 .correctAnswerPoints(1)
                 .wrongAnswerPoints(-1)
                 .topology(topology)
-                .probabilityOfEdgeRedrawing(0.3)
-                .maxVertexDegree(3)
                 .createDateTime(LocalDateTime.now())
                 .build();
     }
@@ -91,7 +89,7 @@ public class GameServiceTests {
         given(gameRepository.findById(1L)).willReturn(Optional.of(game));
         given(userRepository.save(Mockito.any(User.class))).willReturn(User.builder()
                 .id(1L)
-                .gameId(1L)
+                .game(game)
                 .score(0)
                 .generation(0)
                 .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
@@ -110,7 +108,7 @@ public class GameServiceTests {
     public void givenGameIdAndUserId_whenJoinGameAsUser_thenReturnUserObject() {
         User user = User.builder()
                 .id(1L)
-                .gameId(1L)
+                .game(game)
                 .score(11)
                 .generation(3)
                 .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
@@ -148,7 +146,7 @@ public class GameServiceTests {
         List<User> users = List.of(new User[]{
                 User.builder()
                         .id(1L)
-                        .gameId(1L)
+                        .game(game)
                         .score(11)
                         .generation(3)
                         .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
@@ -156,7 +154,7 @@ public class GameServiceTests {
                         .build(),
                 User.builder()
                         .id(2L)
-                        .gameId(1L)
+                        .game(game)
                         .score(13)
                         .generation(1)
                         .lastSeen(LocalDateTime.of(2023, 4, 13, 17, 6))
@@ -164,7 +162,7 @@ public class GameServiceTests {
                         .build(),
                 User.builder()
                         .id(3L)
-                        .gameId(1L)
+                        .game(game)
                         .score(7)
                         .generation(1)
                         .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 21))

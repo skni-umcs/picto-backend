@@ -25,6 +25,6 @@ public class Topology {
     private int maxVertexDegree;
 
     // Relations
-    @OneToMany(mappedBy = "topology")
+    @OneToMany(mappedBy = "topology", cascade = CascadeType.ALL)
     private Set<Game> games;
 }

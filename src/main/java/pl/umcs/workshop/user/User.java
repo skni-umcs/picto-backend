@@ -1,7 +1,6 @@
 package pl.umcs.workshop.user;
 
 import jakarta.persistence.*;
-import jakarta.servlet.http.Cookie;
 import lombok.*;
 import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.image.ImageUserRoundRelation;

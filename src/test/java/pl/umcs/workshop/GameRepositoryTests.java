@@ -1,17 +1,15 @@
 package pl.umcs.workshop;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.game.GameRepository;
 import pl.umcs.workshop.topology.Topology;
+import pl.umcs.workshop.topology.TopologyRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,20 +18,23 @@ import java.util.Optional;
 @DataJpaTest
 @Rollback(value = false)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class GameRepositoryTests {
     @Autowired
     private GameRepository gameRepository;
 
-    private Topology topology;
-
-    @BeforeEach
-    public void setup() {
-        topology = Topology.builder().build();
-    }
+    @Autowired
+    private TopologyRepository topologyRepository;
 
     @Test
     @Order(value = 1)
     public void saveGameTest() {
+        Topology topology = Topology.builder()
+                .maxVertexDegree(5)
+                .probabilityOfEdgeRedrawing(0.55)
+                .build();
+        topologyRepository.save(topology);
+
         Game game = Game.builder()
                 .userOneNumberOfImages(4)
                 .userTwoNumberOfImages(4)
@@ -44,14 +45,11 @@ public class GameRepositoryTests {
                 .correctAnswerPoints(1)
                 .wrongAnswerPoints(-1)
                 .topology(topology)
-                .probabilityOfEdgeRedrawing(0.25)
-                .maxVertexDegree(4)
                 .createDateTime(LocalDateTime.now())
                 .build();
-
         Game savedGame = gameRepository.save(game);
 
-        Assertions.assertThat(savedGame.getId()).isGreaterThan(0);
+        Assertions.assertThat(savedGame.getId()).isEqualTo(1L);
     }
 
     @Test
@@ -67,6 +65,12 @@ public class GameRepositoryTests {
     @Test
     @Order(value = 3)
     public void getListOfAllGamesTest() {
+        Topology topology = Topology.builder()
+                .maxVertexDegree(3)
+                .probabilityOfEdgeRedrawing(0.16)
+                .build();
+        topologyRepository.save(topology);
+
         Game game = Game.builder()
                 .userOneNumberOfImages(3)
                 .userTwoNumberOfImages(5)
@@ -79,7 +83,6 @@ public class GameRepositoryTests {
                 .topology(topology)
                 .createDateTime(LocalDateTime.now())
                 .build();
-
         gameRepository.save(game);
 
         List<Game> games = gameRepository.findAll();

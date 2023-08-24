@@ -21,9 +21,6 @@ public class Image {
     @Column(name = "path", nullable = false)
     private String path;
 
-//    @Column(name = "group_id")
-//    private Long groupId;
-
     // Relations
     @OneToMany(mappedBy = "image")
     private Set<ImageUserRoundRelation> imageUserRoundRelations;

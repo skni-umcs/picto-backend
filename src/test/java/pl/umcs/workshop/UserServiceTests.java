@@ -2,12 +2,15 @@ package pl.umcs.workshop;
 
 import jakarta.servlet.http.Cookie;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import pl.umcs.workshop.game.Game;
+import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserRepository;
 import pl.umcs.workshop.user.UserService;
@@ -29,13 +32,34 @@ public class UserServiceTests {
     @InjectMocks
     private UserService userService;
 
-    private User user;
+    private static User user;
+    public static Game game;
+    private static Topology topology;
 
-    @BeforeEach
-    public void setup() {
+    @BeforeAll
+    public static void setup() {
+        topology = Topology.builder()
+                .maxVertexDegree(5)
+                .probabilityOfEdgeRedrawing(0.55)
+                .build();
+
+        game = Game.builder()
+                .id(1L)
+                .userOneNumberOfImages(4)
+                .userTwoNumberOfImages(4)
+                .userOneTime(5)
+                .userTwoTime(3)
+                .symbolGroupsAmount(3)
+                .symbolsInGroupAmount(4)
+                .correctAnswerPoints(1)
+                .wrongAnswerPoints(-1)
+                .topology(topology)
+                .createDateTime(LocalDateTime.now())
+                .build();
+
         user = User.builder()
                 .id(1L)
-                .gameId(1L)
+                .game(game)
                 .score(11)
                 .lastSeen(LocalDateTime.now())
                 .cookie(JWTCookieHandler.createToken(1L, 1L))
@@ -61,7 +85,6 @@ public class UserServiceTests {
         given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
         given(userRepository.save(user)).willReturn(user);
 
-        // TODO: make this unique or figure out how we want to update users
         User userToUpdate = user;
 
         // when

@@ -2,6 +2,7 @@ package pl.umcs.workshop;
 
 import jakarta.servlet.http.Cookie;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,10 +12,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.server.ResponseStatusException;
 import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.game.GameRepository;
+import pl.umcs.workshop.image.Image;
 import pl.umcs.workshop.round.Round;
 import pl.umcs.workshop.round.RoundRepository;
 import pl.umcs.workshop.round.RoundResult;
 import pl.umcs.workshop.round.RoundService;
+import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserRepository;
 import pl.umcs.workshop.utils.JWTCookieHandler;
@@ -38,14 +41,23 @@ public class RoundServiceTests {
     @InjectMocks
     private RoundService roundService;
 
-    private Game game;
+    private static Game game;
+    private static Game gameInvalid;
+    private static Game gameEnded;
+    private static Topology topology;
+    private static Round round;
+    private static User userOne;
+    private static User userTwo;
+    private static Image topic;
+    private static Image imageSelected;
 
-    private Round round;
+    @BeforeAll
+    public static void setup() {
+        topology = Topology.builder()
+                .maxVertexDegree(5)
+                .probabilityOfEdgeRedrawing(0.55)
+                .build();
 
-    private String cookie;
-
-    @BeforeEach
-    public void setup() {
         game = Game.builder()
                 .id(1L)
                 .userOneNumberOfImages(4)
@@ -60,32 +72,80 @@ public class RoundServiceTests {
                 .createDateTime(LocalDateTime.now())
                 .build();
 
-        round = Round.builder()
-                .id(1L)
-                .gameId(1L)
-                .generation(4)
-                .userOneId(1L)
-                .userTwoId(6L)
-                .userTwoAnswerTime(7)
-                .userTwoAnswerTime(8)
-                .topic(9L)
-                .imageSelected(9L)
+        gameInvalid = Game.builder()
+                .id(2L)
+                .userOneNumberOfImages(4)
+                .userTwoNumberOfImages(4)
+                .userOneTime(5)
+                .userTwoTime(3)
+                .symbolGroupsAmount(3)
+                .symbolsInGroupAmount(4)
+                .correctAnswerPoints(1)
+                .wrongAnswerPoints(-1)
+                .topology(topology)
+                .createDateTime(LocalDateTime.now())
                 .build();
 
-        cookie = JWTCookieHandler.createToken(1L, 1L);
+        gameEnded = Game.builder()
+                .id(3L)
+                .userOneNumberOfImages(4)
+                .userTwoNumberOfImages(4)
+                .userOneTime(5)
+                .userTwoTime(3)
+                .symbolGroupsAmount(3)
+                .symbolsInGroupAmount(4)
+                .correctAnswerPoints(1)
+                .wrongAnswerPoints(-1)
+                .topology(topology)
+                .createDateTime(LocalDateTime.now())
+                .endDateTime(LocalDateTime.now())
+                .build();
+
+        userOne = User.builder()
+                .id(1L)
+                .game(game)
+                .score(6)
+                .generation(3)
+                .lastSeen(LocalDateTime.now())
+                .cookie(JWTCookieHandler.createToken(1L, 1L))
+                .build();
+
+        userTwo = User.builder()
+                .id(2L)
+                .game(game)
+                .score(8)
+                .generation(3)
+                .lastSeen(LocalDateTime.now())
+                .cookie(JWTCookieHandler.createToken(2L, 2L))
+                .build();
+
+        topic = Image.builder()
+                .id(1L)
+                .path("flower.jpg")
+                .build();
+
+        imageSelected = Image.builder()
+                .id(2L)
+                .path("car.jpg")
+                .build();
+
+        round = Round.builder()
+                .id(1L)
+                .game(game)
+                .generation(4)
+                .userOne(userOne)
+                .userTwo(userTwo)
+                .userTwoAnswerTime(7)
+                .userTwoAnswerTime(8)
+                .topic(topic)
+                .imageSelected(topic)
+                .build();
     }
 
     @Test
     public void givenUserId_whenGetNextRound_thenReturnRoundObject() {
         // given
-        given(userRepository.findById(1L)).willReturn(Optional.of(User.builder()
-                .id(1L)
-                .gameId(1L)
-                .score(11)
-                .generation(3)
-                .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
-                .cookie(cookie)
-                .build()));
+        given(userRepository.findById(1L)).willReturn(Optional.of(userOne));
         given(gameRepository.findById(1L)).willReturn(Optional.of(game));
         given(roundRepository.getNextRound(1L, 1L, 4)).willReturn(round);
 
@@ -95,7 +155,7 @@ public class RoundServiceTests {
         // then
         Assertions.assertThat(nextRound).isNotNull();
         Assertions.assertThat(nextRound.getGeneration()).isEqualTo(4);
-        Assertions.assertThat(nextRound.getGame().getId()).isEqualTo(1);
+        Assertions.assertThat(nextRound.getGame().getId()).isEqualTo(1L);
     }
 
     @Test
@@ -112,15 +172,8 @@ public class RoundServiceTests {
     @Test
     public void givenUserId_whenGetNextRoundForInvalidGame_thenThrowGameNotFound() {
         // given
-        given(userRepository.findById(1L)).willReturn(Optional.of(User.builder()
-                .id(1L)
-                .gameId(2L)
-                .score(11)
-                .generation(3)
-                .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
-                .cookie(cookie)
-                .build()));
-        given(gameRepository.findById(2L)).willReturn(Optional.empty());
+        given(userRepository.findById(1L)).willReturn(Optional.of(userOne));
+        given(gameRepository.findById(1L)).willReturn(Optional.empty());
 
         // then (with when)
         Assertions.assertThatThrownBy(() -> roundService.getNextRound(1L))
@@ -131,28 +184,8 @@ public class RoundServiceTests {
     @Test
     public void givenUserId_whenGetNextRoundForEndedGame_thenThrowGameHasEnded() {
         // given
-        given(userRepository.findById(1L)).willReturn(Optional.of(User.builder()
-                .id(1L)
-                .gameId(2L)
-                .score(11)
-                .generation(3)
-                .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
-                .cookie(cookie)
-                .build()));
-        given(gameRepository.findById(2L)).willReturn(Optional.of(Game.builder()
-                .id(1L)
-                .userOneNumberOfImages(4)
-                .userTwoNumberOfImages(4)
-                .userOneTime(5)
-                .userTwoTime(3)
-                .symbolGroupsAmount(3)
-                .symbolsInGroupAmount(4)
-                .correctAnswerPoints(1)
-                .wrongAnswerPoints(-1)
-                .topology(topology)
-                .createDateTime(LocalDateTime.of(2023, 4, 13, 16, 53))
-                .endDateTime(LocalDateTime.now())
-                .build()));
+        given(userRepository.findById(1L)).willReturn(Optional.of(userOne));
+        given(gameRepository.findById(1L)).willReturn(Optional.of(gameEnded));
 
         // then (with when)
         Assertions.assertThatThrownBy(() -> roundService.getNextRound(1L))
@@ -226,14 +259,14 @@ public class RoundServiceTests {
         // given
         Round round = Round.builder()
                 .id(2L)
-                .gameId(1L)
+                .game(game)
                 .generation(3)
-                .userOneId(5L)
-                .userTwoId(6L)
+                .userOne(userOne)
+                .userTwo(userTwo)
                 .userTwoAnswerTime(7)
                 .userTwoAnswerTime(8)
-                .topic(7L)
-                .imageSelected(11L)
+                .topic(topic)
+                .imageSelected(imageSelected)
                 .build();
 
         // when

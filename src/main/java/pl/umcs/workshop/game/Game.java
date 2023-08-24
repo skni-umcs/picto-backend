@@ -2,6 +2,7 @@ package pl.umcs.workshop.game;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 import pl.umcs.workshop.round.Round;
 import pl.umcs.workshop.topology.Topology;
 

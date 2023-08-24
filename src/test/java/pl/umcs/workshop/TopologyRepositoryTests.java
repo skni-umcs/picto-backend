@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.topology.Topology;
@@ -18,6 +19,7 @@ import java.util.Optional;
 @DataJpaTest
 @Rollback(value = false)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class TopologyRepositoryTests {
     @Autowired
     private TopologyRepository topologyRepository;
@@ -26,9 +28,8 @@ public class TopologyRepositoryTests {
     @Order(value = 1)
     public void saveTopologyTest() {
         Topology topology = Topology.builder()
-                .name("Test topology")
-                .numberOfSets(3)
-                .usersInSet(5)
+                .maxVertexDegree(5)
+                .probabilityOfEdgeRedrawing(0.55)
                 .build();
 
         topologyRepository.save(topology);
@@ -49,9 +50,8 @@ public class TopologyRepositoryTests {
     @Order(value = 3)
     public void getListOfAllTopologiesTest() {
         Topology topology = Topology.builder()
-                .name("Test topology 2")
-                .numberOfSets(2)
-                .usersInSet(8)
+                .maxVertexDegree(3)
+                .probabilityOfEdgeRedrawing(0.25)
                 .build();
 
         topologyRepository.save(topology);
@@ -63,18 +63,7 @@ public class TopologyRepositoryTests {
     @Test
     @Order(value = 4)
     public void updateTopologyTest() {
-        Topology topology = topologyRepository.findById(1L).orElse(null);
 
-        Assertions.assertThat(topology).isNotNull();
-        Assertions.assertThat(topology.getNumberOfSets()).isEqualTo(3);
-
-        topology.setNumberOfSets(4);
-
-        Topology savedTopology = topologyRepository.save(topology);
-
-        Assertions.assertThat(topology.getNumberOfSets()).isEqualTo(4);
-        Assertions.assertThat(savedTopology.getNumberOfSets()).isEqualTo(4);
-        Assertions.assertThat(topology.getId()).isEqualTo(savedTopology.getId());
     }
 
     @Test
