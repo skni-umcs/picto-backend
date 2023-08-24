@@ -15,11 +15,10 @@ public class ImageService {
     public List<Image> generateImages(int numberOfImages, Long groupId) {
         List<Image> images = imageRepository.findAllByGroupsId(groupId);
 
-        Random rand = new Random();
         List<Image> generatedImages = new ArrayList<>();
 
         for (int i = 0; i < numberOfImages; i++) {
-            Image generatedImage = images.get(rand.nextInt(images.size()));
+            Image generatedImage = images.get(getRandomized(numberOfImages));
 
             generatedImages.add(generatedImage);
             images.remove(generatedImage);
@@ -30,8 +29,22 @@ public class ImageService {
 
     public Image generateTopic(Long groupId) {
         List<Image> images = imageRepository.findAllByGroupsId(groupId);
+
+        return images.get(getRandomized(1));
+    }
+
+
+    private static int getRandomized(int numberOfImages) {
         Random rand = new Random();
 
-        return images.get(rand.nextInt(images.size()));
+        int mean = numberOfImages / 2;
+        int variance = numberOfImages / 10;
+
+        double randomized = rand.nextGaussian() * variance + mean;
+        while (randomized < 0 || randomized > numberOfImages) {
+            randomized = rand.nextGaussian() * variance + mean;
+        }
+
+        return (int) randomized;
     }
 }
