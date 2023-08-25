@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.game.GameRepository;
@@ -20,6 +21,7 @@ import java.util.Optional;
 @DataJpaTest
 @Rollback(value = false)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class UserRepositoryTests {
     @Autowired
     private UserRepository userRepository;

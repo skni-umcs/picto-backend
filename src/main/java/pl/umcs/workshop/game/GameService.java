@@ -98,7 +98,7 @@ public class GameService {
     }
 
     @NotNull
-    private Game getGame(Long gameId) {
+    public Game getGame(Long gameId) {
         Game game = gameRepository.findById(gameId).orElse(null);
 
         if (game == null) {

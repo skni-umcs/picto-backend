@@ -7,11 +7,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.game.GameRepository;
+import pl.umcs.workshop.game.GameService;
 import pl.umcs.workshop.image.Image;
 import pl.umcs.workshop.image.ImageRepository;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserInfo;
 import pl.umcs.workshop.user.UserRepository;
+import pl.umcs.workshop.user.UserService;
 
 import java.util.List;
 import java.util.Objects;
@@ -29,6 +31,12 @@ public class RoundService {
 
     @Autowired
     private ImageRepository imageRepository;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private GameService gameService;
 
     public Round getNextRound(Long userId) {
         // Check what generation the user is on
@@ -71,7 +79,7 @@ public class RoundService {
 
         round.setUserOneAnswerTime(userInfo.getAnswerTime());
 
-        // TODO: updateUserLastSeen from UserService validity
+        userService.updateUserLastSeen(userInfo.getUserId());
 
         return roundRepository.save(round);
     }
@@ -86,29 +94,30 @@ public class RoundService {
         round.setUserTwoAnswerTime(userInfo.getAnswerTime());
         round.setImageSelected(userInfo.getImageSelected());
 
-        // TODO: updateUserLastSeen from UserService validity
+        userService.updateUserLastSeen(userInfo.getUserId());
 
         return roundRepository.save(round);
     }
 
     public RoundResult getRoundResult(Long roundId) {
-        Round round = roundRepository.findById(roundId).orElse(null);
-
-        if (round == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Round not found");
-        }
-
-        Game game = gameRepository.findById(round.getGame().getId()).orElse(null);
-
-        if (game == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
-        }
+        Round round = getRound(roundId);
+        Game game = gameService.getGame(round.getGame().getId());
 
         if (isImageCorrect(round)) {
             return new RoundResult(RoundResult.Result.CORRECT, game.getCorrectAnswerPoints());
         }
 
         return new RoundResult(RoundResult.Result.WRONG, game.getWrongAnswerPoints());
+    }
+
+    private @NotNull Round getRound(Long roundId) {
+        Round round = roundRepository.findById(roundId).orElse(null);
+
+        if (round == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Round not found");
+        }
+
+        return round;
     }
 
     public boolean isImageCorrect(@NotNull Round round) {
