@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.server.ResponseStatusException;
 import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.game.GameRepository;
+import pl.umcs.workshop.game.GameService;
 import pl.umcs.workshop.image.Image;
 import pl.umcs.workshop.round.Round;
 import pl.umcs.workshop.round.RoundRepository;
@@ -39,11 +40,15 @@ public class RoundServiceTests {
     @InjectMocks
     private RoundService roundService;
 
+    @Mock
+    private GameService gameService;
+
     private static Game game;
     private static Game gameInvalid;
     private static Game gameEnded;
     private static Topology topology;
     private static Round round;
+    private static Round roundWrong;
     private static User userOne;
     private static User userTwo;
     private static Image topic;
@@ -138,6 +143,18 @@ public class RoundServiceTests {
                 .topic(topic)
                 .imageSelected(topic)
                 .build();
+
+        roundWrong = Round.builder()
+                .id(1L)
+                .game(game)
+                .generation(4)
+                .userOne(userOne)
+                .userTwo(userTwo)
+                .userTwoAnswerTime(7)
+                .userTwoAnswerTime(8)
+                .topic(topic)
+                .imageSelected(topic)
+                .build();
     }
 
     @Test
@@ -198,8 +215,8 @@ public class RoundServiceTests {
     @Test
     public void givenRoundId_whenGetRoundResult_thenReturnPointsGottenOnCorrect() {
         // given
-        given(gameRepository.findById(1L)).willReturn(Optional.of(game));
         given(roundRepository.findById(1L)).willReturn(Optional.of(round));
+        given(gameService.getGame(1L)).willReturn(game);
 
         // when
         RoundResult roundResult = roundService.getRoundResult(round.getId());
@@ -212,13 +229,15 @@ public class RoundServiceTests {
     @Test
     public void givenRoundId_whenGetRoundResult_thenReturnPointsGottenOnWrong() {
         // given
-        given(gameRepository.findById(1L)).willReturn(Optional.empty());
-        given(roundRepository.findById(1L)).willReturn(Optional.of(round));
+        given(roundRepository.findById(1L)).willReturn(Optional.of(roundWrong));
+        given(gameService.getGame(1L)).willReturn(game);
+
+        // when
+        RoundResult roundResult = roundService.getRoundResult(roundWrong.getId());
 
         // then
-        Assertions.assertThatThrownBy(() -> roundService.getRoundResult(1L))
-                .isInstanceOf(ResponseStatusException.class)
-                .hasMessageContaining("Game not found");
+        Assertions.assertThat(roundResult.getResult()).isEqualTo(RoundResult.Result.CORRECT);
+        Assertions.assertThat(roundResult.getPoints()).isEqualTo(1);
     }
 
     @Test
