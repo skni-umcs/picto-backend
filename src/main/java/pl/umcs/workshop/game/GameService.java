@@ -26,9 +26,6 @@ public class GameService {
     @Autowired
     private TopologyRepository topologyRepository;
 
-    @Autowired
-    private TopologyService topologyService;
-
     public Game createGame(Game game) {
         return gameRepository.save(game);
     }

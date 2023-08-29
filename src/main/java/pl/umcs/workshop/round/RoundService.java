@@ -24,9 +24,6 @@ public class RoundService {
     private RoundRepository roundRepository;
 
     @Autowired
-    private GameRepository gameRepository;
-
-    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -47,36 +44,19 @@ public class RoundService {
         }
 
         // Check if the game exists and is still in progress
-        Game game = gameRepository.findById(user.getGame().getId()).orElse(null);
-
-        if (game == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
-        }
-
-        if (game.getEndDateTime() != null) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game has ended");
-        }
+        Game game = gameService.getGame(user.getGame().getId());
 
         return roundRepository.getNextRound(user.getGame().getId(), userId, user.getGeneration() + 1);
     }
 
     public List<Image> getImages(Long roundId, Long userId) {
-        Round round = roundRepository.findById(roundId).orElse(null);
-
-        if (round == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Round not found");
-        }
+//        Round round = getRound(roundId);
 
         return imageRepository.findAllByImageUserRoundRelationsRoundId(roundId);
     }
 
     public Round saveRoundSpeakerInfo(@NotNull UserInfo userInfo) {
-        Round round = roundRepository.findById(userInfo.getRoundId()).orElse(null);
-
-        if (round == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Round not found");
-        }
-
+        Round round = getRound(userInfo.getRoundId());
         round.setUserOneAnswerTime(userInfo.getAnswerTime());
 
         userService.updateUserLastSeen(userInfo.getUserId());
@@ -85,11 +65,7 @@ public class RoundService {
     }
 
     public Round saveRoundListenerInfo(@NotNull UserInfo userInfo) {
-        Round round = roundRepository.findById(userInfo.getRoundId()).orElse(null);
-
-        if (round == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Round not found");
-        }
+        Round round = getRound(userInfo.getRoundId());
 
         round.setUserTwoAnswerTime(userInfo.getAnswerTime());
         round.setImageSelected(userInfo.getImageSelected());

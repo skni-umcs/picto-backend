@@ -38,8 +38,10 @@ public class JWTCookieHandler {
         }
     }
 
-    public static Long getUserId(DecodedJWT token) {
-        return token.getClaim("userId").asLong();
+    public static Long getUserId(String token) {
+        DecodedJWT verifiedToken = verifyToken(token);
+
+        return verifiedToken.getClaim("userId").asLong();
     }
 
 }
