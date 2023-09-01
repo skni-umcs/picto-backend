@@ -4,7 +4,6 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.web.server.ResponseStatusException;
 import pl.umcs.workshop.utils.JWTCookieHandler;
 
 public class JWTCookieHandlerTests {
@@ -17,7 +16,7 @@ public class JWTCookieHandlerTests {
 
     @Test
     public void verifyTokenTestValid() {
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwaWN0byIsInN1YiI6IlVzZXIgY29va2llIiwiZ2FtZUlkIjoxLCJ1c2VySWQiOjEsImlhdCI6MTY5MzMwODYzOSwiZXhwIjoxNjkzMzUxODM5LCJqdGkiOiIxNjA4ZWUzMi1mNTY1LTQzMWItYWE5Ny0wOWRiMmEwNzRjNzgiLCJuYmYiOjE2OTMzMDg2Mzl9.LxxhDBAeAgPpXl3MzC6KMM7tdr-GwC-Jg4RqKlylHII";
+        String token = JWTCookieHandler.createToken(1L, 1L);
         DecodedJWT decodedToken = JWTCookieHandler.verifyToken(token);
         Long userId = decodedToken.getClaim("userId").asLong();
 
@@ -35,7 +34,7 @@ public class JWTCookieHandlerTests {
 
     @Test
     public void getUserIdTestValidToken() {
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwaWN0byIsInN1YiI6IlVzZXIgY29va2llIiwiZ2FtZUlkIjoxLCJ1c2VySWQiOjEsImlhdCI6MTY5MzMwODYzOSwiZXhwIjoxNjkzMzUxODM5LCJqdGkiOiIxNjA4ZWUzMi1mNTY1LTQzMWItYWE5Ny0wOWRiMmEwNzRjNzgiLCJuYmYiOjE2OTMzMDg2Mzl9.LxxhDBAeAgPpXl3MzC6KMM7tdr-GwC-Jg4RqKlylHII";
+        String token = JWTCookieHandler.createToken(1L, 1L);
         Long userId = JWTCookieHandler.getUserId(token);
 
         Assertions.assertThat(userId).isEqualTo(1L);

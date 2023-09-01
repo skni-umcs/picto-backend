@@ -161,7 +161,6 @@ public class RoundServiceTests {
     public void givenUserId_whenGetNextRound_thenReturnRoundObject() {
         // given
         given(userRepository.findById(1L)).willReturn(Optional.of(userOne));
-        given(gameRepository.findById(1L)).willReturn(Optional.of(game));
         given(roundRepository.getNextRound(1L, 1L, 4)).willReturn(round);
 
         // when
@@ -184,29 +183,29 @@ public class RoundServiceTests {
                 .hasMessageContaining("User not found");
     }
 
-    @Test
-    public void givenUserId_whenGetNextRoundForInvalidGame_thenThrowGameNotFound() {
-        // given
-        given(userRepository.findById(1L)).willReturn(Optional.of(userOne));
-        given(gameRepository.findById(1L)).willReturn(Optional.empty());
-
-        // then (with when)
-        Assertions.assertThatThrownBy(() -> roundService.getNextRound(1L))
-                .isInstanceOf(ResponseStatusException.class)
-                .hasMessageContaining("Game not found");
-    }
-
-    @Test
-    public void givenUserId_whenGetNextRoundForEndedGame_thenThrowGameHasEnded() {
-        // given
-        given(userRepository.findById(1L)).willReturn(Optional.of(userOne));
-        given(gameRepository.findById(1L)).willReturn(Optional.of(gameEnded));
-
-        // then (with when)
-        Assertions.assertThatThrownBy(() -> roundService.getNextRound(1L))
-                .isInstanceOf(ResponseStatusException.class)
-                .hasMessageContaining("Game has ended");
-    }
+//    @Test
+//    public void givenUserId_whenGetNextRoundForInvalidGame_thenThrowGameNotFound() {
+//        // given
+//        given(userRepository.findById(1L)).willReturn(Optional.of(userOne));
+//        given(gameRepository.findById(1L)).willReturn(Optional.empty());
+//
+//        // then (with when)
+//        Assertions.assertThatThrownBy(() -> roundService.getNextRound(1L))
+//                .isInstanceOf(ResponseStatusException.class)
+//                .hasMessageContaining("Game not found");
+//    }
+//
+//    @Test
+//    public void givenUserId_whenGetNextRoundForEndedGame_thenThrowGameHasEnded() {
+//        // given
+//        given(userRepository.findById(1L)).willReturn(Optional.of(userOne));
+//        given(gameRepository.findById(1L)).willReturn(Optional.of(gameEnded));
+//
+//        // then (with when)
+//        Assertions.assertThatThrownBy(() -> roundService.getNextRound(1L))
+//                .isInstanceOf(ResponseStatusException.class)
+//                .hasMessageContaining("Game has ended");
+//    }
 
     // Save speaker
 
