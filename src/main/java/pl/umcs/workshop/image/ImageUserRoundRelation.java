@@ -5,7 +5,7 @@ import pl.umcs.workshop.round.Round;
 import pl.umcs.workshop.user.User;
 
 @Entity
-@Table(name = "image_user_round_relation")
+@Table(name = "images_users_rounds_relation")
 public class ImageUserRoundRelation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
