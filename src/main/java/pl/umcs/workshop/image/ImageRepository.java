@@ -7,5 +7,9 @@ import java.util.List;
 public interface ImageRepository extends JpaRepository<Image, Long> {
     List<Image> findAllByGroupsId(Long groupId);
 
-    List<Image> findAllByImageUserRoundRelationsRoundId(Long roundId);
+    List<Image> findAllByImageUserRoundRelationsRoundIdAndImageUserRoundRelationsUserId(Long roundId, Long userId);
+
+    default List<Image> findAllImagesForUser(Long roundId, Long userId) {
+        return findAllByImageUserRoundRelationsRoundIdAndImageUserRoundRelationsUserId(roundId, userId);
+    }
 }

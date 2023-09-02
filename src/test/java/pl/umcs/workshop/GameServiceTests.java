@@ -16,6 +16,7 @@ import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserRepository;
 import pl.umcs.workshop.utils.JWTCookieHandler;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -126,7 +127,7 @@ public class GameServiceTests {
     }
 
     @Test
-    public void givenGameId_whenEndGame_thenReturnUserObject() {
+    public void givenGameId_whenEndGame_thenReturnUserObject() throws IOException {
         given(gameRepository.findById(1L)).willReturn(Optional.of(game));
         given(gameRepository.save(game)).willReturn(game);
 

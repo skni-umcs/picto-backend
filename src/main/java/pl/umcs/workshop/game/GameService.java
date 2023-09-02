@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import pl.umcs.workshop.sse.SseService;
 import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.topology.TopologyRepository;
 import pl.umcs.workshop.topology.TopologyService;
@@ -12,6 +13,7 @@ import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserRepository;
 import pl.umcs.workshop.utils.JWTCookieHandler;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,7 +33,7 @@ public class GameService {
     }
 
     // TODO: begin game method
-    public Game beginGame(Long gameId) {
+    public Game beginGame(Long gameId) throws IOException {
         Game game = getGame(gameId);
 
         // Get all users for given game
@@ -43,6 +45,8 @@ public class GameService {
         if (topology == null) {
             // Generate topology
         }
+
+        SseService.emitEventForAll(SseService.EventType.BEGIN_GAME);
 
         return game;
     }
@@ -56,8 +60,9 @@ public class GameService {
                 .generation(0)
                 .lastSeen(LocalDateTime.now())
                 .build();
-
         user.setCookie(JWTCookieHandler.createToken(game.getId(), user.getId()));
+
+        SseService.addUserSession(user.getId());
 
         return userRepository.save(user);
     }
@@ -76,11 +81,13 @@ public class GameService {
         return userRepository.save(user);
     }
 
-    public Game endGame(Long gameId) {
+    public Game endGame(Long gameId) throws IOException {
         Game game = getGame(gameId);
         game.setEndDateTime(LocalDateTime.now());
 
         deleteUserCookies(gameId);
+
+        SseService.emitEventForAll(SseService.EventType.END_GAME);
 
         return gameRepository.save(game);
     }

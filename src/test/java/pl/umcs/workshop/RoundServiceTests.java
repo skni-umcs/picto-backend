@@ -21,6 +21,7 @@ import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserRepository;
 import pl.umcs.workshop.utils.JWTCookieHandler;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -158,7 +159,7 @@ public class RoundServiceTests {
     }
 
     @Test
-    public void givenUserId_whenGetNextRound_thenReturnRoundObject() {
+    public void givenUserId_whenGetNextRound_thenReturnRoundObject() throws IOException {
         // given
         given(userRepository.findById(1L)).willReturn(Optional.of(userOne));
         given(roundRepository.getNextRound(1L, 1L, 4)).willReturn(round);
@@ -212,7 +213,7 @@ public class RoundServiceTests {
     // Save listener
 
     @Test
-    public void givenRoundId_whenGetRoundResult_thenReturnPointsGottenOnCorrect() {
+    public void givenRoundId_whenGetRoundResult_thenReturnPointsGottenOnCorrect() throws IOException {
         // given
         given(roundRepository.findById(1L)).willReturn(Optional.of(round));
         given(gameService.getGame(1L)).willReturn(game);
@@ -226,7 +227,7 @@ public class RoundServiceTests {
     }
 
     @Test
-    public void givenRoundId_whenGetRoundResult_thenReturnPointsGottenOnWrong() {
+    public void givenRoundId_whenGetRoundResult_thenReturnPointsGottenOnWrong() throws IOException {
         // given
         given(roundRepository.findById(1L)).willReturn(Optional.of(roundWrong));
         given(gameService.getGame(1L)).willReturn(game);

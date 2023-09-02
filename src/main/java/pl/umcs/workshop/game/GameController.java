@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.umcs.workshop.user.User;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -25,7 +26,7 @@ public class GameController {
     // TODO: begin game method
     @PostMapping("{gameId}/admin/begin")
     // Returns list of round ids
-    public Game beginGame(@PathVariable Long gameId) {
+    public Game beginGame(@PathVariable Long gameId) throws IOException {
         return gameService.beginGame(gameId);
     }
 
@@ -40,7 +41,7 @@ public class GameController {
     }
 
     @PostMapping("{gameId}/admin/end")
-    public Game endGame(@PathVariable Long gameId) {
+    public Game endGame(@PathVariable Long gameId) throws IOException {
         return gameService.endGame(gameId);
     }
 
