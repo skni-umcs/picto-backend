@@ -9,10 +9,10 @@ import java.util.HashMap;
 // TODO: move to separate package
 @Service
 public class SseService {
-    private static HashMap<Long, SseEmitter> userSessions = new HashMap<Long, SseEmitter>();
+    private static HashMap<Long, SseEmitter> userSessions = new HashMap<>();
 
     public enum EventType {
-        BEGIN_GAME,
+        AWAITING_GAME_BEGIN,
         AWAITING_ROUND,
         SPEAKER_READY,
         LISTENER_READY,
@@ -47,10 +47,7 @@ public class SseService {
         emitter.send(event);
     }
 
-    public static SseEmitter handleSseConnection() {
-        // get userId from cookie
-        Long userId = 1L;
-
+    public static SseEmitter handleSseConnection(Long userId) {
         return userSessions.get(userId);
     }
 }

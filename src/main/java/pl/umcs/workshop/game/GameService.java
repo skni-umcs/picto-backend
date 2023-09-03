@@ -45,7 +45,7 @@ public class GameService {
             // Generate topology
         }
 
-        SseService.emitEventForAll(SseService.EventType.BEGIN_GAME);
+        SseService.emitEventForAll(SseService.EventType.AWAITING_GAME_BEGIN);
 
         return game;
     }

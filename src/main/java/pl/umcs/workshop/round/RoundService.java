@@ -51,7 +51,6 @@ public class RoundService {
 
         // TODO: refactor
         SseService.EventType eventType = Objects.equals(round.getUserOne().getId(), userId) ? SseService.EventType.SPEAKER_READY : SseService.EventType.LISTENER_HOLD;
-
         SseService.emitEventForUser(userId, eventType);
 
         return round;
