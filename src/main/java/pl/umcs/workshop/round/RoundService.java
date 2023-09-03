@@ -75,7 +75,7 @@ public class RoundService {
         return saveRound;
     }
 
-    public Round saveRoundListenerInfo(@NotNull UserInfo userInfo) throws IOException {
+    public Round saveRoundListenerInfo(@NotNull UserInfo userInfo) {
         Round round = getRound(userInfo.getRoundId());
 
         round.setUserTwoAnswerTime(userInfo.getAnswerTime());

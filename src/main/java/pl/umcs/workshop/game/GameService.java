@@ -8,7 +8,6 @@ import org.springframework.web.server.ResponseStatusException;
 import pl.umcs.workshop.sse.SseService;
 import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.topology.TopologyRepository;
-import pl.umcs.workshop.topology.TopologyService;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserRepository;
 import pl.umcs.workshop.utils.JWTCookieHandler;

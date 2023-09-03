@@ -55,14 +55,14 @@ public class GameControllerTests {
                 .build();
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                    .post("/game/admin/create")
-                    .content(asJsonString(game))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON))
+                        .post("/game/admin/create")
+                        .content(asJsonString(game))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers
-                    .jsonPath("$.id")
-                    .exists());
+                        .jsonPath("$.id")
+                        .exists());
     }
 
     public static String asJsonString(final Object obj) {
