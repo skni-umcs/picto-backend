@@ -8,6 +8,7 @@ import org.springframework.web.server.ResponseStatusException;
 import pl.umcs.workshop.sse.SseService;
 import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.topology.TopologyRepository;
+import pl.umcs.workshop.topology.TopologyService;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserRepository;
 import pl.umcs.workshop.utils.JWTCookieHandler;
@@ -27,6 +28,9 @@ public class GameService {
     @Autowired
     private TopologyRepository topologyRepository;
 
+    @Autowired
+    private TopologyService topologyService;
+
     public Game createGame(Game game) {
         return gameRepository.save(game);
     }
@@ -42,8 +46,15 @@ public class GameService {
         Topology topology = topologyRepository.findById(game.getTopology().getId()).orElse(null);
 
         if (topology == null) {
-            // Generate topology
+            topology = Topology.builder()
+                    .probabilityOfEdgeRedrawing(.25)     // TODO: get and use p
+                    .maxVertexDegree(2)                  // TODO: get and use k
+                    .build();
+
+            topologyRepository.save(topology);
         }
+
+        topologyService.generateBrackets(users, topology);
 
         SseService.emitEventForAll(SseService.EventType.AWAITING_GAME_BEGIN);
 
@@ -61,9 +72,11 @@ public class GameService {
                 .build();
         user.setCookie(JWTCookieHandler.createToken(game.getId(), user.getId()));
 
-        SseService.addUserSession(user.getId());
+        User savedUser = userRepository.save(user);
 
-        return userRepository.save(user);
+        SseService.addUserSession(savedUser.getId());
+
+        return savedUser;
     }
 
     public User joinGameAsUser(Long gameId, Long userId) {

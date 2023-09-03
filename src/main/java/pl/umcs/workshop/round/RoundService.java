@@ -74,7 +74,7 @@ public class RoundService {
         return saveRound;
     }
 
-    public Round saveRoundListenerInfo(@NotNull UserInfo userInfo) {
+    public Round saveRoundListenerInfo(@NotNull UserInfo userInfo) throws IOException {
         Round round = getRound(userInfo.getRoundId());
 
         round.setUserTwoAnswerTime(userInfo.getAnswerTime());
@@ -82,7 +82,12 @@ public class RoundService {
 
         userService.updateUserLastSeen(userInfo.getUserId());
 
-        return roundRepository.save(round);
+        Round saveRound = roundRepository.save(round);
+
+        SseService.emitEventForUser(round.getUserOne().getId(), SseService.EventType.AWAITING_RESULT);
+        SseService.emitEventForUser(round.getUserTwo().getId(), SseService.EventType.AWAITING_RESULT);
+
+        return saveRound;
     }
 
     public RoundResult getRoundResult(Long roundId) throws IOException {

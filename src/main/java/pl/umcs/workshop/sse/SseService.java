@@ -14,6 +14,7 @@ public class SseService {
     public enum EventType {
         AWAITING_GAME_BEGIN,
         AWAITING_ROUND,
+        AWAITING_RESULT,
         SPEAKER_READY,
         LISTENER_READY,
         SPEAKER_HOLD,
