@@ -1,9 +1,8 @@
 package pl.umcs.workshop.topology;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
 import pl.umcs.workshop.user.User;
-
-import java.util.List;
 
 @Service
 public class TopologyService {

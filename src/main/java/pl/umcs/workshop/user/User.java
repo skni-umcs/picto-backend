@@ -1,13 +1,12 @@
 package pl.umcs.workshop.user;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Set;
 import lombok.*;
 import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.image.ImageUserRoundRelation;
 import pl.umcs.workshop.round.Round;
-
-import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -20,9 +19,6 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-//    @Column(name = "game_id", nullable = false)
-//    private Long gameId;
 
     @Column(name = "score", nullable = false)
     private int score;

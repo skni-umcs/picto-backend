@@ -1,5 +1,9 @@
 package pl.umcs.workshop;
 
+import static org.mockito.BDDMockito.given;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -14,41 +18,15 @@ import pl.umcs.workshop.game.GameService;
 import pl.umcs.workshop.image.Image;
 import pl.umcs.workshop.round.Round;
 import pl.umcs.workshop.round.RoundRepository;
-import pl.umcs.workshop.round.RoundResult;
 import pl.umcs.workshop.round.RoundService;
 import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.user.User;
-import pl.umcs.workshop.user.UserController;
 import pl.umcs.workshop.user.UserRepository;
 import pl.umcs.workshop.user.UserService;
-import pl.umcs.workshop.utils.JWTCookieHandler;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Optional;
-
-import static org.mockito.BDDMockito.given;
+import pl.umcs.workshop.utils.JwtCookieHandler;
 
 @ExtendWith(MockitoExtension.class)
 public class RoundServiceTests {
-    @Mock
-    private GameRepository gameRepository;
-
-    @Mock
-    private RoundRepository roundRepository;
-
-    @Mock
-    private UserRepository userRepository;
-
-    @InjectMocks
-    private RoundService roundService;
-
-    @Mock
-    private GameService gameService;
-
-    @Mock
-    private UserService userService;
-
     private static Game game;
     private static Game gameInvalid;
     private static Game gameEnded;
@@ -59,6 +37,18 @@ public class RoundServiceTests {
     private static User userTwo;
     private static Image topic;
     private static Image imageSelected;
+    @Mock
+    private GameRepository gameRepository;
+    @Mock
+    private RoundRepository roundRepository;
+    @Mock
+    private UserRepository userRepository;
+    @InjectMocks
+    private RoundService roundService;
+    @Mock
+    private GameService gameService;
+    @Mock
+    private UserService userService;
 
     @BeforeAll
     public static void setup() {
@@ -116,7 +106,7 @@ public class RoundServiceTests {
                 .score(6)
                 .generation(3)
                 .lastSeen(LocalDateTime.now())
-                .cookie(JWTCookieHandler.createToken(1L, 1L))
+                .cookie(JwtCookieHandler.createToken(1L, 1L))
                 .build();
 
         userTwo = User.builder()
@@ -125,7 +115,7 @@ public class RoundServiceTests {
                 .score(8)
                 .generation(3)
                 .lastSeen(LocalDateTime.now())
-                .cookie(JWTCookieHandler.createToken(2L, 2L))
+                .cookie(JwtCookieHandler.createToken(2L, 2L))
                 .build();
 
         topic = Image.builder()

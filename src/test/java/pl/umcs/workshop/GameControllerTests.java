@@ -1,7 +1,10 @@
 package pl.umcs.workshop;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.time.LocalDateTime;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
@@ -17,10 +20,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.topology.Topology;
 
-import java.time.LocalDateTime;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -29,6 +28,14 @@ public class GameControllerTests {
     private MockMvc mockMvc;
 
     private Topology topology;
+
+    public static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @BeforeEach
     public void setup() {
@@ -63,13 +70,5 @@ public class GameControllerTests {
                 .andExpect(MockMvcResultMatchers
                         .jsonPath("$.id")
                         .exists());
-    }
-
-    public static String asJsonString(final Object obj) {
-        try {
-            return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }

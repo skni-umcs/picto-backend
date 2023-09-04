@@ -1,5 +1,11 @@
 package pl.umcs.workshop;
 
+import static org.mockito.BDDMockito.given;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,14 +20,7 @@ import pl.umcs.workshop.game.GameService;
 import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserRepository;
-import pl.umcs.workshop.utils.JWTCookieHandler;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
-import static org.mockito.BDDMockito.given;
+import pl.umcs.workshop.utils.JwtCookieHandler;
 
 @ExtendWith(MockitoExtension.class)
 public class GameServiceTests {
@@ -92,7 +91,7 @@ public class GameServiceTests {
                 .score(0)
                 .generation(0)
                 .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
-                .cookie(JWTCookieHandler.createToken(1L, 1L))
+                .cookie(JwtCookieHandler.createToken(1L, 1L))
                 .build());
 
         // when
@@ -111,7 +110,7 @@ public class GameServiceTests {
                 .score(11)
                 .generation(3)
                 .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
-                .cookie(JWTCookieHandler.createToken(1L, 1L))
+                .cookie(JwtCookieHandler.createToken(1L, 1L))
                 .build();
 
         given(userRepository.findById(1L)).willReturn(Optional.of(user));
@@ -149,7 +148,7 @@ public class GameServiceTests {
                         .score(11)
                         .generation(3)
                         .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
-                        .cookie(JWTCookieHandler.createToken(1L, 1L))
+                        .cookie(JwtCookieHandler.createToken(1L, 1L))
                         .build(),
                 User.builder()
                         .id(2L)
@@ -157,7 +156,7 @@ public class GameServiceTests {
                         .score(13)
                         .generation(1)
                         .lastSeen(LocalDateTime.of(2023, 4, 13, 17, 6))
-                        .cookie(JWTCookieHandler.createToken(2L, 1L))
+                        .cookie(JwtCookieHandler.createToken(2L, 1L))
                         .build(),
                 User.builder()
                         .id(3L)
@@ -165,7 +164,7 @@ public class GameServiceTests {
                         .score(7)
                         .generation(1)
                         .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 21))
-                        .cookie(JWTCookieHandler.createToken(3L, 1L))
+                        .cookie(JwtCookieHandler.createToken(3L, 1L))
                         .build()
         });
 

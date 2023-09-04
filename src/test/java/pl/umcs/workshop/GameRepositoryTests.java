@@ -1,5 +1,8 @@
 package pl.umcs.workshop;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -13,10 +16,6 @@ import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.game.GameRepository;
 import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.topology.TopologyRepository;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
 @DataJpaTest
 @Rollback(value = false)

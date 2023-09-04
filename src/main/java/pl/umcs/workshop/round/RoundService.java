@@ -1,5 +1,8 @@
 package pl.umcs.workshop.round;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,12 +15,7 @@ import pl.umcs.workshop.image.ImageRepository;
 import pl.umcs.workshop.sse.SseService;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserInfo;
-import pl.umcs.workshop.user.UserRepository;
 import pl.umcs.workshop.user.UserService;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
 
 @Service
 public class RoundService {

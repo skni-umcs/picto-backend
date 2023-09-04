@@ -1,12 +1,11 @@
 package pl.umcs.workshop.game;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Set;
 import lombok.*;
 import pl.umcs.workshop.round.Round;
 import pl.umcs.workshop.topology.Topology;
-
-import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity
 @Table(name = "games")

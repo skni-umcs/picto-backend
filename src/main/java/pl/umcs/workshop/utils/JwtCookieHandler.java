@@ -5,11 +5,10 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-
 import java.util.Date;
 import java.util.UUID;
 
-public class JWTCookieHandler {
+public class JwtCookieHandler {
     // TODO: get this from env
     private static final String secret = "test";
     static Algorithm algorithm = Algorithm.HMAC256(secret);

@@ -1,5 +1,8 @@
 package pl.umcs.workshop;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,32 +19,13 @@ import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.topology.TopologyRepository;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserRepository;
-import pl.umcs.workshop.utils.JWTCookieHandler;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import pl.umcs.workshop.utils.JwtCookieHandler;
 
 @DataJpaTest
 @Rollback(value = false)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class RoundRepositoryTests {
-    @Autowired
-    private RoundRepository roundRepository;
-
-    @Autowired
-    private TopologyRepository topologyRepository;
-
-    @Autowired
-    private GameRepository gameRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private ImageRepository imageRepository;
-
     private static Game game;
     private static Topology topology;
     private static User userOne;
@@ -49,6 +33,16 @@ public class RoundRepositoryTests {
     private static Image topic;
     private static Image imageSelected;
     private static Image imageSelectedUpdate;
+    @Autowired
+    private RoundRepository roundRepository;
+    @Autowired
+    private TopologyRepository topologyRepository;
+    @Autowired
+    private GameRepository gameRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private ImageRepository imageRepository;
 
     @BeforeAll
     public static void setup() {
@@ -76,7 +70,7 @@ public class RoundRepositoryTests {
                 .game(game)
                 .score(6)
                 .lastSeen(LocalDateTime.now())
-                .cookie(JWTCookieHandler.createToken(1L, 1L))
+                .cookie(JwtCookieHandler.createToken(1L, 1L))
                 .build();
 
         userTwo = User.builder()
@@ -84,7 +78,7 @@ public class RoundRepositoryTests {
                 .game(game)
                 .score(8)
                 .lastSeen(LocalDateTime.now())
-                .cookie(JWTCookieHandler.createToken(2L, 2L))
+                .cookie(JwtCookieHandler.createToken(2L, 2L))
                 .build();
 
         topic = Image.builder()

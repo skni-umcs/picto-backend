@@ -1,5 +1,12 @@
 package pl.umcs.workshop;
 
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -12,27 +19,17 @@ import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserRepository;
 import pl.umcs.workshop.user.UserService;
-import pl.umcs.workshop.utils.JWTCookieHandler;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
-
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import pl.umcs.workshop.utils.JwtCookieHandler;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTests {
+    public static Game game;
+    private static User user;
+    private static Topology topology;
     @Mock
     private UserRepository userRepository;
-
     @InjectMocks
     private UserService userService;
-
-    private static User user;
-    public static Game game;
-    private static Topology topology;
 
     @BeforeAll
     public static void setup() {
@@ -60,7 +57,7 @@ public class UserServiceTests {
                 .game(game)
                 .score(11)
                 .lastSeen(LocalDateTime.now())
-                .cookie(JWTCookieHandler.createToken(1L, 1L))
+                .cookie(JwtCookieHandler.createToken(1L, 1L))
                 .build();
     }
 

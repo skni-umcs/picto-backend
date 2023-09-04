@@ -1,5 +1,7 @@
 package pl.umcs.workshop;
 
+import java.util.List;
+import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -11,9 +13,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.topology.TopologyRepository;
-
-import java.util.List;
-import java.util.Optional;
 
 @DataJpaTest
 @Rollback(value = false)

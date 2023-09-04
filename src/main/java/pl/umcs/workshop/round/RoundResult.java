@@ -12,6 +12,6 @@ public class RoundResult {
     public enum Result {
         CORRECT,
         WRONG,
-        TIME_END;
+        TIME_END
     }
 }

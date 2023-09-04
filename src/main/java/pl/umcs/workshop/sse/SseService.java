@@ -1,30 +1,17 @@
 package pl.umcs.workshop.sse;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import pl.umcs.workshop.utils.JWTCookieHandler;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import pl.umcs.workshop.utils.JwtCookieHandler;
 
 @Service
 public class SseService {
-    private static HashMap<Pair<Long, Long>, SseEmitter> userSessions = new HashMap<>();
-
-    public enum EventType {
-        GAME_BEGIN,
-        AWAITING_ROUND,
-        SPEAKER_READY,
-        LISTENER_READY,
-        SPEAKER_HOLD,
-        LISTENER_HOLD,
-        RESULT_READY,
-        PAUSE_GAME,
-        END_GAME
-    }
+    private static final HashMap<Pair<Long, Long>, SseEmitter> userSessions = new HashMap<>();
 
     private static SseEmitter createNewSession() {
         return new SseEmitter();
@@ -54,8 +41,8 @@ public class SseService {
     }
 
     public static SseEmitter handleSseConnection(String token) {
-        Long gameId = JWTCookieHandler.getGameId(token);
-        Long userId = JWTCookieHandler.getUserId(token);
+        Long gameId = JwtCookieHandler.getGameId(token);
+        Long userId = JwtCookieHandler.getUserId(token);
 
         return userSessions.get(new ImmutablePair<>(gameId, userId));
     }
@@ -73,5 +60,17 @@ public class SseService {
                 closeSseConnection(gameId, entry.getKey().getKey());
             }
         }
+    }
+
+    public enum EventType {
+        GAME_BEGIN,
+        AWAITING_ROUND,
+        SPEAKER_READY,
+        LISTENER_READY,
+        SPEAKER_HOLD,
+        LISTENER_HOLD,
+        RESULT_READY,
+        PAUSE_GAME,
+        END_GAME
     }
 }

@@ -1,9 +1,8 @@
 package pl.umcs.workshop.user;
 
+import java.util.List;
 import lombok.*;
 import pl.umcs.workshop.image.Image;
-
-import java.util.List;
 
 @Getter
 @Setter

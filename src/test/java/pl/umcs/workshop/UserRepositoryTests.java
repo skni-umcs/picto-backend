@@ -1,5 +1,8 @@
 package pl.umcs.workshop;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,29 +15,22 @@ import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.topology.TopologyRepository;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserRepository;
-import pl.umcs.workshop.utils.JWTCookieHandler;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import pl.umcs.workshop.utils.JwtCookieHandler;
 
 @DataJpaTest
 @Rollback(value = false)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class UserRepositoryTests {
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private TopologyRepository topologyRepository;
-
-    @Autowired
-    private GameRepository gameRepository;
-
     private static Game game;
     private static Game gameTwo;
     private static Topology topology;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private TopologyRepository topologyRepository;
+    @Autowired
+    private GameRepository gameRepository;
 
     @BeforeAll
     public static void setup() {
@@ -89,7 +85,7 @@ public class UserRepositoryTests {
                 .game(game)
                 .score(6)
                 .lastSeen(LocalDateTime.now())
-                .cookie(JWTCookieHandler.createToken(1L, 1L))
+                .cookie(JwtCookieHandler.createToken(1L, 1L))
                 .build();
 
         userRepository.save(user);
@@ -113,7 +109,7 @@ public class UserRepositoryTests {
                 .game(gameTwo)
                 .score(11)
                 .lastSeen(LocalDateTime.now())
-                .cookie(JWTCookieHandler.createToken(2L, 2L))
+                .cookie(JwtCookieHandler.createToken(2L, 2L))
                 .build();
 
         userRepository.save(user);
@@ -130,7 +126,7 @@ public class UserRepositoryTests {
                 .game(game)
                 .score(17)
                 .lastSeen(LocalDateTime.now())
-                .cookie(JWTCookieHandler.createToken(1L, 3L))
+                .cookie(JwtCookieHandler.createToken(1L, 3L))
                 .build();
 
         userRepository.save(user);

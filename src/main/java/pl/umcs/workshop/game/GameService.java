@@ -1,5 +1,8 @@
 package pl.umcs.workshop.game;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,11 +13,7 @@ import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.topology.TopologyRepository;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserRepository;
-import pl.umcs.workshop.utils.JWTCookieHandler;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.List;
+import pl.umcs.workshop.utils.JwtCookieHandler;
 
 @Service
 public class GameService {
@@ -59,7 +58,7 @@ public class GameService {
                 .generation(0)
                 .lastSeen(LocalDateTime.now())
                 .build();
-        user.setCookie(JWTCookieHandler.createToken(game.getId(), user.getId()));
+        user.setCookie(JwtCookieHandler.createToken(game.getId(), user.getId()));
 
         SseService.addUserSession(gameId, user.getId());
 
@@ -75,7 +74,7 @@ public class GameService {
 
         Game game = getGame(gameId);
 
-        user.setCookie(JWTCookieHandler.createToken(game.getId(), user.getId()));
+        user.setCookie(JwtCookieHandler.createToken(game.getId(), user.getId()));
 
         return userRepository.save(user);
     }
