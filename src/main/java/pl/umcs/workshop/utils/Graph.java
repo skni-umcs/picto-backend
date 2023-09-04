@@ -66,19 +66,12 @@ public class Graph {
 
     public static Long chooseRandomLowestVertexPositionWithoutTaken(Map<Long, Long> verticesConnectionCount, Long currentVertex, List<Map.Entry<Long,Long>> pairs) {
         Random random = new Random();
+        modifyConnectionCount(verticesConnectionCount, currentVertex, (long) verticesConnectionCount.size()); //is temporary increased so it cannot be the lowest one
         Set<Long> lowestValueVertices = lowestValues(verticesConnectionCount).keySet();
-
-        lowestValueVertices.remove(currentVertex);
+        modifyConnectionCount(verticesConnectionCount, currentVertex, (long) -verticesConnectionCount.size());
 
         if(lowestValueVertices.isEmpty()) {
-            modifyConnectionCount(verticesConnectionCount, currentVertex, (long) verticesConnectionCount.size()); //is temporary increased so it cannot be the lowest one
-            lowestValueVertices = lowestValues(verticesConnectionCount).keySet();
-            lowestValueVertices.remove(currentVertex);
-            modifyConnectionCount(verticesConnectionCount, currentVertex, (long) -verticesConnectionCount.size());
-
-            if(lowestValueVertices.isEmpty()) {
-                return -1L; //it means there are no more vertices to connect to
-            }
+            return -1L; //it means there are no more vertices to connect to
         }
 
         List<Long> lowestValueList = new ArrayList<>(lowestValueVertices);
@@ -99,7 +92,9 @@ public class Graph {
     }
 
     public static void modifyConnectionCount(Map<Long,Long> connectionCount, Long vertex, Long value) {
-        connectionCount.put(vertex, connectionCount.get(vertex) + value);
+        if(connectionCount.containsKey(vertex)) {
+            connectionCount.put(vertex, connectionCount.get(vertex) + value);
+        }
     }
 
     public static boolean pairPresent(List<Map.Entry<Long,Long>> pairs, Long a, Long b) {
@@ -124,7 +119,6 @@ public class Graph {
 
         for (User user : users) {
             Long lowestVertexPosition = chooseRandomLowestVertexPositionWithoutTaken(verticesConnectionCount, null, result);
-
             if (verticesConnectionCount.get(lowestVertexPosition) >= k) {
                 continue;
             }
@@ -135,9 +129,11 @@ public class Graph {
             }
 
             while (verticesConnectionCount.get(lowestVertexPosition) < k && verticesConnectionCount.get(anotherLowestVertex) < k) {
+                //create new pair
                 modifyConnectionCount(verticesConnectionCount,lowestVertexPosition,1L);
                 modifyConnectionCount(verticesConnectionCount,anotherLowestVertex,1L);
                 result.add(Map.entry(lowestVertexPosition, anotherLowestVertex));
+                
                 anotherLowestVertex = chooseRandomLowestVertexPositionWithoutTaken(verticesConnectionCount, lowestVertexPosition, result);
             }
             verticesConnectionCount.remove(lowestVertexPosition);
@@ -330,7 +326,7 @@ public class Graph {
 //                        .build()
 //        }, 4L);
 
-        int n = 36;
+        int n = 37;
         User[] userArray = new User[n];
         for(int i = 0;i<n;i++) {
             userArray[i] = User.builder()
