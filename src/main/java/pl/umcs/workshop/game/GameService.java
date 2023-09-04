@@ -45,7 +45,7 @@ public class GameService {
             // Generate topology
         }
 
-        SseService.emitEventForAll(SseService.EventType.AWAITING_GAME_BEGIN);
+        SseService.emitEventForAll(SseService.EventType.GAME_BEGIN);
 
         return game;
     }
@@ -86,9 +86,11 @@ public class GameService {
 
         deleteUserCookies(gameId);
 
+        Game savedGame = gameRepository.save(game);
+
         SseService.emitEventForAll(SseService.EventType.END_GAME);
 
-        return gameRepository.save(game);
+        return savedGame;
     }
 
     // TODO

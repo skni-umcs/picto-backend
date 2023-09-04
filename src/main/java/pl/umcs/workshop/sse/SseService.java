@@ -6,18 +6,18 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.io.IOException;
 import java.util.HashMap;
 
-// TODO: move to separate package
 @Service
 public class SseService {
     private static HashMap<Long, SseEmitter> userSessions = new HashMap<>();
 
     public enum EventType {
-        AWAITING_GAME_BEGIN,
+        GAME_BEGIN,
         AWAITING_ROUND,
         SPEAKER_READY,
         LISTENER_READY,
         SPEAKER_HOLD,
         LISTENER_HOLD,
+        RESULT_READY,
         PAUSE_GAME,
         END_GAME
     }

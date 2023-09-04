@@ -7,8 +7,9 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
 public class SseController {
-    @GetMapping("event/{userId}")
-    public SseEmitter handleSseConnection(@PathVariable Long userId) {
+    // TODO: get cookie from request header
+    @GetMapping("event")
+    public SseEmitter handleSseConnection(Long userId) {
         return SseService.handleSseConnection(userId);
     }
 }
