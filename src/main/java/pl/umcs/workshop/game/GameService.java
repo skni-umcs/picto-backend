@@ -45,7 +45,7 @@ public class GameService {
             // Generate topology
         }
 
-        SseService.emitEventForAll(SseService.EventType.GAME_BEGIN);
+        SseService.emitEventForAll(gameId, SseService.EventType.GAME_BEGIN);
 
         return game;
     }
@@ -61,7 +61,7 @@ public class GameService {
                 .build();
         user.setCookie(JWTCookieHandler.createToken(game.getId(), user.getId()));
 
-        SseService.addUserSession(user.getId());
+        SseService.addUserSession(gameId, user.getId());
 
         return userRepository.save(user);
     }
@@ -83,12 +83,12 @@ public class GameService {
     public Game endGame(Long gameId) throws IOException {
         Game game = getGame(gameId);
         game.setEndDateTime(LocalDateTime.now());
-
         deleteUserCookies(gameId);
 
         Game savedGame = gameRepository.save(game);
+        SseService.emitEventForAll(gameId, SseService.EventType.END_GAME);
 
-        SseService.emitEventForAll(SseService.EventType.END_GAME);
+        SseService.closeSseConnectionForAll(gameId);
 
         return savedGame;
     }
