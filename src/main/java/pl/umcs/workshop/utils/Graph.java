@@ -1,8 +1,11 @@
 package pl.umcs.workshop.utils;
 
 
+import pl.umcs.workshop.game.Game;
+import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.user.User;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class Graph {
@@ -42,56 +45,60 @@ public class Graph {
         return adjUsers.get(user.getId());
     }
 
+    public static Map<Long, Long> lowestValues(Map<Long, Long> values) {
+        Map<Long, Long> result = new HashMap<>();
+        Long lowest = Long.MAX_VALUE;
 
-    public static Map<Integer, Integer> lowestValues(Map<Integer, Integer> values) {
-        int lowest = Integer.MAX_VALUE;
-        Map<Integer, Integer> result = new HashMap<>();
-        for (Integer key : values.keySet()) {
-            Integer value = values.get(key);
-            if(value == lowest) {
+        for (Long key : values.keySet()) {
+            Long value = values.get(key);
+
+            if (Objects.equals(value, lowest)) {
                 result.put(key, value);
-            }
-            else if(value < lowest) {
+            } else if (value < lowest) {
                 lowest = value;
-                result = new HashMap<>();
+                result.clear();
                 result.put(key, value);
             }
         }
+
         return result;
     }
 
-    public static Integer chooseRandomLowestVertexPositionWithoutTaken(Map<Integer, Integer> verticesConnectionCount, Integer currentVertex, List<Map.Entry<Integer,Integer>> pairs) {
+    public static Long chooseRandomLowestVertexPositionWithoutTaken(Map<Long, Long> verticesConnectionCount, Long currentVertex, List<Map.Entry<Long,Long>> pairs) {
         Random random = new Random();
-        Set lowestValueVertices = lowestValues(verticesConnectionCount).keySet();
-        if(lowestValueVertices.contains(currentVertex)) {
-            lowestValueVertices.remove(currentVertex);
+        Set<Long> lowestValueVertices = lowestValues(verticesConnectionCount).keySet();
+
+        lowestValueVertices.remove(currentVertex);
+
+        if(lowestValueVertices.isEmpty()) {
+            return -1L;
         }
-        List<Integer> lowestValueList = new ArrayList<>();
-        lowestValueList.addAll(lowestValueVertices);
-        Integer chosenPosition = random.nextInt(lowestValueList.size());
-        chosenPosition = lowestValueList.get(chosenPosition);
-        while(lowestValueList.size() > 0) {
-            if(pairPresent(pairs,currentVertex,chosenPosition) || chosenPosition == currentVertex) {
+
+        List<Long> lowestValueList = new ArrayList<>(lowestValueVertices);
+        Long chosenPosition = random.nextLong(lowestValueList.size());
+        chosenPosition = lowestValueList.get(Math.toIntExact(chosenPosition));
+
+        while (!lowestValueList.isEmpty()) {
+            if (pairPresent(pairs, currentVertex, chosenPosition) || Objects.equals(chosenPosition, currentVertex)) {
                 lowestValueList.remove(chosenPosition);
-                chosenPosition = random.nextInt(lowestValueList.size());
-                chosenPosition = lowestValueList.get(chosenPosition);
-            }
-            else {
+                chosenPosition = random.nextLong(lowestValueList.size());
+                chosenPosition = lowestValueList.get(Math.toIntExact(chosenPosition));
+            } else {
                 return chosenPosition;
             }
         }
-        return -1;
 
+        return -1L;
     }
 
-    public static void modifyConnectionCount(Map<Integer,Integer> connectionCount, Integer vertex, Integer value) {
-        connectionCount.put(vertex,connectionCount.get(vertex)+value);
+    public static void modifyConnectionCount(Map<Long,Long> connectionCount, Long vertex, Long value) {
+        connectionCount.put(vertex, connectionCount.get(vertex) + value);
     }
 
-    public static boolean pairPresent(List<Map.Entry<Integer,Integer>> pairs, Integer a, Integer b) {
-        for(Map.Entry<Integer, Integer> pair : pairs) {
-            if(pair.getKey() == a || pair.getKey() == b) {
-                if(pair.getValue() == a || pair.getValue() == b) {
+    public static boolean pairPresent(List<Map.Entry<Long,Long>> pairs, Long a, Long b) {
+        for (Map.Entry<Long, Long> pair : pairs) {
+            if (Objects.equals(pair.getKey(), a) || Objects.equals(pair.getKey(), b)) {
+                if (Objects.equals(pair.getValue(), a) || Objects.equals(pair.getValue(), b)) {
                     return true;
                 }
             }
@@ -99,25 +106,30 @@ public class Graph {
         return false;
     }
 
-    public static List<Map.Entry<Integer, Integer>> generateGraph(int k, int n) {
-        List<Map.Entry<Integer, Integer>> result = new ArrayList<>();
-        Map<Integer, Integer> verticesConnectionCount = new HashMap<>();
-        for(int i = 0;i<n;++i) {
-            verticesConnectionCount.put(i,0);
+    // TODO: swap User[] to List<User>
+    public static List<Map.Entry<Long, Long>> generateGraph(User[] users, long k) {
+        List<Map.Entry<Long, Long>> result = new ArrayList<>();
+        Map<Long, Long> verticesConnectionCount = new HashMap<>();
+
+        for (User user : users) {
+            verticesConnectionCount.put(user.getId(), 0L);
         }
-        for(int i = 0;i<n;++i) {
-            Integer lowestVertexPosition = chooseRandomLowestVertexPositionWithoutTaken(verticesConnectionCount, null, result);
-            if(verticesConnectionCount.get(lowestVertexPosition) >= k) {
+
+        for (User user : users) {
+            Long lowestVertexPosition = chooseRandomLowestVertexPositionWithoutTaken(verticesConnectionCount, null, result);
+
+            if (verticesConnectionCount.get(lowestVertexPosition) >= k) {
                 continue;
             }
 
-            Integer anotherLowestVertex = chooseRandomLowestVertexPositionWithoutTaken(verticesConnectionCount, lowestVertexPosition, result);
-            if(verticesConnectionCount.get(anotherLowestVertex) >= k) {
-                break;
+            Long anotherLowestVertex = chooseRandomLowestVertexPositionWithoutTaken(verticesConnectionCount, lowestVertexPosition, result);
+            if (anotherLowestVertex == -1L || verticesConnectionCount.get(anotherLowestVertex) >= k) {
+                continue;
             }
-            while(verticesConnectionCount.get(lowestVertexPosition) < k && verticesConnectionCount.get(anotherLowestVertex) < k) {
-                modifyConnectionCount(verticesConnectionCount,lowestVertexPosition,1);
-                modifyConnectionCount(verticesConnectionCount,anotherLowestVertex,1);
+
+            while (verticesConnectionCount.get(lowestVertexPosition) < k && verticesConnectionCount.get(anotherLowestVertex) < k) {
+                modifyConnectionCount(verticesConnectionCount,lowestVertexPosition,1L);
+                modifyConnectionCount(verticesConnectionCount,anotherLowestVertex,1L);
                 result.add(Map.entry(lowestVertexPosition, anotherLowestVertex));
                 anotherLowestVertex = chooseRandomLowestVertexPositionWithoutTaken(verticesConnectionCount, lowestVertexPosition, result);
             }
@@ -127,18 +139,192 @@ public class Graph {
         return result;
     }
 
-    public void printGraph() {
-        List<Map.Entry<Integer, Integer>> result = generateGraph(3,30);
-        for(Map.Entry<Integer, Integer> pair : result) {
-            System.out.println(String.format("(%d,%d),",pair.getKey(),pair.getValue()));
-        }
-        /*for (Long userId : adjUsers.keySet()) {
-            System.out.print(userId + ": ");
+    public static void printGraph() {
+        List<Map.Entry<Long, Long>> result = generateGraph(new User[] {
+                User.builder()
+                        .id(1L)
+                        .game(Game.builder()
+                            .id(1L)
+                            .userOneNumberOfImages(4)
+                            .userTwoNumberOfImages(4)
+                            .userOneTime(5)
+                            .userTwoTime(3)
+                            .symbolGroupsAmount(3)
+                            .symbolsInGroupAmount(4)
+                            .correctAnswerPoints(1)
+                            .wrongAnswerPoints(-1)
+                            .topology(Topology.builder().build())
+                            .createDateTime(LocalDateTime.now())
+                            .build())
+                        .score(11)
+                        .generation(1)
+                        .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
+                        .cookie(JWTCookieHandler.createToken(1L, 1L))
+                        .build(),
+                User.builder()
+                        .id(2L)
+                        .game(Game.builder()
+                                .id(1L)
+                                .userOneNumberOfImages(4)
+                                .userTwoNumberOfImages(4)
+                                .userOneTime(5)
+                                .userTwoTime(3)
+                                .symbolGroupsAmount(3)
+                                .symbolsInGroupAmount(4)
+                                .correctAnswerPoints(1)
+                                .wrongAnswerPoints(-1)
+                                .topology(Topology.builder().build())
+                                .createDateTime(LocalDateTime.now())
+                                .build())
+                        .score(13)
+                        .generation(1)
+                        .lastSeen(LocalDateTime.of(2023, 4, 13, 17, 6))
+                        .cookie(JWTCookieHandler.createToken(2L, 1L))
+                        .build(),
+                User.builder()
+                        .id(3L)
+                        .game(Game.builder()
+                                .id(1L)
+                                .userOneNumberOfImages(4)
+                                .userTwoNumberOfImages(4)
+                                .userOneTime(5)
+                                .userTwoTime(3)
+                                .symbolGroupsAmount(3)
+                                .symbolsInGroupAmount(4)
+                                .correctAnswerPoints(1)
+                                .wrongAnswerPoints(-1)
+                                .topology(Topology.builder().build())
+                                .createDateTime(LocalDateTime.now())
+                                .build())
+                        .score(7)
+                        .generation(1)
+                        .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 21))
+                        .cookie(JWTCookieHandler.createToken(3L, 1L))
+                        .build(),
+                User.builder()
+                        .id(4L)
+                        .game(Game.builder()
+                                .id(1L)
+                                .userOneNumberOfImages(4)
+                                .userTwoNumberOfImages(4)
+                                .userOneTime(5)
+                                .userTwoTime(3)
+                                .symbolGroupsAmount(3)
+                                .symbolsInGroupAmount(4)
+                                .correctAnswerPoints(1)
+                                .wrongAnswerPoints(-1)
+                                .topology(Topology.builder().build())
+                                .createDateTime(LocalDateTime.now())
+                                .build())
+                        .score(11)
+                        .generation(1)
+                        .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
+                        .cookie(JWTCookieHandler.createToken(1L, 1L))
+                        .build(),
+                User.builder()
+                        .id(5L)
+                        .game(Game.builder()
+                                .id(1L)
+                                .userOneNumberOfImages(4)
+                                .userTwoNumberOfImages(4)
+                                .userOneTime(5)
+                                .userTwoTime(3)
+                                .symbolGroupsAmount(3)
+                                .symbolsInGroupAmount(4)
+                                .correctAnswerPoints(1)
+                                .wrongAnswerPoints(-1)
+                                .topology(Topology.builder().build())
+                                .createDateTime(LocalDateTime.now())
+                                .build())
+                        .score(13)
+                        .generation(1)
+                        .lastSeen(LocalDateTime.of(2023, 4, 13, 17, 6))
+                        .cookie(JWTCookieHandler.createToken(2L, 1L))
+                        .build(),
+                User.builder()
+                        .id(6L)
+                        .game(Game.builder()
+                                .id(1L)
+                                .userOneNumberOfImages(4)
+                                .userTwoNumberOfImages(4)
+                                .userOneTime(5)
+                                .userTwoTime(3)
+                                .symbolGroupsAmount(3)
+                                .symbolsInGroupAmount(4)
+                                .correctAnswerPoints(1)
+                                .wrongAnswerPoints(-1)
+                                .topology(Topology.builder().build())
+                                .createDateTime(LocalDateTime.now())
+                                .build())
+                        .score(7)
+                        .generation(1)
+                        .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 21))
+                        .cookie(JWTCookieHandler.createToken(3L, 1L))
+                        .build(),
+                User.builder()
+                        .id(7L)
+                        .game(Game.builder()
+                                .id(1L)
+                                .userOneNumberOfImages(4)
+                                .userTwoNumberOfImages(4)
+                                .userOneTime(5)
+                                .userTwoTime(3)
+                                .symbolGroupsAmount(3)
+                                .symbolsInGroupAmount(4)
+                                .correctAnswerPoints(1)
+                                .wrongAnswerPoints(-1)
+                                .topology(Topology.builder().build())
+                                .createDateTime(LocalDateTime.now())
+                                .build())
+                        .score(11)
+                        .generation(1)
+                        .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
+                        .cookie(JWTCookieHandler.createToken(1L, 1L))
+                        .build(),
+                User.builder()
+                        .id(8L)
+                        .game(Game.builder()
+                                .id(1L)
+                                .userOneNumberOfImages(4)
+                                .userTwoNumberOfImages(4)
+                                .userOneTime(5)
+                                .userTwoTime(3)
+                                .symbolGroupsAmount(3)
+                                .symbolsInGroupAmount(4)
+                                .correctAnswerPoints(1)
+                                .wrongAnswerPoints(-1)
+                                .topology(Topology.builder().build())
+                                .createDateTime(LocalDateTime.now())
+                                .build())
+                        .score(13)
+                        .generation(1)
+                        .lastSeen(LocalDateTime.of(2023, 4, 13, 17, 6))
+                        .cookie(JWTCookieHandler.createToken(2L, 1L))
+                        .build(),
+                User.builder()
+                        .id(9L)
+                        .game(Game.builder()
+                                .id(1L)
+                                .userOneNumberOfImages(4)
+                                .userTwoNumberOfImages(4)
+                                .userOneTime(5)
+                                .userTwoTime(3)
+                                .symbolGroupsAmount(3)
+                                .symbolsInGroupAmount(4)
+                                .correctAnswerPoints(1)
+                                .wrongAnswerPoints(-1)
+                                .topology(Topology.builder().build())
+                                .createDateTime(LocalDateTime.now())
+                                .build())
+                        .score(13)
+                        .generation(1)
+                        .lastSeen(LocalDateTime.of(2023, 4, 13, 17, 6))
+                        .cookie(JWTCookieHandler.createToken(2L, 1L))
+                        .build()
+        }, 3L);
 
-            for (Long neighId : adjUsers.get(userId)) {
-                System.out.print(neighId + " ");
-            }
-            System.out.println();
-        }*/
+        for (Map.Entry<Long, Long> pair : result) {
+            System.out.printf("(%d, %d), %n", pair.getKey(), pair.getValue());
+        }
     }
 }
