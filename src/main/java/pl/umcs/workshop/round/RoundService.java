@@ -25,9 +25,6 @@ public class RoundService {
     private RoundRepository roundRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private ImageRepository imageRepository;
 
     @Autowired
@@ -38,20 +35,17 @@ public class RoundService {
 
     public Round getNextRound(Long userId) throws IOException {
         // Check what generation the user is on
-        User user = userRepository.findById(userId).orElse(null);
-
-        if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-        }
-
-        // Check if the game exists and is still in progress
-        gameService.getGame(user.getGame().getId());
-
+        User user = userService.getUser(userId);
+        Game game = gameService.getGame(user.getGame().getId());
         Round round = roundRepository.getNextRound(user.getGame().getId(), userId, user.getGeneration() + 1);
 
-        // TODO: refactor
-        SseService.EventType eventType = Objects.equals(round.getUserOne().getId(), userId) ? SseService.EventType.SPEAKER_READY : SseService.EventType.LISTENER_HOLD;
-        SseService.emitEventForUser(userId, eventType);
+        SseService.EventType eventType;
+        if (Objects.equals(round.getUserOne().getId(), userId)) {
+            eventType = SseService.EventType.SPEAKER_READY;
+        } else {
+            eventType = SseService.EventType.LISTENER_HOLD;
+        }
+        SseService.emitEventForUser(game.getId(), userId, eventType);
 
         return round;
     }
@@ -68,8 +62,8 @@ public class RoundService {
 
         Round saveRound = roundRepository.save(round);
 
-        SseService.emitEventForUser(round.getUserOne().getId(), SseService.EventType.SPEAKER_HOLD);
-        SseService.emitEventForUser(round.getUserTwo().getId(), SseService.EventType.LISTENER_READY);
+        SseService.emitEventForUser(round.getGame().getId(), round.getUserOne().getId(), SseService.EventType.SPEAKER_HOLD);
+        SseService.emitEventForUser(round.getGame().getId(), round.getUserTwo().getId(), SseService.EventType.LISTENER_READY);
 
         return saveRound;
     }
@@ -82,16 +76,24 @@ public class RoundService {
 
         userService.updateUserLastSeen(userInfo.getUserId());
 
-        return roundRepository.save(round);
+        Round saveRound = roundRepository.save(round);
+
+        try {
+            SseService.emitEventForUser(round.getGame().getId(), round.getUserOne().getId(), SseService.EventType.RESULT_READY);
+            SseService.emitEventForUser(round.getGame().getId(), round.getUserTwo().getId(), SseService.EventType.RESULT_READY);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return saveRound;
     }
 
     public RoundResult getRoundResult(Long roundId) throws IOException {
         Round round = getRound(roundId);
         Game game = gameService.getGame(round.getGame().getId());
 
-        // TODO: think this through
-        SseService.emitEventForUser(round.getUserOne().getId(), SseService.EventType.AWAITING_ROUND);
-        SseService.emitEventForUser(round.getUserTwo().getId(), SseService.EventType.AWAITING_ROUND);
+        SseService.emitEventForUser(round.getGame().getId(), round.getUserOne().getId(), SseService.EventType.AWAITING_ROUND);
+        SseService.emitEventForUser(round.getGame().getId(), round.getUserTwo().getId(), SseService.EventType.AWAITING_ROUND);
 
         if (isImageCorrect(round)) {
             return new RoundResult(RoundResult.Result.CORRECT, game.getCorrectAnswerPoints());

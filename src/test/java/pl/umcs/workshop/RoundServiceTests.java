@@ -18,7 +18,9 @@ import pl.umcs.workshop.round.RoundResult;
 import pl.umcs.workshop.round.RoundService;
 import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.user.User;
+import pl.umcs.workshop.user.UserController;
 import pl.umcs.workshop.user.UserRepository;
+import pl.umcs.workshop.user.UserService;
 import pl.umcs.workshop.utils.JWTCookieHandler;
 
 import java.io.IOException;
@@ -43,6 +45,9 @@ public class RoundServiceTests {
 
     @Mock
     private GameService gameService;
+
+    @Mock
+    private UserService userService;
 
     private static Game game;
     private static Game gameInvalid;
@@ -172,17 +177,6 @@ public class RoundServiceTests {
 //        Assertions.assertThat(nextRound.getGeneration()).isEqualTo(4);
 //        Assertions.assertThat(nextRound.getGame().getId()).isEqualTo(1L);
 //    }
-
-    @Test
-    public void givenUserId_whenGetNextRoundForInvalidUser_thenThrowUserNotFound() {
-        // given
-        given(userRepository.findById(1L)).willReturn(Optional.empty());
-
-        // then (with when)
-        Assertions.assertThatThrownBy(() -> roundService.getNextRound(1L))
-                .isInstanceOf(ResponseStatusException.class)
-                .hasMessageContaining("User not found");
-    }
 
 //    @Test
 //    public void givenUserId_whenGetNextRoundForInvalidGame_thenThrowGameNotFound() {

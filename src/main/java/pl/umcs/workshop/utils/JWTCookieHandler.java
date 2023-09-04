@@ -44,4 +44,10 @@ public class JWTCookieHandler {
         return verifiedToken.getClaim("userId").asLong();
     }
 
+    public static Long getGameId(String token) {
+        DecodedJWT verifiedToken = verifyToken(token);
+
+        return verifiedToken.getClaim("gameId").asLong();
+    }
+
 }

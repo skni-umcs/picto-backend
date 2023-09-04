@@ -23,13 +23,8 @@ public class UserService {
         return user;
     }
 
-    // TODO
     public User updateUser(Long userId, User updatedUser) {
-        User user = userRepository.findById(userId).orElse(null);
-
-        if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-        }
+        User user = getUser(userId);
 
         if (!Objects.equals(user.getId(), updatedUser.getId())) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "User id's don't match");
@@ -38,16 +33,12 @@ public class UserService {
         return userRepository.save(updatedUser);
     }
 
-    public void updateUserLastSeen(Long userId) {
-        User user = userRepository.findById(userId).orElse(null);
-
-        if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-        }
+    public User updateUserLastSeen(Long userId) {
+        User user = getUser(userId);
 
         user.setLastSeen(LocalDateTime.now());
 
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     public void deleteUser(Long userId) {
