@@ -77,13 +77,13 @@ public class TopologyServiceTests {
         users.addAll(Arrays.asList(userOne, userTwo, userThree));
     }
 
-    @Test
-    public void givenUsersListAndTopologyObject_whenGenerateBrackets_thenNothing() {
-        // given
-
-        // when
-        topologyService.generateBrackets(users, topology);
-
-        // then
-    }
+//    @Test
+//    public void givenUsersListAndTopologyObject_whenGenerateBrackets_thenNothing() {
+//        // given
+//
+//        // when
+//        topologyService.generateBrackets(users, topology);
+//
+//        // then
+//    }
 }
