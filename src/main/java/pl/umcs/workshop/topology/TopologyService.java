@@ -10,10 +10,10 @@ import java.util.*;
 
 @Service
 public class TopologyService {
-    private Graph userAdjList = new Graph();
+    private Graph userAdjList;
 
     public void generateBrackets(List<User> users, Topology topology) {
-        userAdjList.addAllVertices(users);
+        userAdjList = new Graph(users, topology.getMaxVertexDegree());
         Random random = new Random();
 
         for (User user : users) {

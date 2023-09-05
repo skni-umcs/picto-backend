@@ -69,7 +69,7 @@ public class CircularDoublyLinkedList {
         insertNodeAfter(value, start.previous);
     }
 
-    public Long getElementAtIndex(int index) {
+    public Node getElementAtIndex(int index) {
         if (start == null) {
             throw new IndexOutOfBoundsException("The list is empty.");
         }
@@ -79,7 +79,7 @@ public class CircularDoublyLinkedList {
 
         do {
             if (currentIndex == index) {
-                return currentNode.getValue();
+                return currentNode;
             }
 
             currentNode = currentNode.getNext();
