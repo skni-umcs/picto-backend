@@ -71,7 +71,7 @@ public class Graph {
         modifyConnectionCount(verticesConnectionCount, currentVertex, (long) -verticesConnectionCount.size());
 
         if(lowestValueVertices.isEmpty()) {
-            return -1L; //it means there are no more vertices to connect to
+            return -1L;  // it means there are no more vertices to connect to
         }
 
         List<Long> lowestValueList = new ArrayList<>(lowestValueVertices);
