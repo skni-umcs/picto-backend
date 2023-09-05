@@ -3,6 +3,7 @@ package pl.umcs.workshop.utils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import pl.umcs.workshop.user.User;
 
 @Getter
 public class CircularDoublyLinkedList {
@@ -12,16 +13,16 @@ public class CircularDoublyLinkedList {
     @Getter
     @RequiredArgsConstructor
     public static class Node {
-        private Long value;
+        private User value;
         private Node next;
         private Node previous;
 
-        public Node(Long value) {
+        public Node(User value) {
             this.value = value;
         }
     }
 
-    public void insertNodeBegin(Long value) {
+    public void insertNodeBegin(User value) {
         Node newNode = new Node(value);
 
         if (start == null) {
@@ -35,7 +36,7 @@ public class CircularDoublyLinkedList {
         this.start = insertNodeAfter(value, start.previous);
     }
 
-    public Node insertNodeAfter(Long value, Node nodeAfter) {
+    public Node insertNodeAfter(User value, Node nodeAfter) {
         Node newNode = new Node(value);
 
         if (start == null) {
@@ -55,7 +56,7 @@ public class CircularDoublyLinkedList {
         return newNode;
     }
 
-    public void insertNodeEnd(Long value) {
+    public void insertNodeEnd(User value) {
         Node newNode = new Node(value);
 
         if (start == null) {

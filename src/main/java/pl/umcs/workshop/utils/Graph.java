@@ -1,9 +1,11 @@
 package pl.umcs.workshop.utils;
+
 import pl.umcs.workshop.user.User;
+
 import java.util.*;
 
 public class Graph {
-    private List<Map.Entry<Long, Long>> graph = new ArrayList<>();
+    private List<Map.Entry<User, User>> graph = new ArrayList<>();
     int k;
     double p;
     CircularDoublyLinkedList circularUsers;
@@ -34,13 +36,12 @@ public class Graph {
         generateGraph();
     }
 
-    public List<Long> getAdjVertices(User user) {
-        List<Long> neighbors = new ArrayList<>();
-        for(Map.Entry<Long, Long> edge : graph) {
-            if(user.getId().equals(edge.getKey())) {
+    public List<User> getAdjVertices(User user) {
+        List<User> neighbors = new ArrayList<>();
+        for (Map.Entry<User, User> edge : graph) {
+            if (user.getId().equals(edge.getKey())) {
                 neighbors.add(edge.getValue());
-            }
-            else if(user.getId().equals(edge.getValue())) {
+            } else if (user.getId().equals(edge.getValue())) {
                 neighbors.add(edge.getKey());
             }
         }
@@ -48,11 +49,11 @@ public class Graph {
     }
 
     //TODO: add pairing
-    public void addEdge(User one, User two) {
+    public void addPair(User one, User two) {
         //placeholder
     }
 
-    private boolean edgePresent(Long userOne, Long userTwo) {
+    private boolean edgePresent(User userOne, User userTwo) {
         //order matters
         for (Map.Entry pair : graph) {
             if (pair.getKey() == userOne && pair.getValue() == userTwo) {
@@ -62,7 +63,7 @@ public class Graph {
         return false;
     }
 
-    private void addEdge(Long userOne, Long userTwo) {
+    private void addEdge(User userOne, User userTwo) {
         if (!edgePresent(userOne, userTwo)) {
             graph.add(new AbstractMap.SimpleEntry(userOne, userTwo));
             graph.add(new AbstractMap.SimpleEntry(userTwo, userOne));
@@ -80,23 +81,22 @@ public class Graph {
             addEdge(userOne.getValue(), currentPreviousUser.getValue());
             addEdge(userOne.getValue(), currentNextUser.getValue());
         }
-        if (k % 2 == 1 && index < circularUsers.size()/2) {
+        if (k % 2 == 1 && index < circularUsers.size() / 2) {
             CircularDoublyLinkedList.Node opposite = userOne;
-            for(int i = 0; i< circularUsers.size()/2; i++) {
+            for (int i = 0; i < circularUsers.size() / 2; i++) {
                 opposite = opposite.getNext();
             }
             addEdge(userOne.getValue(), opposite.getValue());
         }
     }
 
-    private User chooseRandomAvailableUser(Long currentUserId) {
+    private User chooseRandomAvailableUser(User currentUser) {
         Random random = new Random();
         List<User> availableUsers = new ArrayList<>();
-        for(User newUser : users) {
-            if(newUser.getId().equals(currentUserId) || edgePresent(currentUserId,newUser.getId())) {
+        for (User newUser : users) {
+            if (newUser.getId().equals(currentUser.getId()) || edgePresent(currentUser, newUser)) {
                 //bad vertex
-            }
-            else {
+            } else {
                 availableUsers.add(newUser);
             }
         }
@@ -104,16 +104,16 @@ public class Graph {
         return availableUsers.get(userIndex);
     }
 
-    private void reGenerateEdge(Map.Entry<Long, Long> edge) {
-        Long randomUserId = chooseRandomAvailableUser(edge.getKey()).getId();
-        edge.setValue(randomUserId);
+    private void reGenerateEdge(Map.Entry<User, User> edge) {
+        User randomUser = chooseRandomAvailableUser(edge.getKey());
+        edge.setValue(randomUser);
     }
 
     private void reGenerateEdges() {
         Random random = new Random();
-        for(Map.Entry edge : graph) {
+        for (Map.Entry<User, User> edge : graph) {
             double r = random.nextDouble();
-            if(r < p) {
+            if (r < p) {
                 reGenerateEdge(edge);
             }
         }
@@ -127,9 +127,9 @@ public class Graph {
     }
 
     public void printGraph() {
-        for (Map.Entry<Long,Long> pair : graph) {
-            Long a = pair.getKey();
-            Long b = pair.getValue();
+        for (Map.Entry<User, User> pair : graph) {
+            Long a = pair.getKey().getId();
+            Long b = pair.getValue().getId();
             System.out.println(String.format("(%d,%d),", a + 1, b + 1));
         }
     }
@@ -138,7 +138,7 @@ public class Graph {
     public CircularDoublyLinkedList listToCircular(List<User> users) {
         CircularDoublyLinkedList result = new CircularDoublyLinkedList();
         for (User user : users) {
-            result.insertNodeEnd(user.getId());
+            result.insertNodeEnd(user);
         }
         return result;
     }

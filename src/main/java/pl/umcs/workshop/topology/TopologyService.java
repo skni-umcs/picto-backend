@@ -22,7 +22,7 @@ public class TopologyService {
 
             while (userAdjList.getAdjVertices(user).size() < topology.getMaxVertexDegree()) {
                 User generatedUser = unusedUsers.get((int) ((random.nextFloat() * unusedUsers.size()) - 1));
-                userAdjList.addEdge(user, generatedUser);
+                //userAdjList.addEdge(user, generatedUser);
                 unusedUsers.remove(generatedUser);
             }
         }
