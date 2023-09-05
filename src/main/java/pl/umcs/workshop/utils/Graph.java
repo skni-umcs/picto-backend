@@ -44,9 +44,9 @@ public class Graph {
     public List<User> getAdjVertices(User user) {
         List<User> neighbors = new ArrayList<>();
         for (Map.Entry<User, User> edge : edges) {
-            if (user.getId().equals(edge.getKey())) {
+            if (user.getId().equals(edge.getKey().getId())) {
                 neighbors.add(edge.getValue());
-            } else if (user.getId().equals(edge.getValue())) {
+            } else if (user.getId().equals(edge.getValue().getId())) {
                 neighbors.add(edge.getKey());
             }
         }
@@ -59,9 +59,8 @@ public class Graph {
     }
 
     private boolean edgePresent(User userOne, User userTwo) {
-        //order matters
         for (Map.Entry pair : edges) {
-            if (pair.getKey() == userOne && pair.getValue() == userTwo) {
+            if (pair.getKey().equals(userOne) && pair.getValue().equals(userTwo) || pair.getKey().equals(userTwo) && pair.getValue().equals(userOne)) {
                 return true;
             }
         }
@@ -69,9 +68,8 @@ public class Graph {
     }
 
     private void addEdge(User userOne, User userTwo) {
-        if (!edgePresent(userOne, userTwo)) {
+        if (!edgePresent(userOne, userTwo) && !userOne.equals(userTwo)) {
             edges.add(new AbstractMap.SimpleEntry(userOne, userTwo));
-            edges.add(new AbstractMap.SimpleEntry(userTwo, userOne));
         }
     }
 
