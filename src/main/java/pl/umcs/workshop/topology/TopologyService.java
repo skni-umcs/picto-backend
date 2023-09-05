@@ -13,7 +13,7 @@ public class TopologyService {
     private Graph userAdjList;
 
     public void generateBrackets(List<User> users, Topology topology) {
-        userAdjList = new Graph(users, topology.getMaxVertexDegree());
+        userAdjList = new Graph(users, topology.getMaxVertexDegree(), topology.getProbabilityOfEdgeRedrawing());
         Random random = new Random();
 
         for (User user : users) {
