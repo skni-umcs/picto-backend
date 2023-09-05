@@ -5,7 +5,8 @@ import pl.umcs.workshop.user.User;
 import java.util.*;
 
 public class Graph {
-    private List<Map.Entry<User, User>> graph = new ArrayList<>();
+
+    private List<Map.Entry<User, User>> edges = new ArrayList<>();
     int k;
     double p;
     CircularDoublyLinkedList circularUsers;
@@ -18,6 +19,10 @@ public class Graph {
         this.k = k;
         this.p = p;
         generateGraph();
+    }
+
+    public List<Map.Entry<User, User>> getEdges() {
+        return edges;
     }
 
     public void setUsers(List<User> users) {
@@ -38,7 +43,7 @@ public class Graph {
 
     public List<User> getAdjVertices(User user) {
         List<User> neighbors = new ArrayList<>();
-        for (Map.Entry<User, User> edge : graph) {
+        for (Map.Entry<User, User> edge : edges) {
             if (user.getId().equals(edge.getKey())) {
                 neighbors.add(edge.getValue());
             } else if (user.getId().equals(edge.getValue())) {
@@ -55,7 +60,7 @@ public class Graph {
 
     private boolean edgePresent(User userOne, User userTwo) {
         //order matters
-        for (Map.Entry pair : graph) {
+        for (Map.Entry pair : edges) {
             if (pair.getKey() == userOne && pair.getValue() == userTwo) {
                 return true;
             }
@@ -65,8 +70,8 @@ public class Graph {
 
     private void addEdge(User userOne, User userTwo) {
         if (!edgePresent(userOne, userTwo)) {
-            graph.add(new AbstractMap.SimpleEntry(userOne, userTwo));
-            graph.add(new AbstractMap.SimpleEntry(userTwo, userOne));
+            edges.add(new AbstractMap.SimpleEntry(userOne, userTwo));
+            edges.add(new AbstractMap.SimpleEntry(userTwo, userOne));
         }
     }
 
@@ -111,7 +116,7 @@ public class Graph {
 
     private void reGenerateEdges() {
         Random random = new Random();
-        for (Map.Entry<User, User> edge : graph) {
+        for (Map.Entry<User, User> edge : edges) {
             double r = random.nextDouble();
             if (r < p) {
                 reGenerateEdge(edge);
@@ -127,7 +132,7 @@ public class Graph {
     }
 
     public void printGraph() {
-        for (Map.Entry<User, User> pair : graph) {
+        for (Map.Entry<User, User> pair : edges) {
             Long a = pair.getKey().getId();
             Long b = pair.getValue().getId();
             System.out.println(String.format("(%d,%d),", a + 1, b + 1));
