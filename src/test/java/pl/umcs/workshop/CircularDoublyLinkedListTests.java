@@ -76,4 +76,25 @@ public class CircularDoublyLinkedListTests {
 
     assertThrows(IndexOutOfBoundsException.class, () -> list.getElementAtIndex(2));
   }
+
+  @Test
+  public void testSizeEmptyList() {
+    assertEquals(0, list.size());
+  }
+
+  @Test
+  public void testSizeNonEmptyList() {
+    list.insertNodeBegin(1L);
+    list.insertNodeEnd(2L);
+    list.insertNodeEnd(3L);
+
+    assertEquals(3, list.size());
+  }
+
+  @Test
+  public void testSizeSingleNodeList() {
+    list.insertNodeBegin(1L);
+
+    assertEquals(1, list.size());
+  }
 }

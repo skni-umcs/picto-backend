@@ -89,6 +89,21 @@ public class CircularDoublyLinkedList {
         throw new IndexOutOfBoundsException("Index out of bounds: " + index);
     }
 
+    public int size() {
+        if (start == null) {
+            return 0;
+        }
+
+        int count = 0;
+        Node currentNode = start;
+        do {
+            count++;
+            currentNode = currentNode.getNext();
+        } while (currentNode != start);
+
+        return count;
+    }
+
     public void printList() {
         if (start == null) {
             System.out.println("The list is empty.");
@@ -103,5 +118,4 @@ public class CircularDoublyLinkedList {
             System.out.println();
         }
     }
-
 }
