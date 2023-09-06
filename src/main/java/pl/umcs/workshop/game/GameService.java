@@ -36,7 +36,7 @@ public class GameService {
 
     public Game createGame(@NotNull Game game) {
         if (gameRepository.existsById(game.getTopology().getId())) {
-            Topology topology = topologyRepository.findById(game.getTopology().getId())
+            Topology topology = topologyRepository.findById(game.getTopology().getId()).orElse(null);
             game.setTopology(topology);
         } else {
             Topology topology = Topology.builder()
