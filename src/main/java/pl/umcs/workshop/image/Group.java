@@ -3,6 +3,7 @@ package pl.umcs.workshop.image;
 import jakarta.persistence.*;
 import java.util.Set;
 import lombok.*;
+import pl.umcs.workshop.game.Game;
 
 @Entity
 @Table(name = "groups")
@@ -20,6 +21,9 @@ public class Group {
     private String name;
 
     // Relations
+    @OneToMany(mappedBy = "group")
+    private Set<Game> games;
+
     @ManyToMany
     @JoinColumn(name = "image_id")
     private Set<Image> images;

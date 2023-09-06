@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import pl.umcs.workshop.image.ImageService;
 import pl.umcs.workshop.sse.SseService;
 import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.topology.TopologyRepository;
@@ -30,32 +31,32 @@ public class GameService {
     @Autowired
     private TopologyService topologyService;
 
-    public Game createGame(Game game) {
+    @Autowired
+    private ImageService imageService;
+
+    public Game createGame(@NotNull Game game) {
+        if (gameRepository.existsById(game.getTopology().getId())) {
+            Topology topology = topologyRepository.findById(game.getTopology().getId())
+            game.setTopology(topology);
+        } else {
+            Topology topology = Topology.builder()
+                    .maxVertexDegree(game.getTopology().getMaxVertexDegree())
+                    .probabilityOfEdgeRedrawing(game.getTopology().getProbabilityOfEdgeRedrawing())
+                    .build();
+
+            topologyRepository.save(topology);
+        }
+
         return gameRepository.save(game);
     }
 
     // TODO: begin game method
     public Game beginGame(Long gameId) throws IOException {
         Game game = getGame(gameId);
-
-        // Get all users for given game
         List<User> users = userRepository.findAllByGame(game);
 
-        // TODO: if topology is not present, use p and k from config to generate new topology (and return id)
-        Topology topology = topologyRepository.findById(game.getTopology().getId()).orElse(null);
-
-        if (topology == null) {
-            topology = Topology.builder()
-                    .probabilityOfEdgeRedrawing(.25)     // TODO: get and use p
-                    .maxVertexDegree(2)                  // TODO: get and use k
-                    .build();
-
-            topologyRepository.save(topology);
-        }
-
-        topologyService.generateBrackets(users, topology);
-
-        topologyService.generateBrackets(users, topology);
+        topologyService.generateRoundsForGame(game, users);
+        imageService.generateImagesForGame(game);
 
         SseService.emitEventForAll(gameId, SseService.EventType.GAME_BEGIN);
 

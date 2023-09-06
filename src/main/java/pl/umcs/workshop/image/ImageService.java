@@ -3,13 +3,27 @@ package pl.umcs.workshop.image;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.umcs.workshop.game.Game;
+import pl.umcs.workshop.relation.ImageUserRoundRelation;
+import pl.umcs.workshop.relation.ImageUserRoundRelationRepository;
+import pl.umcs.workshop.round.Round;
+import pl.umcs.workshop.round.RoundRepository;
+import pl.umcs.workshop.user.User;
 
 @Service
 public class ImageService {
     @Autowired
     private ImageRepository imageRepository;
+
+    @Autowired
+    private RoundRepository roundRepository;
+
+    @Autowired
+    private ImageUserRoundRelationRepository imageUserRoundRelationRepository;
 
     private static int getRandomized(int numberOfImages) {
         Random rand = new Random();
@@ -25,24 +39,51 @@ public class ImageService {
         return (int) randomized;
     }
 
-    public List<Image> generateImages(int numberOfImages, Long groupId) {
+    public List<Image> generateImagesForRoundForUser(Long groupId, int numberOfImages) {
         List<Image> images = imageRepository.findAllByGroupsId(groupId);
-
-        List<Image> generatedImages = new ArrayList<>();
+        List<Image> roundImages = new ArrayList<>();
 
         for (int i = 0; i < numberOfImages; i++) {
             Image generatedImage = images.get(getRandomized(numberOfImages));
 
-            generatedImages.add(generatedImage);
+            roundImages.add(generatedImage);
             images.remove(generatedImage);
         }
 
-        return generatedImages;
+        return roundImages;
     }
 
-    public Image generateTopic(Long groupId) {
-        List<Image> images = imageRepository.findAllByGroupsId(groupId);
+    public void generateImagesForGame(Game game) {
+        List<Round> rounds = roundRepository.getAllRoundsForGame(game);
 
-        return images.get(getRandomized(1));
+        for (Round round : rounds) {
+            for (User user : new User[]{round.getUserOne(), round.getUserTwo()}) {
+                int numberOfImages = user.equals(round.getUserOne()) ? game.getUserOneNumberOfImages() : game.getUserTwoNumberOfImages();
+                List<Image> images = generateImagesForRoundForUser(game.getGroup().getId(), numberOfImages);
+                Image topic = getTopic(images);
+
+                for (Image image : images) {
+                    ImageUserRoundRelation imageUserRoundRelation =
+                            ImageUserRoundRelation.builder()
+                                .round(round)
+                                .user(user)
+                                .image(image)
+                                .build();
+
+                    imageUserRoundRelationRepository.save(imageUserRoundRelation);
+                }
+
+                round.setTopic(topic);
+                roundRepository.save(round);
+            }
+        }
     }
+
+    public Image getTopic(@NotNull List<Image> userImages) {
+        return userImages.get(getRandomized(userImages.size()));
+    }
+
+    // save List<ImageUserRoundRelation> for given game
+
+    // getTopic(List<Image> userImages);
 }

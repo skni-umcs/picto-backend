@@ -1,7 +1,10 @@
 package pl.umcs.workshop;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -9,20 +12,11 @@ import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.topology.TopologyService;
 import pl.umcs.workshop.user.User;
-import pl.umcs.workshop.utils.Graph;
 import pl.umcs.workshop.utils.JWTCookieHandler;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
 
 @ExtendWith(MockitoExtension.class)
 public class TopologyServiceTests {
-    private static List<User> users = new ArrayList<>();
+    private static final List<User> users = new ArrayList<>();
 
     private static Topology topology;
 

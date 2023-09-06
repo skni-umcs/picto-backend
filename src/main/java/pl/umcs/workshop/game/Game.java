@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 import lombok.*;
+import pl.umcs.workshop.image.Group;
 import pl.umcs.workshop.round.Round;
 import pl.umcs.workshop.topology.Topology;
 
@@ -56,4 +57,8 @@ public class Game {
     @ManyToOne
     @JoinColumn(name = "topology_id")
     private Topology topology;
+
+    @ManyToOne
+    @JoinColumn(name = "image_group_id")
+    private Group group;
 }

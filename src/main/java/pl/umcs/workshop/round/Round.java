@@ -5,7 +5,7 @@ import java.util.Set;
 import lombok.*;
 import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.image.Image;
-import pl.umcs.workshop.image.ImageUserRoundRelation;
+import pl.umcs.workshop.relation.ImageUserRoundRelation;
 import pl.umcs.workshop.user.User;
 
 @Entity

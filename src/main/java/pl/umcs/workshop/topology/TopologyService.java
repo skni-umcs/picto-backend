@@ -1,33 +1,35 @@
 package pl.umcs.workshop.topology;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.util.*;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+import pl.umcs.workshop.game.Game;
+import pl.umcs.workshop.round.Round;
+import pl.umcs.workshop.round.RoundRepository;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.utils.Graph;
-
-import java.util.*;
+import pl.umcs.workshop.utils.RoundGenerator;
 
 @Service
 public class TopologyService {
-    private Graph userAdjList;
+    private RoundRepository roundRepository;
+    private TopologyRepository topologyRepository;
 
-    public void generateBrackets(List<User> users, Topology topology) {
-        userAdjList = new Graph(users, topology.getMaxVertexDegree(), topology.getProbabilityOfEdgeRedrawing());
-        Random random = new Random();
+    public List<Round> generateRoundsForGame(Game game, List<User> users) {
+        Topology topology = game.getTopology();
+        Graph graph = Graph.builder()
+                .users(users)
+                .k(topology.getMaxVertexDegree())
+                .p(topology.getProbabilityOfEdgeRedrawing())
+                .build();
+        graph.generateGraph();
 
-        for (User user : users) {
-            List<User> unusedUsers = new ArrayList<>(users);
-            unusedUsers.remove(user);
+        RoundGenerator roundGenerator = RoundGenerator.builder()
+                .graph(graph)
+                .build();
+        List<Round> rounds = roundGenerator.generateGenerations(500);
 
-            while (userAdjList.getAdjVertices(user).size() < topology.getMaxVertexDegree()) {
-                User generatedUser = unusedUsers.get((int) ((random.nextFloat() * unusedUsers.size()) - 1));
-                //userAdjList.addEdge(user, generatedUser);
-                unusedUsers.remove(generatedUser);
-            }
-        }
-
-        userAdjList.printGraph();
+        return roundRepository.saveAll(rounds);
     }
 }

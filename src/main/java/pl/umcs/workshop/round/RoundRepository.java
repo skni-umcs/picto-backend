@@ -1,6 +1,9 @@
 package pl.umcs.workshop.round;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import pl.umcs.workshop.game.Game;
+
+import java.util.List;
 
 public interface RoundRepository extends JpaRepository<Round, Long> {
 
@@ -9,4 +12,6 @@ public interface RoundRepository extends JpaRepository<Round, Long> {
     default Round getNextRound(Long gameId, Long userId, int generation) {
         return findOneByGameIdAndUserOneIdAndUserTwoIdAndGeneration(gameId, userId, userId, generation);
     }
+
+    List<Round> getAllRoundsForGame(Game game);
 }

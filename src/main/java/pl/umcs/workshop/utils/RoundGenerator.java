@@ -1,27 +1,37 @@
 package pl.umcs.workshop.utils;
 
+import java.util.*;
+
+import lombok.*;
+import org.jetbrains.annotations.NotNull;
 import pl.umcs.workshop.round.Round;
 import pl.umcs.workshop.user.User;
 
-import java.util.*;
-
+@Builder
+@Getter
+@Setter
 public class RoundGenerator {
-    List<Round> roundList = new ArrayList<>();
+    private List<Round> roundList;
+    private Graph graph;
 
     public void addNewRound(Long id, User userOne, User userTwo, int generation) {
-        Round round = new Round();
-        round.setId(id);
-        round.setUserOne(userOne);
-        round.setUserTwo(userTwo);
-        round.setGeneration(generation);
+        Round round = Round.builder()
+                .id(id)
+                .userOne(userOne)
+                .userTwo(userTwo)
+                .generation(generation)
+                .build();
+
         roundList.add(round);
     }
 
-    public void generateRoundsGeneration(Graph graph, int generation) {
-        Set pairedVertices = new HashSet();
+    public void generateRounds(int generation) {
+        Set<User> pairedVertices = new HashSet<>();
+
         for (Map.Entry<User, User> edge : graph.getEdges()) {
             User userOne = edge.getKey();
             User userTwo = edge.getValue();
+
             if (!pairedVertices.contains(userOne) && !pairedVertices.contains(userTwo)) {
                 pairedVertices.add(userOne);
                 pairedVertices.add(userTwo);
@@ -30,17 +40,21 @@ public class RoundGenerator {
         }
     }
 
-    public void generateRounds(Graph graph, int numberOfGenerations) {
-        for (int i = 0; i < numberOfGenerations; i++) {
-            generateRoundsGeneration(graph, i);
+    public List<Round> generateGenerations(int numberOfGenerations) {
+        for (int generation = 1; generation <= numberOfGenerations; generation++) {
+            generateRounds(generation);
         }
+
+        return roundList;
     }
 
     public void printRoundList() {
         for (Round round : roundList) {
-            System.out.println(
-                    String.format("%d: gen: %d u1: %d u2: %d", round.getId(), round.getGeneration(), round.getUserOne().getId(), round.getUserTwo().getId())
-            );
+            System.out.printf("%d: gen: %d u1: %d u2: %d%n",
+                    round.getId(),
+                    round.getGeneration(),
+                    round.getUserOne().getId(),
+                    round.getUserTwo().getId());
         }
     }
 }
