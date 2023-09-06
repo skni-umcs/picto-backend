@@ -55,6 +55,8 @@ public class GameService {
 
         topologyService.generateBrackets(users, topology);
 
+        topologyService.generateBrackets(users, topology);
+
         SseService.emitEventForAll(gameId, SseService.EventType.GAME_BEGIN);
 
         return game;
