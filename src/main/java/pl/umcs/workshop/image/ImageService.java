@@ -54,7 +54,7 @@ public class ImageService {
     }
 
     public void generateImagesForGame(Game game) {
-        List<Round> rounds = roundRepository.getAllRoundsForGame(game);
+        List<Round> rounds = roundRepository.findAllByGame(game);
 
         for (Round round : rounds) {
             for (User user : new User[]{round.getUserOne(), round.getUserTwo()}) {

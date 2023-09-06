@@ -12,7 +12,7 @@ import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.topology.TopologyService;
 import pl.umcs.workshop.user.User;
-import pl.umcs.workshop.utils.JWTCookieHandler;
+import pl.umcs.workshop.utils.JwtCookieHandler;
 
 @ExtendWith(MockitoExtension.class)
 public class TopologyServiceTests {
@@ -49,7 +49,7 @@ public class TopologyServiceTests {
             .game(game)
             .score(11)
             .lastSeen(LocalDateTime.now())
-            .cookie(JWTCookieHandler.createToken(1L, 1L))
+            .cookie(JwtCookieHandler.createToken(1L, 1L))
             .build();
 
         User userTwo = User.builder()
@@ -57,7 +57,7 @@ public class TopologyServiceTests {
                 .game(game)
                 .score(11)
                 .lastSeen(LocalDateTime.now())
-                .cookie(JWTCookieHandler.createToken(1L, 2L))
+                .cookie(JwtCookieHandler.createToken(1L, 2L))
                 .build();
 
         User userThree = User.builder()
@@ -65,7 +65,7 @@ public class TopologyServiceTests {
                 .game(game)
                 .score(11)
                 .lastSeen(LocalDateTime.now())
-                .cookie(JWTCookieHandler.createToken(1L, 3L))
+                .cookie(JwtCookieHandler.createToken(1L, 3L))
                 .build();
 
         users.addAll(Arrays.asList(userOne, userTwo, userThree));

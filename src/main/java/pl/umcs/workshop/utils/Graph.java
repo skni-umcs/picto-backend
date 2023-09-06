@@ -2,9 +2,7 @@ package pl.umcs.workshop.utils;
 
 import java.util.*;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.jetbrains.annotations.NotNull;
 import pl.umcs.workshop.user.User;
 
@@ -12,12 +10,13 @@ import static pl.umcs.workshop.utils.CircularDoublyLinkedList.listToCircular;
 
 @Builder
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class Graph {
     @Getter
     private final List<Map.Entry<User, User>> edges = new ArrayList<>();
 
     private CircularDoublyLinkedList circularUsers;
-    private final List<User> users;
+    private List<User> users;
 
     private final int k;
     private final double p;

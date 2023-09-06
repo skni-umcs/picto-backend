@@ -11,7 +11,6 @@ import pl.umcs.workshop.user.User;
 
 @Entity
 @Table(name = "images_users_rounds_relation")
-@NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Builder
