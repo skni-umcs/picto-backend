@@ -45,6 +45,7 @@ public class GameService {
                     .build();
 
             topologyRepository.save(topology);
+            game.setTopology(topology);
         }
 
         return gameRepository.save(game);
