@@ -3,6 +3,7 @@ package pl.umcs.workshop.topology;
 import java.util.*;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.round.Round;
@@ -13,7 +14,9 @@ import pl.umcs.workshop.utils.RoundGenerator;
 
 @Service
 public class TopologyService {
+    @Autowired
     private RoundRepository roundRepository;
+    @Autowired
     private TopologyRepository topologyRepository;
 
     public List<Round> generateRoundsForGame(Game game, List<User> users) {

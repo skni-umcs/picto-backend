@@ -1,5 +1,6 @@
 package pl.umcs.workshop.topology;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.Set;
 import lombok.*;
@@ -25,5 +26,6 @@ public class Topology {
 
     // Relations
     @OneToMany(mappedBy = "topology", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<Game> games;
 }

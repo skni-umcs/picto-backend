@@ -1,5 +1,6 @@
 package pl.umcs.workshop.game;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -56,6 +57,7 @@ public class Game {
 
     @ManyToOne
     @JoinColumn(name = "topology_id")
+    @JsonBackReference
     private Topology topology;
 
     @ManyToOne
