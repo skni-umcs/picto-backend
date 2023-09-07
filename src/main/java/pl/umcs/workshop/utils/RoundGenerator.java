@@ -3,7 +3,6 @@ package pl.umcs.workshop.utils;
 import java.util.*;
 
 import lombok.*;
-import org.jetbrains.annotations.NotNull;
 import pl.umcs.workshop.round.Round;
 import pl.umcs.workshop.user.User;
 

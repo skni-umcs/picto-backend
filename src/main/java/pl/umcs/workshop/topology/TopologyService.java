@@ -30,6 +30,7 @@ public class TopologyService {
         graph.generateGraph();
 
         RoundGenerator roundGenerator = RoundGenerator.builder()
+                .roundList(new ArrayList<>())
                 .graph(graph)
                 .build();
         List<Round> rounds = roundGenerator.generateGenerations(500);

@@ -85,6 +85,9 @@ public class Graph {
                 availableUsers.add(newUser);
             }
         }
+        if(availableUsers.size() == 0) {
+            return null;
+        }
         int userIndex = random.nextInt(availableUsers.size());
 
         return availableUsers.get(userIndex);
@@ -92,7 +95,9 @@ public class Graph {
 
     private void reGenerateEdge(@NotNull Map.Entry<User, User> edge) {
         User randomUser = chooseRandomAvailableUser(edge.getKey());
-        edge.setValue(randomUser);
+        if(randomUser != null) {
+            edge.setValue(randomUser);
+        }
     }
 
     private void reGenerateEdges() {
