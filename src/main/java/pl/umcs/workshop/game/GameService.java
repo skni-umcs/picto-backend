@@ -59,7 +59,7 @@ public class GameService {
         topologyService.generateRoundsForGame(game, users);
         imageService.generateImagesForGame(game);
 
-        SseService.emitEventForAll(gameId, SseService.EventType.GAME_BEGIN);
+        SseService.emitEventForAll(game.getId(), SseService.EventType.GAME_BEGIN);
 
         return game;
     }
