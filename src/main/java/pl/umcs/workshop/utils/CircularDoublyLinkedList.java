@@ -1,16 +1,25 @@
 package pl.umcs.workshop.utils;
 
+import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import pl.umcs.workshop.user.User;
 
-import java.util.List;
-
 @Getter
 public class CircularDoublyLinkedList {
     private Node start;
+
+    public static @NotNull CircularDoublyLinkedList listToCircular(@NotNull List<User> users) {
+        CircularDoublyLinkedList result = new CircularDoublyLinkedList();
+
+        for (User user : users) {
+            result.insertNodeEnd(user);
+        }
+
+        return result;
+    }
 
     public void insertNodeBegin(User value) {
         Node newNode = new Node(value);
@@ -108,16 +117,6 @@ public class CircularDoublyLinkedList {
 
             System.out.println();
         }
-    }
-
-    public static @NotNull CircularDoublyLinkedList listToCircular(@NotNull List<User> users) {
-        CircularDoublyLinkedList result = new CircularDoublyLinkedList();
-
-        for (User user : users) {
-            result.insertNodeEnd(user);
-        }
-
-        return result;
     }
 
     @Setter

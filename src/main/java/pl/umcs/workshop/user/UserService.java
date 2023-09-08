@@ -2,6 +2,7 @@ package pl.umcs.workshop.user;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class UserService {
         return user;
     }
 
-    public User updateUser(Long userId, User updatedUser) {
+    public User updateUser(Long userId, @NotNull User updatedUser) {
         User user = getUser(userId);
 
         if (!Objects.equals(user.getId(), updatedUser.getId())) {

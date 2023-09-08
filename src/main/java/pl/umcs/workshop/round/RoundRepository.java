@@ -1,10 +1,8 @@
 package pl.umcs.workshop.round;
 
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import pl.umcs.workshop.game.Game;
-import pl.umcs.workshop.user.User;
-
-import java.util.List;
 
 public interface RoundRepository extends JpaRepository<Round, Long> {
 

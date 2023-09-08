@@ -17,10 +17,7 @@ public class TopologyService {
     @Autowired
     private RoundRepository roundRepository;
 
-    @Autowired
-    private TopologyRepository topologyRepository;
-
-    public List<Round> generateRoundsForGame(Game game, List<User> users) {
+    public List<Round> generateRoundsForGame(@NotNull Game game, List<User> users) {
         Topology topology = game.getTopology();
         Graph graph = Graph.builder()
                 .users(users)

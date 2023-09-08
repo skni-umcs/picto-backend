@@ -9,7 +9,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 public class SseController {
     @GetMapping("event")
     public SseEmitter handleSseConnection(@RequestHeader("x-session") String token) {
-        SseEmitter t = SseService.handleSseConnection(token);
-        return t;
+        return SseService.handleSseConnection(token);
     }
 }
