@@ -43,7 +43,7 @@ public class RoundService {
         } else {
             eventType = SseService.EventType.LISTENER_HOLD;
         }
-        SseService.emitEventForUser(game.getId(), userId, eventType);
+        SseService.emitEventForUser(user, eventType);
 
         return round;
     }
@@ -56,12 +56,13 @@ public class RoundService {
         Round round = getRound(userInfo.getRoundId());
         round.setUserOneAnswerTime(userInfo.getAnswerTime());
 
+        User user = userService.getUser(userInfo.getUserId());
         userService.updateUserLastSeen(userInfo.getUserId());
 
         Round saveRound = roundRepository.save(round);
 
-        SseService.emitEventForUser(round.getGame().getId(), round.getUserOne().getId(), SseService.EventType.SPEAKER_HOLD);
-        SseService.emitEventForUser(round.getGame().getId(), round.getUserTwo().getId(), SseService.EventType.LISTENER_READY);
+        SseService.emitEventForUser(user, SseService.EventType.SPEAKER_HOLD);
+        SseService.emitEventForUser(user, SseService.EventType.LISTENER_READY);
 
         return saveRound;
     }
@@ -72,13 +73,14 @@ public class RoundService {
         round.setUserTwoAnswerTime(userInfo.getAnswerTime());
         round.setImageSelected(userInfo.getImageSelected());
 
+        User user = userService.getUser(userInfo.getUserId());
         userService.updateUserLastSeen(userInfo.getUserId());
 
         Round saveRound = roundRepository.save(round);
 
         try {
-            SseService.emitEventForUser(round.getGame().getId(), round.getUserOne().getId(), SseService.EventType.RESULT_READY);
-            SseService.emitEventForUser(round.getGame().getId(), round.getUserTwo().getId(), SseService.EventType.RESULT_READY);
+            SseService.emitEventForUser(user, SseService.EventType.RESULT_READY);
+            SseService.emitEventForUser(user, SseService.EventType.RESULT_READY);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -90,8 +92,11 @@ public class RoundService {
         Round round = getRound(roundId);
         Game game = gameService.getGame(round.getGame().getId());
 
-        SseService.emitEventForUser(round.getGame().getId(), round.getUserOne().getId(), SseService.EventType.AWAITING_ROUND);
-        SseService.emitEventForUser(round.getGame().getId(), round.getUserTwo().getId(), SseService.EventType.AWAITING_ROUND);
+        User userOne = userService.getUser(round.getUserOne().getId());
+        User userTwo = userService.getUser(round.getUserTwo().getId());
+
+        SseService.emitEventForUser(userOne, SseService.EventType.AWAITING_ROUND);
+        SseService.emitEventForUser(userTwo, SseService.EventType.AWAITING_ROUND);
 
         if (isImageCorrect(round)) {
             return new RoundResult(RoundResult.Result.CORRECT, game.getCorrectAnswerPoints());

@@ -3,61 +3,69 @@ package pl.umcs.workshop.sse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import pl.umcs.workshop.user.User;
+import pl.umcs.workshop.user.UserService;
 import pl.umcs.workshop.utils.JwtCookieHandler;
 
 @Service
 public class SseService {
-    private static final HashMap<Pair<Long, Long>, SseEmitter> userSessions = new HashMap<>();
+    private static final HashMap<Long, SseEmitter> userSessions = new HashMap<>();
+
+    private static UserService userService;
+
+    @Autowired
+    private void setUserService(UserService userService) {
+        SseService.userService = userService;
+    }
 
     private static SseEmitter createNewSession() {
         return new SseEmitter();
     }
 
-    public static void addUserSession(Long gameId, Long userId) {
-    userSessions.put(new ImmutablePair<>(gameId, userId), createNewSession());
+    public static void addUserSession(User user) {
+        userSessions.put(user.getId(), createNewSession());
     }
 
-    public static void emitEventForUser(Long gameId, Long userId, EventType eventType) throws IOException {
-        SseEmitter emitter = userSessions.get(new ImmutablePair<>(gameId, userId));
+    public static void emitEventForUser(User user, EventType eventType) throws IOException {
+        SseEmitter emitter = userSessions.get(user.getId());
         SseEmitter.SseEventBuilder event = SseEmitter.event()
-                .id(String.valueOf(userId))
+                .id(String.valueOf(user.getId()))
+                .name(eventType.toString())
                 .data(eventType);
         emitter.send(event);
     }
 
     public static void emitEventForAll(Long gameId, EventType eventType) throws IOException {
-        for (Map.Entry<Pair<Long, Long>, SseEmitter> entry : userSessions.entrySet()) {
-            Pair<Long, Long> userGamePair = entry.getKey();
-            Long userGameId = userGamePair.getKey();
+        for (Map.Entry<Long, SseEmitter> entry : userSessions.entrySet()) {
+            Long userId = entry.getKey();
+            User user = userService.getUser(userId);
 
-            if (userGameId.equals(gameId)) {
-                emitEventForUser(gameId, userGamePair.getValue(), eventType);
+            if (user.getGame().getId().equals(gameId)) {
+                emitEventForUser(user, eventType);
             }
         }
     }
 
     public static SseEmitter handleSseConnection(String token) {
-        Long gameId = JwtCookieHandler.getGameId(token);
         Long userId = JwtCookieHandler.getUserId(token);
 
-        return userSessions.get(new ImmutablePair<>(gameId, userId));
+        return userSessions.get(userId);
     }
 
-    public static void closeSseConnection(Long gameId, Long userId) {
-        userSessions.get(new ImmutablePair<>(gameId, userId)).complete();
+    public static void closeSseConnection(Long userId) {
+        userSessions.get(userId).complete();
     }
 
     public static void closeSseConnectionForAll(Long gameId) {
-        for (Map.Entry<Pair<Long, Long>, SseEmitter> entry : userSessions.entrySet()) {
-            Pair<Long, Long> userGamePair = entry.getKey();
-            Long userGameId = userGamePair.getKey();
+        for (Map.Entry<Long, SseEmitter> entry : userSessions.entrySet()) {
+            Long userId = entry.getKey();
+            User user = userService.getUser(userId);
 
-            if (userGameId.equals(gameId)) {
-                closeSseConnection(gameId, entry.getKey().getKey());
+            if (user.getGame().getId().equals(gameId)) {
+                closeSseConnection(userId);
             }
         }
     }

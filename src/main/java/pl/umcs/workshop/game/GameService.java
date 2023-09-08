@@ -73,10 +73,11 @@ public class GameService {
                 .generation(0)
                 .lastSeen(LocalDateTime.now())
                 .build();
-        user.setCookie(JwtCookieHandler.createToken(game.getId(), user.getId()));
 
         User savedUser = userRepository.save(user);
-        SseService.addUserSession(gameId, user.getId());
+        user.setCookie(JwtCookieHandler.createToken(game.getId(), savedUser.getId()));
+
+        SseService.addUserSession(user);
 
         return savedUser;
     }
@@ -89,10 +90,11 @@ public class GameService {
         }
 
         Game game = getGame(gameId);
+        User savedUser = userRepository.save(user);
 
-        user.setCookie(JwtCookieHandler.createToken(game.getId(), user.getId()));
+        user.setCookie(JwtCookieHandler.createToken(game.getId(), savedUser.getId()));
 
-        return userRepository.save(user);
+        return savedUser;
     }
 
     public Game endGame(Long gameId) throws IOException {
@@ -101,9 +103,9 @@ public class GameService {
         deleteUserCookies(gameId);
 
         Game savedGame = gameRepository.save(game);
-        SseService.emitEventForAll(gameId, SseService.EventType.END_GAME);
+        SseService.emitEventForAll(savedGame.getId(), SseService.EventType.END_GAME);
 
-        SseService.closeSseConnectionForAll(gameId);
+        SseService.closeSseConnectionForAll(savedGame.getId());
 
         return savedGame;
     }
