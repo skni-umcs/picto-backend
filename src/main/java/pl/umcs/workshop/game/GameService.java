@@ -15,6 +15,7 @@ import pl.umcs.workshop.topology.TopologyRepository;
 import pl.umcs.workshop.topology.TopologyService;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserRepository;
+import pl.umcs.workshop.user.UserService;
 import pl.umcs.workshop.utils.JwtCookieHandler;
 
 @Service
@@ -27,6 +28,9 @@ public class GameService {
 
     @Autowired
     private TopologyRepository topologyRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private TopologyService topologyService;
@@ -83,11 +87,7 @@ public class GameService {
     }
 
     public User joinGameAsUser(Long gameId, Long userId) {
-        User user = userRepository.findById(userId).orElse(null);
-
-        if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-        }
+        User user = userService.getUser(userId);
 
         Game game = getGame(gameId);
         User savedUser = userRepository.save(user);

@@ -1,12 +1,12 @@
 package pl.umcs.workshop.utils;
 
-import java.util.*;
+import static pl.umcs.workshop.utils.CircularDoublyLinkedList.listToCircular;
 
+import java.util.*;
 import lombok.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pl.umcs.workshop.user.User;
-
-import static pl.umcs.workshop.utils.CircularDoublyLinkedList.listToCircular;
 
 @Builder
 @RequiredArgsConstructor
@@ -14,12 +14,10 @@ import static pl.umcs.workshop.utils.CircularDoublyLinkedList.listToCircular;
 public class Graph {
     @Getter
     private final List<Map.Entry<User, User>> edges = new ArrayList<>();
-
-    private CircularDoublyLinkedList circularUsers;
-    private List<User> users;
-
     private final int k;
     private final double p;
+    private CircularDoublyLinkedList circularUsers;
+    private List<User> users;
 
     public List<User> getAdjVertices(User user) {
         List<User> neighbors = new ArrayList<>();
@@ -76,7 +74,7 @@ public class Graph {
         }
     }
 
-    private User chooseRandomAvailableUser(User currentUser) {
+    private @Nullable User chooseRandomAvailableUser(User currentUser) {
         Random random = new Random();
         List<User> availableUsers = new ArrayList<>();
 
@@ -85,9 +83,11 @@ public class Graph {
                 availableUsers.add(newUser);
             }
         }
-        if(availableUsers.size() == 0) {
+
+        if(availableUsers.isEmpty()) {
             return null;
         }
+
         int userIndex = random.nextInt(availableUsers.size());
 
         return availableUsers.get(userIndex);

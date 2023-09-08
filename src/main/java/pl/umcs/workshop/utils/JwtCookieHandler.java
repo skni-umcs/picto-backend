@@ -48,5 +48,4 @@ public class JwtCookieHandler {
 
         return verifiedToken.getClaim("gameId").asLong();
     }
-
 }

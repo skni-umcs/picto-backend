@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.game.GameRepository;
@@ -22,6 +21,7 @@ import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.topology.TopologyRepository;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserRepository;
+import pl.umcs.workshop.user.UserService;
 import pl.umcs.workshop.utils.JwtCookieHandler;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,6 +34,9 @@ public class GameServiceTests {
 
     @Mock
     private TopologyRepository topologyRepository;
+
+    @Mock
+    private UserService userService;
 
     @InjectMocks
     private GameService gameService;
@@ -119,9 +122,9 @@ public class GameServiceTests {
                 .cookie(JwtCookieHandler.createToken(1L, 1L))
                 .build();
 
-        given(userRepository.findById(1L)).willReturn(Optional.of(user));
         given(gameRepository.findById(1L)).willReturn(Optional.of(game));
         given(userRepository.save(user)).willReturn(user);
+        given(userService.getUser(user.getId())).willReturn(user);
 
         // when
         User joinedUser = gameService.joinGameAsUser(1L, 1L);

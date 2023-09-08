@@ -1,7 +1,6 @@
 package pl.umcs.workshop.utils;
 
 import java.util.*;
-
 import lombok.*;
 import pl.umcs.workshop.round.Round;
 import pl.umcs.workshop.user.User;

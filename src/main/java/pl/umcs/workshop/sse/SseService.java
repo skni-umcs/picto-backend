@@ -3,6 +3,7 @@ package pl.umcs.workshop.sse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -16,20 +17,15 @@ public class SseService {
 
     private static UserService userService;
 
-    @Autowired
-    private void setUserService(UserService userService) {
-        SseService.userService = userService;
-    }
-
     private static SseEmitter createNewSession() {
         return new SseEmitter();
     }
 
-    public static void addUserSession(User user) {
+    public static void addUserSession(@NotNull User user) {
         userSessions.put(user.getId(), createNewSession());
     }
 
-    public static void emitEventForUser(User user, EventType eventType) throws IOException {
+    public static void emitEventForUser(@NotNull User user, @NotNull EventType eventType) throws IOException {
         SseEmitter emitter = userSessions.get(user.getId());
         SseEmitter.SseEventBuilder event = SseEmitter.event()
                 .id(String.valueOf(user.getId()))
@@ -68,6 +64,11 @@ public class SseService {
                 closeSseConnection(userId);
             }
         }
+    }
+
+    @Autowired
+    private void setUserService(UserService userService) {
+        SseService.userService = userService;
     }
 
     public enum EventType {
