@@ -46,10 +46,6 @@ public class User {
   @JsonManagedReference(value = "round-user-two-reference")
   private Set<Round> userTwoRounds;
 
-  @OneToMany(mappedBy = "user")
-  @JsonBackReference(value = "round-image-user-user-reference")
-  private Set<User> users;
-
   @ManyToOne
   @JoinColumn(name = "game_id")
   @JsonBackReference(value = "user-game-reference")
