@@ -1,6 +1,7 @@
 package pl.umcs.workshop.symbol;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.Set;
 import lombok.*;
@@ -27,7 +28,7 @@ public class Symbol {
   // Relations
   @ManyToMany
   @JoinColumn(name = "game_id")
-  @JsonBackReference(value = "game-symbols-reference")
+  @JsonIgnore
   private Set<Game> game;
 
   @ManyToMany

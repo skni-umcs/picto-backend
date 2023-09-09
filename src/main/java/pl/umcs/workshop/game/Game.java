@@ -1,6 +1,7 @@
 package pl.umcs.workshop.game;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -64,7 +65,6 @@ public class Game {
   private Set<User> users;
 
   @ManyToMany(mappedBy = "game")
-  @JsonManagedReference(value = "game-symbols-reference")
   private Set<Symbol> symbols;
 
   @ManyToOne
