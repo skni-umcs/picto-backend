@@ -50,6 +50,10 @@ public class RoundService {
     return imageRepository.findAllImagesForUser(roundId, userId);
   }
 
+//  public List<Image> getSymbols(Long roundId, Long userId) {
+//    return imageRepository.findAllSymbolsForUser(roundId, userId);
+//  }
+
   public Round saveRoundSpeakerInfo(@NotNull UserInfo userInfo) throws IOException {
     Round round = getRound(userInfo.getRoundId());
     round.setUserOneAnswerTime(userInfo.getAnswerTime());
