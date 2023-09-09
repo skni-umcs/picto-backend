@@ -58,11 +58,11 @@ public class Game {
 
   @ManyToOne
   @JoinColumn(name = "topology_id")
-  @JsonManagedReference(value = "topology-reference")
+  @JsonBackReference(value = "topology-reference")
   private Topology topology;
 
   @ManyToOne
   @JoinColumn(name = "image_group_id")
-  @JsonManagedReference(value = "group-reference")
+  @JsonBackReference(value = "group-reference")
   private Group group;
 }

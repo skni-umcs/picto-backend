@@ -25,7 +25,7 @@ public class Group {
 
   // Relations
   @OneToMany(mappedBy = "group")
-  @JsonBackReference(value = "group-reference")
+  @JsonManagedReference(value = "group-reference")
   private Set<Game> games;
 
   @ManyToMany

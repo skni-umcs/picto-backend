@@ -43,12 +43,12 @@ public class ImageService {
     return (int) randomized;
   }
 
-  public List<Image> generateImagesForRoundForUser(Long groupId, int numberOfImages) {
+  public List<Image> generateImagesForRoundForUser(Long groupId) {
     List<Image> images = imageRepository.findAllByGroupsId(groupId);
     List<Image> roundImages = new ArrayList<>();
 
-    for (int i = 0; i < numberOfImages; i++) {
-      Image generatedImage = images.get(getRandomized(numberOfImages));
+    for (int i = 0; i < images.size(); i++) {
+      Image generatedImage = images.get(getRandomized(images.size()));
 
       roundImages.add(generatedImage);
       images.remove(generatedImage);
@@ -66,7 +66,7 @@ public class ImageService {
             user.equals(round.getUserOne())
                 ? game.getUserOneNumberOfImages()
                 : game.getUserTwoNumberOfImages();
-        List<Image> images = generateImagesForRoundForUser(game.getGroup().getId(), numberOfImages);
+        List<Image> images = generateImagesForRoundForUser(game.getGroup().getId());
         Image topic = getTopic(images);
 
         for (Image image : images) {

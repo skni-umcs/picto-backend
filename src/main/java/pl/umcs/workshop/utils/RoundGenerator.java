@@ -37,7 +37,7 @@ public class RoundGenerator {
       if (!pairedVertices.contains(userOne) && !pairedVertices.contains(userTwo)) {
         pairedVertices.add(userOne);
         pairedVertices.add(userTwo);
-        addNewRound((long) roundList.size(), userOne, userTwo, generation);
+        addNewRound((long) roundList.size()+1, userOne, userTwo, generation);
       }
     }
   }

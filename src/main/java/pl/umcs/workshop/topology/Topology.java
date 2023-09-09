@@ -27,6 +27,6 @@ public class Topology {
 
   // Relations
   @OneToMany(mappedBy = "topology", cascade = CascadeType.ALL)
-  @JsonBackReference(value = "topology-reference")
+  @JsonManagedReference(value = "topology-reference")
   private Set<Game> games;
 }
