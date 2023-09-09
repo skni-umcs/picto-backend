@@ -26,75 +26,73 @@ import pl.umcs.workshop.utils.JwtCookieHandler;
 
 @ExtendWith(MockitoExtension.class)
 public class GameServiceTests {
-    @Mock
-    private GameRepository gameRepository;
+  @Mock private GameRepository gameRepository;
 
-    @Mock
-    private UserRepository userRepository;
+  @Mock private UserRepository userRepository;
 
-    @Mock
-    private TopologyRepository topologyRepository;
+  @Mock private TopologyRepository topologyRepository;
 
-    @Mock
-    private UserService userService;
+  @Mock private UserService userService;
 
-    @InjectMocks
-    private GameService gameService;
+  @InjectMocks private GameService gameService;
 
-    private Game game;
-    private Topology topology;
+  private Game game;
+  private Topology topology;
 
-    @BeforeEach
-    public void setup() {
-        topology = Topology.builder().build();
+  @BeforeEach
+  public void setup() {
+    topology = Topology.builder().build();
 
-        game = Game.builder()
-                .id(1L)
-                .userOneNumberOfImages(4)
-                .userTwoNumberOfImages(4)
-                .userOneTime(5)
-                .userTwoTime(3)
-                .symbolGroupsAmount(3)
-                .symbolsInGroupAmount(4)
-                .correctAnswerPoints(1)
-                .wrongAnswerPoints(-1)
-                .topology(topology)
-                .createDateTime(LocalDateTime.now())
-                .build();
-    }
+    game =
+        Game.builder()
+            .id(1L)
+            .userOneNumberOfImages(4)
+            .userTwoNumberOfImages(4)
+            .userOneTime(5)
+            .userTwoTime(3)
+            .symbolGroupsAmount(3)
+            .symbolsInGroupAmount(4)
+            .correctAnswerPoints(1)
+            .wrongAnswerPoints(-1)
+            .topology(topology)
+            .createDateTime(LocalDateTime.now())
+            .build();
+  }
 
-//    @Test
-//    public void givenGameObject_whenCreateGame_thenReturnGameObject() {
-//        // given
-//        given(gameRepository.save(game)).willReturn(game);
-//        given(topologyRepository.save(any(Topology.class))).willReturn();
-//
-//        // when
-//        Game createdGame = gameService.createGame(game);
-//
-//        // then
-//        Assertions.assertThat(createdGame).isNotNull();
-//        Assertions.assertThat(createdGame.getId()).isEqualTo(1);
-//    }
+  //    @Test
+  //    public void givenGameObject_whenCreateGame_thenReturnGameObject() {
+  //        // given
+  //        given(gameRepository.save(game)).willReturn(game);
+  //        given(topologyRepository.save(any(Topology.class))).willReturn();
+  //
+  //        // when
+  //        Game createdGame = gameService.createGame(game);
+  //
+  //        // then
+  //        Assertions.assertThat(createdGame).isNotNull();
+  //        Assertions.assertThat(createdGame.getId()).isEqualTo(1);
+  //    }
 
-    // TODO when beginGame works
-//    @Test
-//    public void givenGameId_whenBeginGame_thenReturnListOfIntegers() {
-//        // given
-//        given(gameRepository.save(game)).willReturn(game);
-//
-//        // when
-//        Game createdGame = gameService.createGame(game);
-//
-//        // then
-//        Assertions.assertThat(createdGame).isNotNull();
-//        Assertions.assertThat(createdGame.getId()).isEqualTo(1);
-//    }
+  // TODO when beginGame works
+  //    @Test
+  //    public void givenGameId_whenBeginGame_thenReturnListOfIntegers() {
+  //        // given
+  //        given(gameRepository.save(game)).willReturn(game);
+  //
+  //        // when
+  //        Game createdGame = gameService.createGame(game);
+  //
+  //        // then
+  //        Assertions.assertThat(createdGame).isNotNull();
+  //        Assertions.assertThat(createdGame.getId()).isEqualTo(1);
+  //    }
 
-    @Test
-    public void givenGameId_whenJoinGame_thenReturnUserObject() {
-        given(gameRepository.findById(1L)).willReturn(Optional.of(game));
-        given(userRepository.save(any(User.class))).willReturn(User.builder()
+  @Test
+  public void givenGameId_whenJoinGame_thenReturnUserObject() {
+    given(gameRepository.findById(1L)).willReturn(Optional.of(game));
+    given(userRepository.save(any(User.class)))
+        .willReturn(
+            User.builder()
                 .id(1L)
                 .game(game)
                 .score(0)
@@ -103,87 +101,90 @@ public class GameServiceTests {
                 .cookie(JwtCookieHandler.createToken(1L, 1L))
                 .build());
 
-        // when
-        User savedUser = gameService.joinGame(1L);
+    // when
+    User savedUser = gameService.joinGame(1L);
 
-        // then
-        Assertions.assertThat(savedUser).isNotNull();
-        Assertions.assertThat(savedUser.getId()).isEqualTo(1);
-    }
+    // then
+    Assertions.assertThat(savedUser).isNotNull();
+    Assertions.assertThat(savedUser.getId()).isEqualTo(1);
+  }
 
-    @Test
-    public void givenGameIdAndUserId_whenJoinGameAsUser_thenReturnUserObject() {
-        User user = User.builder()
-                .id(1L)
-                .game(game)
-                .score(11)
-                .generation(3)
-                .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
-                .cookie(JwtCookieHandler.createToken(1L, 1L))
-                .build();
+  @Test
+  public void givenGameIdAndUserId_whenJoinGameAsUser_thenReturnUserObject() {
+    User user =
+        User.builder()
+            .id(1L)
+            .game(game)
+            .score(11)
+            .generation(3)
+            .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
+            .cookie(JwtCookieHandler.createToken(1L, 1L))
+            .build();
 
-        given(gameRepository.findById(1L)).willReturn(Optional.of(game));
-        given(userRepository.save(user)).willReturn(user);
-        given(userService.getUser(user.getId())).willReturn(user);
+    given(gameRepository.findById(1L)).willReturn(Optional.of(game));
+    given(userRepository.save(user)).willReturn(user);
+    given(userService.getUser(user.getId())).willReturn(user);
 
-        // when
-        User joinedUser = gameService.joinGameAsUser(1L, 1L);
+    // when
+    User joinedUser = gameService.joinGameAsUser(1L, 1L);
 
-        // then
-        Assertions.assertThat(joinedUser).isNotNull();
-        Assertions.assertThat(joinedUser.getId()).isEqualTo(1);
-    }
+    // then
+    Assertions.assertThat(joinedUser).isNotNull();
+    Assertions.assertThat(joinedUser.getId()).isEqualTo(1);
+  }
 
-    @Test
-    public void givenGameId_whenEndGame_thenReturnUserObject() throws IOException {
-        given(gameRepository.findById(1L)).willReturn(Optional.of(game));
-        given(gameRepository.save(game)).willReturn(game);
+  @Test
+  public void givenGameId_whenEndGame_thenReturnUserObject() throws IOException {
+    given(gameRepository.findById(1L)).willReturn(Optional.of(game));
+    given(gameRepository.save(game)).willReturn(game);
 
-        // when
-        Game endedGame = gameService.endGame(1L);
+    // when
+    Game endedGame = gameService.endGame(1L);
 
-        // then
-        Assertions.assertThat(endedGame).isNotNull();
-        Assertions.assertThat(endedGame.getId()).isEqualTo(1);
-        Assertions.assertThat(endedGame.getEndDateTime()).isNotNull();
-    }
+    // then
+    Assertions.assertThat(endedGame).isNotNull();
+    Assertions.assertThat(endedGame.getId()).isEqualTo(1);
+    Assertions.assertThat(endedGame.getEndDateTime()).isNotNull();
+  }
 
-    @Test
-    public void givenGameId_whenDeleteUserCookies_thenReturnListOfUsers() {
-        List<User> users = List.of(new User[]{
-                User.builder()
-                        .id(1L)
-                        .game(game)
-                        .score(11)
-                        .generation(3)
-                        .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
-                        .cookie(JwtCookieHandler.createToken(1L, 1L))
-                        .build(),
-                User.builder()
-                        .id(2L)
-                        .game(game)
-                        .score(13)
-                        .generation(1)
-                        .lastSeen(LocalDateTime.of(2023, 4, 13, 17, 6))
-                        .cookie(JwtCookieHandler.createToken(2L, 1L))
-                        .build(),
-                User.builder()
-                        .id(3L)
-                        .game(game)
-                        .score(7)
-                        .generation(1)
-                        .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 21))
-                        .cookie(JwtCookieHandler.createToken(3L, 1L))
-                        .build()
-        });
+  @Test
+  public void givenGameId_whenDeleteUserCookies_thenReturnListOfUsers() {
+    List<User> users =
+        List.of(
+            new User[] {
+              User.builder()
+                  .id(1L)
+                  .game(game)
+                  .score(11)
+                  .generation(3)
+                  .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 53))
+                  .cookie(JwtCookieHandler.createToken(1L, 1L))
+                  .build(),
+              User.builder()
+                  .id(2L)
+                  .game(game)
+                  .score(13)
+                  .generation(1)
+                  .lastSeen(LocalDateTime.of(2023, 4, 13, 17, 6))
+                  .cookie(JwtCookieHandler.createToken(2L, 1L))
+                  .build(),
+              User.builder()
+                  .id(3L)
+                  .game(game)
+                  .score(7)
+                  .generation(1)
+                  .lastSeen(LocalDateTime.of(2023, 4, 13, 16, 21))
+                  .cookie(JwtCookieHandler.createToken(3L, 1L))
+                  .build()
+            });
 
-        given(userRepository.findAllByGameId(1L)).willReturn(users);
-        given(userRepository.saveAll(users)).willReturn(users);
+    given(userRepository.findAllByGameId(1L)).willReturn(users);
+    given(userRepository.saveAll(users)).willReturn(users);
 
-        // when
-        List<User> returnedUsers = gameService.deleteUserCookies(1L);
+    // when
+    List<User> returnedUsers = gameService.deleteUserCookies(1L);
 
-        // then
-        Assertions.assertThat(returnedUsers.size()).isEqualTo(3);
-    }
+    // then
+    Assertions.assertThat(returnedUsers.size()).isEqualTo(3);
+  }
 }

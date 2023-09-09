@@ -13,18 +13,18 @@ import pl.umcs.workshop.game.Game;
 @AllArgsConstructor
 @Builder
 public class Group {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(name = "name")
-    private String name;
+  @Column(name = "name")
+  private String name;
 
-    // Relations
-    @OneToMany(mappedBy = "group")
-    private Set<Game> games;
+  // Relations
+  @OneToMany(mappedBy = "group")
+  private Set<Game> games;
 
-    @ManyToMany
-    @JoinColumn(name = "image_id")
-    private Set<Image> images;
+  @ManyToMany
+  @JoinColumn(name = "image_id")
+  private Set<Image> images;
 }

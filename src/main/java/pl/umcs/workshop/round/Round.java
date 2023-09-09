@@ -16,40 +16,40 @@ import pl.umcs.workshop.user.User;
 @AllArgsConstructor
 @Builder
 public class Round {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(name = "generation", nullable = false)
-    private int generation;
+  @Column(name = "generation", nullable = false)
+  private int generation;
 
-    @Column(name = "user_1_answer_time")
-    private double userOneAnswerTime;
+  @Column(name = "user_1_answer_time")
+  private double userOneAnswerTime;
 
-    @Column(name = "user_2_answer_time")
-    private double userTwoAnswerTime;
+  @Column(name = "user_2_answer_time")
+  private double userTwoAnswerTime;
 
-    // Relations
-    @OneToMany(mappedBy = "round")
-    private Set<ImageUserRoundRelation> imageUserRoundRelations;
+  // Relations
+  @OneToMany(mappedBy = "round")
+  private Set<ImageUserRoundRelation> imageUserRoundRelations;
 
-    @ManyToOne
-    @JoinColumn(name = "game_id")
-    private Game game;
+  @ManyToOne
+  @JoinColumn(name = "game_id")
+  private Game game;
 
-    @ManyToOne
-    @JoinColumn(name = "user_1_id")
-    private User userOne;
+  @ManyToOne
+  @JoinColumn(name = "user_1_id")
+  private User userOne;
 
-    @ManyToOne
-    @JoinColumn(name = "user_2_id")
-    private User userTwo;
+  @ManyToOne
+  @JoinColumn(name = "user_2_id")
+  private User userTwo;
 
-    @ManyToOne
-    @JoinColumn(name = "topic")
-    private Image topic;
+  @ManyToOne
+  @JoinColumn(name = "topic")
+  private Image topic;
 
-    @ManyToOne
-    @JoinColumn(name = "image_selected")
-    private Image imageSelected;
+  @ManyToOne
+  @JoinColumn(name = "image_selected")
+  private Image imageSelected;
 }

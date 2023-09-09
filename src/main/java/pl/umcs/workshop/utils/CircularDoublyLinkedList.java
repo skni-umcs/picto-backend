@@ -9,126 +9,126 @@ import pl.umcs.workshop.user.User;
 
 @Getter
 public class CircularDoublyLinkedList {
-    private Node start;
+  private Node start;
 
-    public static @NotNull CircularDoublyLinkedList listToCircular(@NotNull List<User> users) {
-        CircularDoublyLinkedList result = new CircularDoublyLinkedList();
+  public static @NotNull CircularDoublyLinkedList listToCircular(@NotNull List<User> users) {
+    CircularDoublyLinkedList result = new CircularDoublyLinkedList();
 
-        for (User user : users) {
-            result.insertNodeEnd(user);
-        }
-
-        return result;
+    for (User user : users) {
+      result.insertNodeEnd(user);
     }
 
-    public void insertNodeBegin(User value) {
-        Node newNode = new Node(value);
+    return result;
+  }
 
-        if (start == null) {
-            start = newNode;
-            newNode.next = newNode;
-            newNode.previous = newNode;
+  public void insertNodeBegin(User value) {
+    Node newNode = new Node(value);
 
-            return;
-        }
+    if (start == null) {
+      start = newNode;
+      newNode.next = newNode;
+      newNode.previous = newNode;
 
-        this.start = insertNodeAfter(value, start.previous);
+      return;
     }
 
-    public Node insertNodeAfter(User value, Node nodeAfter) {
-        Node newNode = new Node(value);
+    this.start = insertNodeAfter(value, start.previous);
+  }
 
-        if (start == null) {
-            start = newNode;
-            newNode.next = newNode;
-            newNode.previous = newNode;
+  public Node insertNodeAfter(User value, Node nodeAfter) {
+    Node newNode = new Node(value);
 
-            return newNode;
-        }
+    if (start == null) {
+      start = newNode;
+      newNode.next = newNode;
+      newNode.previous = newNode;
 
-        newNode.previous = nodeAfter;
-        newNode.next = nodeAfter.next;
-
-        nodeAfter.next.previous = newNode;
-        nodeAfter.next = newNode;
-
-        return newNode;
+      return newNode;
     }
 
-    public void insertNodeEnd(User value) {
-        Node newNode = new Node(value);
+    newNode.previous = nodeAfter;
+    newNode.next = nodeAfter.next;
 
-        if (start == null) {
-            start = newNode;
-            newNode.next = newNode;
-            newNode.previous = newNode;
+    nodeAfter.next.previous = newNode;
+    nodeAfter.next = newNode;
 
-            return;
-        }
+    return newNode;
+  }
 
-        insertNodeAfter(value, start.previous);
+  public void insertNodeEnd(User value) {
+    Node newNode = new Node(value);
+
+    if (start == null) {
+      start = newNode;
+      newNode.next = newNode;
+      newNode.previous = newNode;
+
+      return;
     }
 
-    public Node getElementAtIndex(int index) {
-        if (start == null) {
-            throw new IndexOutOfBoundsException("The list is empty.");
-        }
+    insertNodeAfter(value, start.previous);
+  }
 
-        Node currentNode = start;
-        int currentIndex = 0;
-
-        do {
-            if (currentIndex == index) {
-                return currentNode;
-            }
-
-            currentNode = currentNode.getNext();
-            currentIndex++;
-        } while (currentNode != start);
-
-        throw new IndexOutOfBoundsException("Index out of bounds: " + index);
+  public Node getElementAtIndex(int index) {
+    if (start == null) {
+      throw new IndexOutOfBoundsException("The list is empty.");
     }
 
-    public int size() {
-        if (start == null) {
-            return 0;
-        }
+    Node currentNode = start;
+    int currentIndex = 0;
 
-        int count = 0;
-        Node currentNode = start;
-        do {
-            count++;
-            currentNode = currentNode.getNext();
-        } while (currentNode != start);
+    do {
+      if (currentIndex == index) {
+        return currentNode;
+      }
 
-        return count;
+      currentNode = currentNode.getNext();
+      currentIndex++;
+    } while (currentNode != start);
+
+    throw new IndexOutOfBoundsException("Index out of bounds: " + index);
+  }
+
+  public int size() {
+    if (start == null) {
+      return 0;
     }
 
-    public void printList() {
-        if (start == null) {
-            System.out.println("The list is empty.");
-        } else {
-            Node currentNode = start;
+    int count = 0;
+    Node currentNode = start;
+    do {
+      count++;
+      currentNode = currentNode.getNext();
+    } while (currentNode != start);
 
-            do {
-                System.out.print(currentNode.getValue() + " ");
-                currentNode = currentNode.getNext();
-            } while (currentNode != start);
+    return count;
+  }
 
-            System.out.println();
-        }
+  public void printList() {
+    if (start == null) {
+      System.out.println("The list is empty.");
+    } else {
+      Node currentNode = start;
+
+      do {
+        System.out.print(currentNode.getValue() + " ");
+        currentNode = currentNode.getNext();
+      } while (currentNode != start);
+
+      System.out.println();
     }
+  }
 
-    @Setter
-    @Getter
-    @RequiredArgsConstructor
-    public static class Node {
-        private User value;
-        private Node next;
-        private Node previous;
+  @Setter
+  @Getter
+  @RequiredArgsConstructor
+  public static class Node {
+    private User value;
+    private Node next;
+    private Node previous;
 
-        public Node(User value) {
-            this.value = value;
-        }
+    public Node(User value) {
+      this.value = value;
     }
+  }
 }

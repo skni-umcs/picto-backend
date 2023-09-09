@@ -9,50 +9,47 @@ import pl.umcs.workshop.user.User;
 @Getter
 @Setter
 public class RoundGenerator {
-    private List<Round> roundList;
-    private Graph graph;
+  private List<Round> roundList;
+  private Graph graph;
 
-    public void addNewRound(Long id, User userOne, User userTwo, int generation) {
-        Round round = Round.builder()
-                .id(id)
-                .userOne(userOne)
-                .userTwo(userTwo)
-                .generation(generation)
-                .build();
+  public void addNewRound(Long id, User userOne, User userTwo, int generation) {
+    Round round =
+        Round.builder().id(id).userOne(userOne).userTwo(userTwo).generation(generation).build();
 
-        roundList.add(round);
+    roundList.add(round);
+  }
+
+  public void generateRounds(int generation) {
+    Set<User> pairedVertices = new HashSet<>();
+
+    for (Map.Entry<User, User> edge : graph.getEdges()) {
+      User userOne = edge.getKey();
+      User userTwo = edge.getValue();
+
+      if (!pairedVertices.contains(userOne) && !pairedVertices.contains(userTwo)) {
+        pairedVertices.add(userOne);
+        pairedVertices.add(userTwo);
+        addNewRound((long) roundList.size(), userOne, userTwo, generation);
+      }
+    }
+  }
+
+  public List<Round> generateGenerations(int numberOfGenerations) {
+    for (int generation = 1; generation <= numberOfGenerations; generation++) {
+      generateRounds(generation);
     }
 
-    public void generateRounds(int generation) {
-        Set<User> pairedVertices = new HashSet<>();
+    return roundList;
+  }
 
-        for (Map.Entry<User, User> edge : graph.getEdges()) {
-            User userOne = edge.getKey();
-            User userTwo = edge.getValue();
-
-            if (!pairedVertices.contains(userOne) && !pairedVertices.contains(userTwo)) {
-                pairedVertices.add(userOne);
-                pairedVertices.add(userTwo);
-                addNewRound((long) roundList.size(), userOne, userTwo, generation);
-            }
-        }
+  public void printRoundList() {
+    for (Round round : roundList) {
+      System.out.printf(
+          "%d: gen: %d u1: %d u2: %d%n",
+          round.getId(),
+          round.getGeneration(),
+          round.getUserOne().getId(),
+          round.getUserTwo().getId());
     }
-
-    public List<Round> generateGenerations(int numberOfGenerations) {
-        for (int generation = 1; generation <= numberOfGenerations; generation++) {
-            generateRounds(generation);
-        }
-
-        return roundList;
-    }
-
-    public void printRoundList() {
-        for (Round round : roundList) {
-            System.out.printf("%d: gen: %d u1: %d u2: %d%n",
-                    round.getId(),
-                    round.getGeneration(),
-                    round.getUserOne().getId(),
-                    round.getUserTwo().getId());
-        }
-    }
+  }
 }

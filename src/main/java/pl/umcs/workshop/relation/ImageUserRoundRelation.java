@@ -14,20 +14,20 @@ import pl.umcs.workshop.user.User;
 @RequiredArgsConstructor
 @Builder
 public class ImageUserRoundRelation {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    // Relations
-    @ManyToOne
-    @JoinColumn(name = "round_id")
-    private Round round;
+  // Relations
+  @ManyToOne
+  @JoinColumn(name = "round_id")
+  private Round round;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "image_id")
-    private Image image;
+  @ManyToOne
+  @JoinColumn(name = "image_id")
+  private Image image;
 }

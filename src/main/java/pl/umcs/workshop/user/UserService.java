@@ -10,38 +10,37 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class UserService {
-    @Autowired
-    private UserRepository userRepository;
+  @Autowired private UserRepository userRepository;
 
-    public User getUser(Long userId) {
-        User user = userRepository.findById(userId).orElse(null);
+  public User getUser(Long userId) {
+    User user = userRepository.findById(userId).orElse(null);
 
-        if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-        }
-
-        return user;
+    if (user == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
     }
 
-    public User updateUser(Long userId, @NotNull User updatedUser) {
-        User user = getUser(userId);
+    return user;
+  }
 
-        if (!Objects.equals(user.getId(), updatedUser.getId())) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "User id's don't match");
-        }
+  public User updateUser(Long userId, @NotNull User updatedUser) {
+    User user = getUser(userId);
 
-        return userRepository.save(updatedUser);
+    if (!Objects.equals(user.getId(), updatedUser.getId())) {
+      throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "User id's don't match");
     }
 
-    public User updateUserLastSeen(Long userId) {
-        User user = getUser(userId);
+    return userRepository.save(updatedUser);
+  }
 
-        user.setLastSeen(LocalDateTime.now());
+  public User updateUserLastSeen(Long userId) {
+    User user = getUser(userId);
 
-        return userRepository.save(user);
-    }
+    user.setLastSeen(LocalDateTime.now());
 
-    public void deleteUser(Long userId) {
-        userRepository.deleteById(userId);
-    }
+    return userRepository.save(user);
+  }
+
+  public void deleteUser(Long userId) {
+    userRepository.deleteById(userId);
+  }
 }

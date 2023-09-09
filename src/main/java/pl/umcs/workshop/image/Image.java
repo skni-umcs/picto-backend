@@ -14,24 +14,24 @@ import pl.umcs.workshop.round.Round;
 @AllArgsConstructor
 @Builder
 public class Image {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(name = "path", nullable = false)
-    private String path;
+  @Column(name = "path", nullable = false)
+  private String path;
 
-    // Relations
-    @OneToMany(mappedBy = "image")
-    private Set<ImageUserRoundRelation> imageUserRoundRelations;
+  // Relations
+  @OneToMany(mappedBy = "image")
+  private Set<ImageUserRoundRelation> imageUserRoundRelations;
 
-    @OneToMany(mappedBy = "topic")
-    private Set<Round> topics;
+  @OneToMany(mappedBy = "topic")
+  private Set<Round> topics;
 
-    @OneToMany(mappedBy = "imageSelected")
-    private Set<Round> imagesSelected;
+  @OneToMany(mappedBy = "imageSelected")
+  private Set<Round> imagesSelected;
 
-    @ManyToMany
-    @JoinColumn(name = "group_id")
-    private Set<Group> groups;
+  @ManyToMany
+  @JoinColumn(name = "group_id")
+  private Set<Group> groups;
 }

@@ -10,35 +10,35 @@ import pl.umcs.workshop.user.UserInfo;
 @RestController
 @RequestMapping("round/")
 public class RoundController {
-    RoundService roundService;
+  RoundService roundService;
 
-    @Autowired
-    public RoundController(RoundService roundService) {
-        this.roundService = roundService;
-    }
+  @Autowired
+  public RoundController(RoundService roundService) {
+    this.roundService = roundService;
+  }
 
-    @GetMapping("next/{userId}")
-    public Round getNextRound(@PathVariable Long userId) throws IOException {
-        return roundService.getNextRound(userId);
-    }
+  @GetMapping("next/{userId}")
+  public Round getNextRound(@PathVariable Long userId) throws IOException {
+    return roundService.getNextRound(userId);
+  }
 
-    @GetMapping("{roundId}/images/{userId}")
-    public List<Image> getImages(@PathVariable Long roundId, @PathVariable Long userId) {
-        return roundService.getImages(roundId, userId);
-    }
+  @GetMapping("{roundId}/images/{userId}")
+  public List<Image> getImages(@PathVariable Long roundId, @PathVariable Long userId) {
+    return roundService.getImages(roundId, userId);
+  }
 
-    @PostMapping("{roundId}/speaker")
-    public Round saveRoundSpeakerInfo(@RequestBody UserInfo userInfo) throws IOException {
-        return roundService.saveRoundSpeakerInfo(userInfo);
-    }
+  @PostMapping("{roundId}/speaker")
+  public Round saveRoundSpeakerInfo(@RequestBody UserInfo userInfo) throws IOException {
+    return roundService.saveRoundSpeakerInfo(userInfo);
+  }
 
-    @PostMapping("{roundId}/listener")
-    public Round saveRoundListenerInfo(@RequestBody UserInfo userInfo) throws IOException {
-        return roundService.saveRoundListenerInfo(userInfo);
-    }
+  @PostMapping("{roundId}/listener")
+  public Round saveRoundListenerInfo(@RequestBody UserInfo userInfo) throws IOException {
+    return roundService.saveRoundListenerInfo(userInfo);
+  }
 
-    @GetMapping("{roundId}/result")
-    public RoundResult getRoundResult(@PathVariable Long roundId) throws IOException {
-        return roundService.getRoundResult(roundId);
-    }
+  @GetMapping("{roundId}/result")
+  public RoundResult getRoundResult(@PathVariable Long roundId) throws IOException {
+    return roundService.getRoundResult(roundId);
+  }
 }

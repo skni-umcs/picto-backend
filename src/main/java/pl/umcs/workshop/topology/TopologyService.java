@@ -14,24 +14,22 @@ import pl.umcs.workshop.utils.RoundGenerator;
 
 @Service
 public class TopologyService {
-    @Autowired
-    private RoundRepository roundRepository;
+  @Autowired private RoundRepository roundRepository;
 
-    public List<Round> generateRoundsForGame(@NotNull Game game, List<User> users) {
-        Topology topology = game.getTopology();
-        Graph graph = Graph.builder()
-                .users(users)
-                .k(topology.getMaxVertexDegree())
-                .p(topology.getProbabilityOfEdgeRedrawing())
-                .build();
-        graph.generateGraph();
+  public List<Round> generateRoundsForGame(@NotNull Game game, List<User> users) {
+    Topology topology = game.getTopology();
+    Graph graph =
+        Graph.builder()
+            .users(users)
+            .k(topology.getMaxVertexDegree())
+            .p(topology.getProbabilityOfEdgeRedrawing())
+            .build();
+    graph.generateGraph();
 
-        RoundGenerator roundGenerator = RoundGenerator.builder()
-                .roundList(new ArrayList<>())
-                .graph(graph)
-                .build();
-        List<Round> rounds = roundGenerator.generateGenerations(500);
+    RoundGenerator roundGenerator =
+        RoundGenerator.builder().roundList(new ArrayList<>()).graph(graph).build();
+    List<Round> rounds = roundGenerator.generateGenerations(500);
 
-        return roundRepository.saveAll(rounds);
-    }
+    return roundRepository.saveAll(rounds);
+  }
 }

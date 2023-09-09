@@ -10,9 +10,9 @@ import pl.umcs.workshop.image.Image;
 @AllArgsConstructor
 @Builder
 public class UserInfo {
-    private Long userId;
-    private Long roundId;
-    private int answerTime;
-    private Image imageSelected;
-    private List<Image> symbolsSelected;
+  private Long userId;
+  private Long roundId;
+  private int answerTime;
+  private Image imageSelected;
+  private List<Image> symbolsSelected;
 }
