@@ -2,6 +2,7 @@ package pl.umcs.workshop.utils;
 
 import java.util.*;
 import lombok.*;
+import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.round.Round;
 import pl.umcs.workshop.user.User;
 
@@ -11,10 +12,17 @@ import pl.umcs.workshop.user.User;
 public class RoundGenerator {
   private List<Round> roundList;
   private Graph graph;
+  private Game game;
 
   public void addNewRound(Long id, User userOne, User userTwo, int generation) {
     Round round =
-        Round.builder().id(id).userOne(userOne).userTwo(userTwo).generation(generation).build();
+        Round.builder()
+            .id(id)
+            .game(game)
+            .userOne(userOne)
+            .userTwo(userTwo)
+            .generation(generation)
+            .build();
 
     roundList.add(round);
   }
