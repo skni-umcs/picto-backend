@@ -22,6 +22,8 @@ public class Image {
   @Column(name = "path", nullable = false)
   private String path;
 
+  @Transient private String url;
+
   // Relations
   @OneToMany(mappedBy = "image")
   private Set<ImageUserRoundRelation> imageUserRoundRelations;

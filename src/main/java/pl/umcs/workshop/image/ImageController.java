@@ -8,11 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("image/")
 public class ImageController {
-    @Autowired
-    private ImageService imageService;
+  @Autowired private ImageService imageService;
 
-    @PostMapping("add")
-    public void addImages() {
-        imageService.addImages();
-    }
+  @PostMapping("add")
+  public void addImages() {
+    imageService.addImages();
+  }
 }
