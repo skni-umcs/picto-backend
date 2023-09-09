@@ -2,6 +2,7 @@ package pl.umcs.workshop.utils;
 
 import java.util.*;
 import lombok.*;
+import org.jetbrains.annotations.NotNull;
 import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.round.Round;
 import pl.umcs.workshop.user.User;
@@ -27,18 +28,41 @@ public class RoundGenerator {
     roundList.add(round);
   }
 
+  public Map.Entry<User, User> getRandomEdge(@NotNull List<Map.Entry<User, User>> edges) {
+    Random random = new Random();
+    int randomIndex = random.nextInt(edges.size());
+    return edges.get(randomIndex);
+  }
+
+  public void removeAllEdgesWithUser(@NotNull List<Map.Entry<User, User>> edges, User user) {
+    edges.removeIf(edge -> edge.getKey().equals(user) || edge.getValue().equals(user));
+  }
+
+  public Map.Entry<User, User> randomPair(User candidateOne, User candidateTwo) {
+    Random random = new Random();
+    int whichUser = random.nextInt(2);
+    if (whichUser == 0) {
+      return new AbstractMap.SimpleEntry<>(candidateOne, candidateTwo);
+    } else {
+      return new AbstractMap.SimpleEntry<>(candidateTwo, candidateOne);
+    }
+  }
+
   public void generateRounds(int generation) {
-    Set<User> pairedVertices = new HashSet<>();
+    List<Map.Entry<User, User>> edgesLeft = new ArrayList<>(graph.getEdges());
 
-    for (Map.Entry<User, User> edge : graph.getEdges()) {
-      User userOne = edge.getKey();
-      User userTwo = edge.getValue();
+    while (!edgesLeft.isEmpty()) {
+      Map.Entry<User, User> randomEdge = getRandomEdge(edgesLeft);
+      User candidateOne = randomEdge.getKey();
+      User candidateTwo = randomEdge.getValue();
 
-      if (!pairedVertices.contains(userOne) && !pairedVertices.contains(userTwo)) {
-        pairedVertices.add(userOne);
-        pairedVertices.add(userTwo);
-        addNewRound((long) roundList.size()+1, userOne, userTwo, generation);
-      }
+      Map.Entry<User, User> newPair = randomPair(candidateOne, candidateTwo);
+      User userOne = newPair.getKey();
+      User userTwo = newPair.getValue();
+
+      addNewRound((long) roundList.size() + 1, userOne, userTwo, generation);
+      removeAllEdgesWithUser(edgesLeft, userOne);
+      removeAllEdgesWithUser(edgesLeft, userTwo);
     }
   }
 
