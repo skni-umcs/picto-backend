@@ -1,9 +1,10 @@
-package pl.umcs.workshop.image;
+package pl.umcs.workshop.group;
 
 import jakarta.persistence.*;
 import java.util.Set;
 import lombok.*;
 import pl.umcs.workshop.game.Game;
+import pl.umcs.workshop.image.Image;
 
 @Entity
 @Table(name = "groups")

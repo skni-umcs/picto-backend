@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 import lombok.*;
-import pl.umcs.workshop.image.Group;
+import pl.umcs.workshop.group.Group;
 import pl.umcs.workshop.round.Round;
 import pl.umcs.workshop.topology.Topology;
 

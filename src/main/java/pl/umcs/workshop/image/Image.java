@@ -3,6 +3,7 @@ package pl.umcs.workshop.image;
 import jakarta.persistence.*;
 import java.util.Set;
 import lombok.*;
+import pl.umcs.workshop.group.Group;
 import pl.umcs.workshop.relation.ImageUserRoundRelation;
 import pl.umcs.workshop.round.Round;
 

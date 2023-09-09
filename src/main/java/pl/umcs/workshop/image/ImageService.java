@@ -1,12 +1,19 @@
 package pl.umcs.workshop.image;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.umcs.workshop.game.Game;
+import pl.umcs.workshop.group.Group;
+import pl.umcs.workshop.group.GroupRepository;
 import pl.umcs.workshop.relation.ImageUserRoundRelation;
 import pl.umcs.workshop.relation.ImageUserRoundRelationRepository;
 import pl.umcs.workshop.round.Round;
@@ -18,6 +25,8 @@ public class ImageService {
   @Autowired private ImageRepository imageRepository;
 
   @Autowired private RoundRepository roundRepository;
+
+  @Autowired private GroupRepository groupRepository;
 
   @Autowired private ImageUserRoundRelationRepository imageUserRoundRelationRepository;
 
@@ -78,7 +87,32 @@ public class ImageService {
     return userImages.get(getRandomized(userImages.size()));
   }
 
-  // save List<ImageUserRoundRelation> for given game
+  public void addImages() {
+    Set<String> images = listFiles("src/main/resources/static");
+    System.out.println(images);
 
-  // getTopic(List<Image> userImages);
+    Group group = Group.builder().name("Please don't sell my wife").build();
+    group = groupRepository.save(group);
+
+    for (String imagePath : images) {
+      Image image =
+          Image.builder()
+              .path(imagePath)
+              .groups(new HashSet<>(Collections.singleton(group)))
+              .build();
+      imageRepository.save(image);
+    }
+  }
+
+  public Set<String> listFiles(String dir) {
+    try (Stream<Path> stream = Files.list(Paths.get(dir))) {
+      return stream
+          .filter(file -> !Files.isDirectory(file))
+          .map(Path::getFileName)
+          .map(Path::toString)
+          .collect(Collectors.toSet());
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
 }
