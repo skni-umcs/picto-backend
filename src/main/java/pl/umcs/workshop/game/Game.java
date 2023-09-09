@@ -9,6 +9,7 @@ import lombok.*;
 import pl.umcs.workshop.group.Group;
 import pl.umcs.workshop.round.Round;
 import pl.umcs.workshop.topology.Topology;
+import pl.umcs.workshop.user.User;
 
 @Entity
 @Table(name = "games")
@@ -54,15 +55,20 @@ public class Game {
 
   // Relations
   @OneToMany(mappedBy = "game")
+  @JsonManagedReference(value = "game-round-reference")
   private Set<Round> rounds;
+
+  @OneToMany(mappedBy = "game")
+  @JsonManagedReference(value = "user-game-reference")
+  private Set<User> users;
 
   @ManyToOne
   @JoinColumn(name = "topology_id")
-  @JsonBackReference(value = "topology-reference")
+  @JsonBackReference(value = "topology-game-reference")
   private Topology topology;
 
   @ManyToOne
   @JoinColumn(name = "image_group_id")
-  @JsonBackReference(value = "group-reference")
+  @JsonBackReference(value = "group-games-reference")
   private Group group;
 }

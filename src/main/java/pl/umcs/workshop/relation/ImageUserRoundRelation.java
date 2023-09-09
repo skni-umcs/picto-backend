@@ -1,5 +1,6 @@
 package pl.umcs.workshop.relation;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,13 +22,16 @@ public class ImageUserRoundRelation {
   // Relations
   @ManyToOne
   @JoinColumn(name = "round_id")
+  @JsonBackReference(value = "round-image-user-round-reference")
   private Round round;
 
   @ManyToOne
   @JoinColumn(name = "user_id")
+  @JsonBackReference(value = "round-image-user-user-reference")
   private User user;
 
   @ManyToOne
   @JoinColumn(name = "image_id")
+  @JsonBackReference(value = "round-image-user-image-reference")
   private Image image;
 }

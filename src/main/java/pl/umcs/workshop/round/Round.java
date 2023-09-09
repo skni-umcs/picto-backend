@@ -1,5 +1,7 @@
 package pl.umcs.workshop.round;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.Set;
 import lombok.*;
@@ -31,25 +33,31 @@ public class Round {
 
   // Relations
   @OneToMany(mappedBy = "round")
+  @JsonManagedReference(value = "round-image-user-round-reference")
   private Set<ImageUserRoundRelation> imageUserRoundRelations;
 
   @ManyToOne
   @JoinColumn(name = "game_id")
+  @JsonBackReference(value = "game-round-reference")
   private Game game;
 
   @ManyToOne
   @JoinColumn(name = "user_1_id")
+  @JsonBackReference(value = "round-user-one-reference")
   private User userOne;
 
   @ManyToOne
   @JoinColumn(name = "user_2_id")
+  @JsonBackReference(value = "round-user-two-reference")
   private User userTwo;
 
   @ManyToOne
   @JoinColumn(name = "topic")
+  @JsonBackReference(value = "round-topic-reference")
   private Image topic;
 
   @ManyToOne
   @JoinColumn(name = "image_selected")
+  @JsonBackReference(value = "round-image-selected-reference")
   private Image imageSelected;
 }

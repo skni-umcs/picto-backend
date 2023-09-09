@@ -1,5 +1,7 @@
 package pl.umcs.workshop.user;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -37,12 +39,19 @@ public class User {
   private Set<ImageUserRoundRelation> imageUserRoundRelations;
 
   @OneToMany(mappedBy = "userOne")
+  @JsonManagedReference(value = "round-user-one-reference")
   private Set<Round> userOneRounds;
 
   @OneToMany(mappedBy = "userTwo")
+  @JsonManagedReference(value = "round-user-two-reference")
   private Set<Round> userTwoRounds;
+
+  @OneToMany(mappedBy = "user")
+  @JsonBackReference(value = "round-image-user-user-reference")
+  private Set<User> users;
 
   @ManyToOne
   @JoinColumn(name = "game_id")
+  @JsonBackReference(value = "user-game-reference")
   private Game game;
 }
