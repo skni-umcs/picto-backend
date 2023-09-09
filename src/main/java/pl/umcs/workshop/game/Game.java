@@ -1,6 +1,7 @@
 package pl.umcs.workshop.game;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -57,11 +58,11 @@ public class Game {
 
   @ManyToOne
   @JoinColumn(name = "topology_id")
-  @JsonBackReference(value = "topology-reference")
+  @JsonManagedReference(value = "topology-reference")
   private Topology topology;
 
   @ManyToOne
   @JoinColumn(name = "image_group_id")
-  @JsonBackReference(value = "group-reference")
+  @JsonManagedReference(value = "group-reference")
   private Group group;
 }
