@@ -5,9 +5,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import pl.umcs.workshop.group.Group;
+import pl.umcs.workshop.group.GroupRepository;
 import pl.umcs.workshop.image.ImageService;
 import pl.umcs.workshop.sse.SseService;
 import pl.umcs.workshop.topology.Topology;
@@ -31,6 +34,7 @@ public class GameService {
   @Autowired private TopologyService topologyService;
 
   @Autowired private ImageService imageService;
+  @Autowired private GroupRepository groupRepository;
 
   public Game createGame(@NotNull Game game) {
     if (gameRepository.existsById(game.getTopology().getId())) {
@@ -46,6 +50,8 @@ public class GameService {
       topologyRepository.save(topology);
       game.setTopology(topology);
     }
+    Group group = groupRepository.findById(game.getGroup().getId()).orElse(null);
+    game.setGroup(group);
 
     return gameRepository.save(game);
   }
