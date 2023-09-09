@@ -1,8 +1,8 @@
 package pl.umcs.workshop.round;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,8 +53,27 @@ public class RoundService {
     return imageRepository.findAllImagesForUser(roundId, userId);
   }
 
-  public List<Symbol> getSymbols(Long roundId) {
-    return symbolRepository.findAllByRoundsId(roundId);
+  public List<List<Symbol>> getSymbols(Long roundId, Long userId) {
+    Round round = getRound(roundId);
+    Set<Symbol> symbols = gameService.getGame(round.getGame().getId()).getSymbols();
+
+    if (Objects.equals(round.getUserOne().getId(), userId)) {
+      List<List<Symbol>> symbolMatrix = new ArrayList<>();
+      Set<Long> groupIds = new HashSet<>();
+
+      for (Symbol symbol : symbols) {
+        Long groupId = symbol.getGroup().getId();
+        groupIds.add(groupId);
+      }
+
+      for (Long id : groupIds) {
+        symbolMatrix.add(symbolRepository.findAllByRoundsIdAndGroupId(roundId, id));
+      }
+
+      return symbolMatrix;
+    }
+
+    return Collections.singletonList(symbolRepository.findAllByUsersId(roundId));
   }
 
   public Round saveRoundSpeakerInfo(@NotNull UserInfo userInfo) throws IOException {

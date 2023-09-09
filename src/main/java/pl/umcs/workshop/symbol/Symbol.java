@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import java.util.Set;
 import lombok.*;
 import pl.umcs.workshop.game.Game;
+import pl.umcs.workshop.group.Group;
 import pl.umcs.workshop.round.Round;
+import pl.umcs.workshop.user.User;
 
 @Entity
 @Table(name = "symbols")
@@ -23,13 +25,23 @@ public class Symbol {
   private String path;
 
   // Relations
-  @ManyToOne
+  @ManyToMany
   @JoinColumn(name = "game_id")
   @JsonBackReference(value = "game-symbols-reference")
-  private Game game;
+  private Set<Game> game;
 
   @ManyToMany
   @JoinColumn(name = "round_id")
   @JsonBackReference(value = "symbols-rounds-id")
   private Set<Round> rounds;
+
+  @ManyToOne
+  @JoinColumn(name = "group_id")
+  @JsonBackReference(value = "symbols-groups-id")
+  private Group group;
+
+  @ManyToMany
+  @JoinColumn(name = "user_id")
+  @JsonBackReference(value = "symbols-users-id")
+  private Set<User> users;
 }

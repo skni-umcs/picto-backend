@@ -28,9 +28,9 @@ public class RoundController {
     return roundService.getImages(roundId, userId);
   }
 
-  @GetMapping("{roundId}/symbols")
-  public List<Symbol> getSymbols(@PathVariable Long roundId) {
-    return roundService.getSymbols(roundId);
+  @GetMapping("{roundId}/symbols/{userId}")
+  public List<List<Symbol>> getSymbols(@PathVariable Long roundId, @PathVariable Long userId) {
+    return roundService.getSymbols(roundId, userId);
   }
 
   @PostMapping("{roundId}/speaker")
@@ -39,7 +39,7 @@ public class RoundController {
   }
 
   @PostMapping("{roundId}/listener")
-  public Round saveRoundListenerInfo(@RequestBody UserInfo userInfo) throws IOException {
+  public Round saveRoundListenerInfo(@RequestBody UserInfo userInfo) {
     return roundService.saveRoundListenerInfo(userInfo);
   }
 

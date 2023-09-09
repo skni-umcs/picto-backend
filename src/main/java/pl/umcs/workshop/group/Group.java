@@ -7,6 +7,7 @@ import java.util.Set;
 import lombok.*;
 import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.image.Image;
+import pl.umcs.workshop.symbol.Symbol;
 
 @Entity
 @Table(name = "groups")
@@ -32,4 +33,9 @@ public class Group {
   @JoinColumn(name = "image_id")
   @JsonBackReference(value = "group-images-reference")
   private Set<Image> images;
+
+  @OneToMany
+  @JoinColumn(name = "symbol_id")
+  @JsonBackReference(value = "symbols-groups-id")
+  private Set<Symbol> symbols;
 }

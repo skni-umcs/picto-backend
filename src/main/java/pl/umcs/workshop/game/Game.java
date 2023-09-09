@@ -63,7 +63,7 @@ public class Game {
   @JsonManagedReference(value = "user-game-reference")
   private Set<User> users;
 
-  @OneToMany(mappedBy = "game")
+  @ManyToMany(mappedBy = "game")
   @JsonManagedReference(value = "game-symbols-reference")
   private Set<Symbol> symbols;
 
