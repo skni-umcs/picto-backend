@@ -8,6 +8,7 @@ import lombok.*;
 import pl.umcs.workshop.game.Game;
 import pl.umcs.workshop.image.Image;
 import pl.umcs.workshop.relation.ImageUserRoundRelation;
+import pl.umcs.workshop.symbol.Symbol;
 import pl.umcs.workshop.user.User;
 
 @Entity
@@ -60,4 +61,9 @@ public class Round {
   @JoinColumn(name = "image_selected")
   @JsonBackReference(value = "round-image-selected-reference")
   private Image imageSelected;
+
+  @ManyToMany
+  @JoinColumn(name = "symbol_id")
+  @JsonBackReference(value = "symbols-rounds-id")
+  private Set<Symbol> symbols;
 }

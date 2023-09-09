@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -14,6 +13,8 @@ import pl.umcs.workshop.game.GameService;
 import pl.umcs.workshop.image.Image;
 import pl.umcs.workshop.image.ImageRepository;
 import pl.umcs.workshop.sse.SseService;
+import pl.umcs.workshop.symbol.Symbol;
+import pl.umcs.workshop.symbol.SymbolRepository;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserInfo;
 import pl.umcs.workshop.user.UserService;
@@ -27,6 +28,8 @@ public class RoundService {
   @Autowired private UserService userService;
 
   @Autowired private GameService gameService;
+
+  @Autowired private SymbolRepository symbolRepository;
 
   public Round getNextRound(Long userId) throws IOException {
     // Check what generation the user is on
@@ -50,9 +53,9 @@ public class RoundService {
     return imageRepository.findAllImagesForUser(roundId, userId);
   }
 
-//  public List<Image> getSymbols(Long roundId, Long userId) {
-//    return imageRepository.findAllSymbolsForUser(roundId, userId);
-//  }
+  public List<Symbol> getSymbols(Long roundId) {
+    return symbolRepository.findAllByRoundsId(roundId);
+  }
 
   public Round saveRoundSpeakerInfo(@NotNull UserInfo userInfo) throws IOException {
     Round round = getRound(userInfo.getRoundId());

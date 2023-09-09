@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.umcs.workshop.image.Image;
+import pl.umcs.workshop.symbol.Symbol;
 import pl.umcs.workshop.user.UserInfo;
 
 @RestController
@@ -27,10 +28,10 @@ public class RoundController {
     return roundService.getImages(roundId, userId);
   }
 
-//  @GetMapping("{roundId}/symbols/{userId}")
-//  public List<Image> getSymbols(@PathVariable Long roundId, @PathVariable Long userId) {
-//    return roundService.getSymbols(roundId, userId);
-//  }
+  @GetMapping("{roundId}/symbols")
+  public List<Symbol> getSymbols(@PathVariable Long roundId) {
+    return roundService.getSymbols(roundId);
+  }
 
   @PostMapping("{roundId}/speaker")
   public Round saveRoundSpeakerInfo(@RequestBody UserInfo userInfo) throws IOException {
