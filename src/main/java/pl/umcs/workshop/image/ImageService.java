@@ -88,7 +88,6 @@ public class ImageService {
 
   public void addImages() {
     Set<String> images = listFiles("src/main/resources/static");
-    System.out.println(images);
 
     Group group = Group.builder().name("Please don't sell my wife").build();
     group = groupRepository.save(group);
@@ -114,4 +113,8 @@ public class ImageService {
       throw new RuntimeException(e);
     }
   }
+
+    public List<Image> getAllImagesWithGroups() {
+      return imageRepository.findAll();
+    }
 }
