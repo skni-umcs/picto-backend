@@ -64,7 +64,6 @@ public class Game {
   private Set<User> users;
 
   @ManyToMany(mappedBy = "game")
-  @JoinColumn(name = "symbol_id")
   private Set<Symbol> symbols;
 
   @ManyToOne
