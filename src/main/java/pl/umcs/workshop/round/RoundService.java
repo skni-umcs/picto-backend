@@ -98,14 +98,16 @@ public class RoundService {
     round.setUserTwoAnswerTime(userInfo.getAnswerTime());
     round.setImageSelected(userInfo.getImageSelected());
 
-    User user = userService.getUser(userInfo.getUserId());
+    User listener = userService.getUser(userInfo.getUserId());
     userService.updateUserLastSeen(userInfo.getUserId());
+
+    User speaker = round.getUserOne();
 
     Round saveRound = roundRepository.save(round);
 
     try {
-      SseService.emitEventForUser(user, SseService.EventType.RESULT_READY);
-      SseService.emitEventForUser(user, SseService.EventType.RESULT_READY);
+      SseService.emitEventForUser(speaker, SseService.EventType.RESULT_READY);
+      SseService.emitEventForUser(listener, SseService.EventType.RESULT_READY);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
