@@ -12,5 +12,5 @@ public interface SymbolRepository extends JpaRepository<Symbol, Long> {
 
   List<Symbol> findAllByRoundsIdAndGroupId(Long roundId, Long id);
 
-    Set<Symbol> findAllByGameId(Long gameId);
+  List<Symbol> findAllByGameId(Long gameId);
 }
