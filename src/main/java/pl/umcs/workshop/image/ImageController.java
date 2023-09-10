@@ -18,7 +18,7 @@ public class ImageController {
     imageService.addImages();
   }
 
-  @GetMapping("all-images")
+  @GetMapping("all")
   public List<Image> getAllImagesWithGroups() {
     return imageService.getAllImagesWithGroups();
   }
