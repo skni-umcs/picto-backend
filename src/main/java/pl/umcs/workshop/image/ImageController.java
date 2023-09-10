@@ -15,6 +15,7 @@ public class ImageController {
   @PostMapping("add")
   public void addImages() {
     imageService.addImages();
+    imageService.addSymbols();
   }
 
   @GetMapping("all")

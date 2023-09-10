@@ -17,11 +17,15 @@ import pl.umcs.workshop.relation.ImageUserRoundRelation;
 import pl.umcs.workshop.relation.ImageUserRoundRelationRepository;
 import pl.umcs.workshop.round.Round;
 import pl.umcs.workshop.round.RoundRepository;
+import pl.umcs.workshop.symbol.Symbol;
+import pl.umcs.workshop.symbol.SymbolRepository;
 import pl.umcs.workshop.user.User;
 
 @Service
 public class ImageService {
   @Autowired private ImageRepository imageRepository;
+
+  @Autowired private SymbolRepository symbolRepository;
 
   @Autowired private RoundRepository roundRepository;
 
@@ -62,10 +66,6 @@ public class ImageService {
 
     for (Round round : rounds) {
       for (User user : new User[] {round.getUserOne(), round.getUserTwo()}) {
-        int numberOfImages =
-            user.equals(round.getUserOne())
-                ? game.getUserOneNumberOfImages()
-                : game.getUserTwoNumberOfImages();
         List<Image> images = generateImagesForRoundForUser(game.getGroup().getId());
         Image topic = getTopic(images);
 
@@ -99,6 +99,22 @@ public class ImageService {
               .groups(new HashSet<>(Collections.singleton(group)))
               .build();
       imageRepository.save(image);
+    }
+  }
+
+  public void addSymbols() {
+    Set<String> symbols = listFiles("src/main/resources/static");
+
+    Group group = Group.builder().name("Please don't sell my wife").build();
+    group = groupRepository.save(group);
+
+    for (String symbolPath : symbols) {
+      Symbol symbol =
+              Symbol.builder()
+                      .path(symbolPath)
+                      .group(group)
+                      .build();
+      symbolRepository.save(symbol);
     }
   }
 
