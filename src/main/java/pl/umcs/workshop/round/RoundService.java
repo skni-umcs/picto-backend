@@ -54,7 +54,7 @@ public class RoundService {
 
   public List<List<Symbol>> getSymbols(Long roundId, Long userId) {
     Round round = getRound(roundId);
-    Set<Symbol> symbols = gameService.getGame(round.getGame().getId()).getSymbols();
+    Set<Symbol> symbols = symbolRepository.findAllByGameId(round.getGame().getId());
 
     if (Objects.equals(round.getUserOne().getId(), userId)) {
       List<List<Symbol>> symbolMatrix = new ArrayList<>();
