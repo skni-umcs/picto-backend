@@ -31,17 +31,17 @@ public class Image {
   private Set<ImageUserRoundRelation> imageUserRoundRelations;
 
   @OneToMany(mappedBy = "topic")
-//  @JsonManagedReference(value = "round-topic-reference")
+  //  @JsonManagedReference(value = "round-topic-reference")
   @JsonIgnore
   private Set<Round> topics;
 
   @OneToMany(mappedBy = "imageSelected")
-//  @JsonManagedReference(value = "round-image-selected-reference")
+  //  @JsonManagedReference(value = "round-image-selected-reference")
   @JsonIgnore
   private Set<Round> imagesSelected;
 
   @ManyToMany
   @JoinColumn(name = "group_id")
-//  @JsonBackReference(value = "group-images-reference")
+  //  @JsonBackReference(value = "group-images-reference")
   private Set<Group> groups;
 }

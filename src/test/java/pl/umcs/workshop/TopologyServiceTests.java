@@ -26,7 +26,8 @@ class TopologyServiceTests {
     // Given
     Game game = mock(Game.class);
     List<User> users = Arrays.asList(mock(User.class), mock(User.class));
-    Topology topology = Topology.builder().maxVertexDegree(3).probabilityOfEdgeRedrawing(0.25).build();
+    Topology topology =
+        Topology.builder().maxVertexDegree(3).probabilityOfEdgeRedrawing(0.25).build();
     given(game.getTopology()).willReturn(topology);
     List<Round> expectedRounds = Collections.singletonList(mock(Round.class));
     given(roundRepository.saveAll(any())).willReturn(expectedRounds);

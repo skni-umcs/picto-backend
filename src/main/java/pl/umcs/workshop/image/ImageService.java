@@ -114,7 +114,7 @@ public class ImageService {
     }
   }
 
-    public List<Image> getAllImagesWithGroups() {
-      return imageRepository.findAll();
-    }
+  public List<Image> getAllImagesWithGroups() {
+    return imageRepository.findAll();
+  }
 }
