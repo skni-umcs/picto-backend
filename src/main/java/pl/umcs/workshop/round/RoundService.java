@@ -16,6 +16,7 @@ import pl.umcs.workshop.symbol.Symbol;
 import pl.umcs.workshop.symbol.SymbolRepository;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserInfo;
+import pl.umcs.workshop.user.UserRepository;
 import pl.umcs.workshop.user.UserService;
 
 @Service
@@ -30,12 +31,17 @@ public class RoundService {
 
   @Autowired private SymbolRepository symbolRepository;
 
+  @Autowired private UserRepository userRepository;
+
   public Round getNextRound(Long userId) throws IOException {
     // Check what generation the user is on
     User user = userService.getUser(userId);
     Game game = gameService.getGame(user.getGame().getId());
     Round round =
         roundRepository.getNextRound(user.getGame().getId(), userId, user.getGeneration() + 1);
+
+    user.setGeneration(user.getGeneration() + 1);
+    userRepository.save(user);
 
     SseService.EventType eventType;
     if (Objects.equals(round.getUserOne().getId(), userId)) {
