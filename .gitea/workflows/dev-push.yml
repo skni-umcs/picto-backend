@@ -1,0 +1,24 @@
+name: Deploy to Dev server
+run-name: ${{ gitea.actor }} is deploying to Dev server from ${{ gitea.ref }} 🚀
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  Deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare environment
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ansible
+          sudo apt-get install -y sshpass
+          sudo apt-get install -y git
+      - name: Get latest ansible scripts from repo
+        run: |
+          git clone https://gitea-deploy:${{ secrets.GIT_PASS }}@${{ secrets.GITEA_SERVER }}/${{ gitea.repository }}
+      - name: ls
+        run: |
+          ls
