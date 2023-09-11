@@ -4,7 +4,7 @@ services:
       dockerfile: Dockerfile
       target: production
     ports:
-      - "10.169.160.3:8080:8080"
+      - "8080:8080"
     volumes:
       - ./src:/app/src
     environment:
@@ -18,8 +18,8 @@ services:
         condition: service_healthy
   db:
     image: postgres
-    ports:
-      - "10.169.160.3:5434:5432"
+    # ports:
+      # - "10.169.160.3:5434:5432"
     environment:
       POSTGRES_PASSWORD: picto
       POSTGRES_USER: picto
