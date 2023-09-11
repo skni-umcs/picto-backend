@@ -79,13 +79,15 @@ public class RoundService {
     Round round = getRound(userInfo.getRoundId());
     round.setUserOneAnswerTime(userInfo.getAnswerTime());
 
-    User user = userService.getUser(userInfo.getUserId());
+    User speaker = userService.getUser(userInfo.getUserId());
     userService.updateUserLastSeen(userInfo.getUserId());
+
+    User listener = round.getUserTwo();
 
     Round saveRound = roundRepository.save(round);
 
-    SseService.emitEventForUser(user, SseService.EventType.SPEAKER_HOLD);
-    SseService.emitEventForUser(user, SseService.EventType.LISTENER_READY);
+    SseService.emitEventForUser(speaker, SseService.EventType.SPEAKER_HOLD);
+    SseService.emitEventForUser(listener, SseService.EventType.LISTENER_READY);
 
     return saveRound;
   }
@@ -96,14 +98,16 @@ public class RoundService {
     round.setUserTwoAnswerTime(userInfo.getAnswerTime());
     round.setImageSelected(userInfo.getImageSelected());
 
-    User user = userService.getUser(userInfo.getUserId());
+    User listener = userService.getUser(userInfo.getUserId());
     userService.updateUserLastSeen(userInfo.getUserId());
+
+    User speaker = round.getUserOne();
 
     Round saveRound = roundRepository.save(round);
 
     try {
-      SseService.emitEventForUser(user, SseService.EventType.RESULT_READY);
-      SseService.emitEventForUser(user, SseService.EventType.RESULT_READY);
+      SseService.emitEventForUser(speaker, SseService.EventType.RESULT_READY);
+      SseService.emitEventForUser(listener, SseService.EventType.RESULT_READY);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

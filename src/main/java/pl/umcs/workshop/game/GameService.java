@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,10 +57,6 @@ public class GameService {
     Group group = groupRepository.findById(game.getGroup().getId()).orElse(null);
     game.setGroup(group);
 
-    // TODO: fix this to get symbols from config
-    List<Symbol> symbols = symbolRepository.findAll();
-    game.setSymbols(new HashSet<>(symbols));
-
     return gameRepository.save(game);
   }
 
@@ -73,6 +67,17 @@ public class GameService {
 
     topologyService.generateRoundsForGame(game, users);
     imageService.generateImagesForGame(game);
+
+    // TODO: fix this to get symbols from config
+    List<Symbol> symbols = symbolRepository.findAll();
+    game.setSymbols(new HashSet<>(symbols));
+    for(Symbol symbol : symbols) {
+      symbol.setGame(new HashSet<>(List.of(game)));
+      symbol.setRounds(new HashSet<>(game.getRounds()));
+//      symbolRepository.save(symbol);
+    }
+
+    gameRepository.save(game);
 
     SseService.emitEventForAll(game.getId(), SseService.EventType.GAME_BEGIN);
 
