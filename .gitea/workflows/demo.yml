@@ -16,4 +16,6 @@ jobs:
       - name: List files in the repository
         run: |
           ls ${{ gitea.workspace }}
+          pwd
+          echo "$USER"
       - run: echo "🍏 This job's status is ${{ job.status }}."
