@@ -43,8 +43,8 @@ public class RoundController {
     return roundService.saveRoundListenerInfo(userInfo);
   }
 
-  @GetMapping("{roundId}/result")
-  public RoundResult getRoundResult(@PathVariable Long roundId) throws IOException {
-    return roundService.getRoundResult(roundId);
+  @GetMapping("{roundId}/result/{userId}")
+  public RoundResult getRoundResult(@PathVariable Long roundId, @PathVariable Long userId) throws IOException {
+    return roundService.getRoundResult(roundId, userId);
   }
 }

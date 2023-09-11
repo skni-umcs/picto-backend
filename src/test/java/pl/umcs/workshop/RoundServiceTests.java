@@ -224,7 +224,7 @@ public class RoundServiceTests {
     given(roundRepository.findById(1L)).willReturn(Optional.empty());
 
     // then
-    Assertions.assertThatThrownBy(() -> roundService.getRoundResult(1L))
+    Assertions.assertThatThrownBy(() -> roundService.getRoundResult(1L, 1L))
         .isInstanceOf(ResponseStatusException.class)
         .hasMessageContaining("Round not found");
   }
@@ -235,7 +235,7 @@ public class RoundServiceTests {
     given(roundRepository.findById(1L)).willReturn(Optional.empty());
 
     // then
-    Assertions.assertThatThrownBy(() -> roundService.getRoundResult(1L))
+    Assertions.assertThatThrownBy(() -> roundService.getRoundResult(1L, 1L))
         .isInstanceOf(ResponseStatusException.class)
         .hasMessageContaining("Round not found");
   }

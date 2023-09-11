@@ -121,15 +121,14 @@ public class RoundService {
     return saveRound;
   }
 
-  public RoundResult getRoundResult(Long roundId) throws IOException {
+  public RoundResult getRoundResult(Long roundId, Long userId) throws IOException {
     Round round = getRound(roundId);
     Game game = gameService.getGame(round.getGame().getId());
 
-    User userOne = userService.getUser(round.getUserOne().getId());
+    User user = userService.getUser(userId);
     User userTwo = userService.getUser(round.getUserTwo().getId());
 
-    SseService.emitEventForUser(userOne, SseService.EventType.AWAITING_ROUND);
-    SseService.emitEventForUser(userTwo, SseService.EventType.AWAITING_ROUND);
+    SseService.emitEventForUser(user, SseService.EventType.AWAITING_ROUND);
 
     if (isImageCorrect(round)) {
       return new RoundResult(RoundResult.Result.CORRECT, game.getCorrectAnswerPoints());
