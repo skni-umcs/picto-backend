@@ -18,7 +18,8 @@ public class SseService {
   private static UserService userService;
 
   private static SseEmitter createNewSession() {
-    return new SseEmitter();
+    Long timeout = 900000L; //15 minutes
+    return new SseEmitter(timeout);
   }
 
   public static void addUserSession(@NotNull User user) {
