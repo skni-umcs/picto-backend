@@ -2,10 +2,13 @@ package pl.umcs.workshop.game;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Scanner;
+import java.util.Set;
+
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -13,6 +16,8 @@ import pl.umcs.workshop.group.Group;
 import pl.umcs.workshop.group.GroupRepository;
 import pl.umcs.workshop.image.ImageService;
 import pl.umcs.workshop.sse.SseService;
+import pl.umcs.workshop.symbol.Symbol;
+import pl.umcs.workshop.symbol.SymbolRepository;
 import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.topology.TopologyRepository;
 import pl.umcs.workshop.topology.TopologyService;
@@ -35,6 +40,7 @@ public class GameService {
 
   @Autowired private ImageService imageService;
   @Autowired private GroupRepository groupRepository;
+  @Autowired private SymbolRepository symbolRepository;
 
   public Game createGame(@NotNull Game game) {
     if (gameRepository.existsById(game.getTopology().getId())) {
@@ -52,6 +58,10 @@ public class GameService {
     }
     Group group = groupRepository.findById(game.getGroup().getId()).orElse(null);
     game.setGroup(group);
+
+    // TODO: fix this to get symbols from config
+    List<Symbol> symbols = symbolRepository.findAll();
+    game.setSymbols(new HashSet<>(symbols));
 
     return gameRepository.save(game);
   }

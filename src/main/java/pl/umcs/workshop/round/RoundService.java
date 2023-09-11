@@ -1,11 +1,9 @@
 package pl.umcs.workshop.round;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -14,6 +12,8 @@ import pl.umcs.workshop.game.GameService;
 import pl.umcs.workshop.image.Image;
 import pl.umcs.workshop.image.ImageRepository;
 import pl.umcs.workshop.sse.SseService;
+import pl.umcs.workshop.symbol.Symbol;
+import pl.umcs.workshop.symbol.SymbolRepository;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserInfo;
 import pl.umcs.workshop.user.UserService;
@@ -27,6 +27,8 @@ public class RoundService {
   @Autowired private UserService userService;
 
   @Autowired private GameService gameService;
+
+  @Autowired private SymbolRepository symbolRepository;
 
   public Round getNextRound(Long userId) throws IOException {
     // Check what generation the user is on
@@ -50,9 +52,28 @@ public class RoundService {
     return imageRepository.findAllImagesForUser(roundId, userId);
   }
 
-//  public List<Image> getSymbols(Long roundId, Long userId) {
-//    return imageRepository.findAllSymbolsForUser(roundId, userId);
-//  }
+  public List<List<Symbol>> getSymbols(Long roundId, Long userId) {
+    Round round = getRound(roundId);
+    List<Symbol> symbols = symbolRepository.findAllByGameId(round.getGame().getId());
+
+    if (Objects.equals(round.getUserOne().getId(), userId)) {
+      List<List<Symbol>> symbolMatrix = new ArrayList<>();
+      Set<Long> groupIds = new HashSet<>();
+
+      for (Symbol symbol : symbols) {
+        Long groupId = symbol.getGroup().getId();
+        groupIds.add(groupId);
+      }
+
+      for (Long id : groupIds) {
+        symbolMatrix.add(symbolRepository.findAllByRoundsIdAndGroupId(roundId, id));
+      }
+
+      return symbolMatrix;
+    }
+
+    return Collections.singletonList(symbolRepository.findAllByUsersId(roundId));
+  }
 
   public Round saveRoundSpeakerInfo(@NotNull UserInfo userInfo) throws IOException {
     Round round = getRound(userInfo.getRoundId());

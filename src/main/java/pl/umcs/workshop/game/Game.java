@@ -8,6 +8,7 @@ import java.util.Set;
 import lombok.*;
 import pl.umcs.workshop.group.Group;
 import pl.umcs.workshop.round.Round;
+import pl.umcs.workshop.symbol.Symbol;
 import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.user.User;
 
@@ -61,6 +62,9 @@ public class Game {
   @OneToMany(mappedBy = "game")
   @JsonManagedReference(value = "user-game-reference")
   private Set<User> users;
+
+  @ManyToMany(mappedBy = "game")
+  private Set<Symbol> symbols;
 
   @ManyToOne
   @JoinColumn(name = "topology_id")

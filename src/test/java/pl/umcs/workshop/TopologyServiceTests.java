@@ -1,83 +1,42 @@
 package pl.umcs.workshop;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import org.junit.jupiter.api.BeforeAll;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.*;
+
+import java.util.*;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.umcs.workshop.game.Game;
+import pl.umcs.workshop.round.Round;
+import pl.umcs.workshop.round.RoundRepository;
 import pl.umcs.workshop.topology.Topology;
 import pl.umcs.workshop.topology.TopologyService;
 import pl.umcs.workshop.user.User;
-import pl.umcs.workshop.utils.JwtCookieHandler;
 
 @ExtendWith(MockitoExtension.class)
-public class TopologyServiceTests {
-  private static final List<User> users = new ArrayList<>();
+class TopologyServiceTests {
+  @Mock private RoundRepository roundRepository;
+  @InjectMocks private TopologyService topologyService;
 
-  private static Topology topology;
+  @Test
+  void shouldGenerateAndSaveRoundsForGameAndUsers() {
+    // Given
+    Game game = mock(Game.class);
+    List<User> users = Arrays.asList(mock(User.class), mock(User.class));
+    Topology topology =
+        Topology.builder().maxVertexDegree(3).probabilityOfEdgeRedrawing(0.25).build();
+    given(game.getTopology()).willReturn(topology);
+    List<Round> expectedRounds = Collections.singletonList(mock(Round.class));
+    given(roundRepository.saveAll(any())).willReturn(expectedRounds);
 
-  @InjectMocks private static TopologyService topologyService;
+    // When
+    List<Round> actualRounds = topologyService.generateRoundsForGame(game, users);
 
-  @BeforeAll
-  public static void setup() {
-    topology = Topology.builder().maxVertexDegree(2).probabilityOfEdgeRedrawing(0.25).build();
-
-    Game game =
-        Game.builder()
-            .id(1L)
-            .userOneNumberOfImages(4)
-            .userTwoNumberOfImages(4)
-            .userOneTime(5)
-            .userTwoTime(3)
-            .symbolGroupsAmount(3)
-            .symbolsInGroupAmount(4)
-            .correctAnswerPoints(1)
-            .wrongAnswerPoints(-1)
-            .topology(topology)
-            .createDateTime(LocalDateTime.now())
-            .build();
-
-    User userOne =
-        User.builder()
-            .id(1L)
-            .game(game)
-            .score(11)
-            .lastSeen(LocalDateTime.now())
-            .cookie(JwtCookieHandler.createToken(1L, 1L))
-            .build();
-
-    User userTwo =
-        User.builder()
-            .id(2L)
-            .game(game)
-            .score(11)
-            .lastSeen(LocalDateTime.now())
-            .cookie(JwtCookieHandler.createToken(1L, 2L))
-            .build();
-
-    User userThree =
-        User.builder()
-            .id(3L)
-            .game(game)
-            .score(11)
-            .lastSeen(LocalDateTime.now())
-            .cookie(JwtCookieHandler.createToken(1L, 3L))
-            .build();
-
-    users.addAll(Arrays.asList(userOne, userTwo, userThree));
+    // Then
+    verify(roundRepository).saveAll(any());
+    assertEquals(expectedRounds, actualRounds);
   }
-
-  //    @Test
-  //    public void givenUsersListAndTopologyObject_whenGenerateBrackets_thenNothing() {
-  //        // given
-  //
-  //        // when
-  //        topologyService.generateBrackets(users, topology);
-  //
-  //        // then
-  //    }
 }

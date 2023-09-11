@@ -1,6 +1,8 @@
 package pl.umcs.workshop.image;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.Set;
 import lombok.*;
@@ -23,21 +25,23 @@ public class Image {
   @Column(name = "path", nullable = false)
   private String path;
 
-  @Transient private String url;
-
   // Relations
   @OneToMany(mappedBy = "image")
   @JsonBackReference(value = "round-image-user-image-reference")
   private Set<ImageUserRoundRelation> imageUserRoundRelations;
 
   @OneToMany(mappedBy = "topic")
+  //  @JsonManagedReference(value = "round-topic-reference")
+  @JsonIgnore
   private Set<Round> topics;
 
   @OneToMany(mappedBy = "imageSelected")
+  //  @JsonManagedReference(value = "round-image-selected-reference")
+  @JsonIgnore
   private Set<Round> imagesSelected;
 
   @ManyToMany
   @JoinColumn(name = "group_id")
-  @JsonBackReference(value = "group-images-reference")
+  //  @JsonBackReference(value = "group-images-reference")
   private Set<Group> groups;
 }

@@ -14,7 +14,8 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
   }
 
   // TODO: symbols or something idk the only thing I want to commit is suicide
-//  default List<Image> findAllSymbolsForUser(Long roundId, Long userId) {
-//    return findAllByImageUserRoundRelationsRoundIdAndImageUserRoundRelationsUserId(roundId, userId);
-//  }
+  //  default List<Image> findAllSymbolsForUser(Long roundId, Long userId) {
+  //    return findAllByImageUserRoundRelationsRoundIdAndImageUserRoundRelationsUserId(roundId,
+  // userId);
+  //  }
 }
