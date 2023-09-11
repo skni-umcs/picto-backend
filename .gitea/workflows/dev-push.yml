@@ -18,7 +18,7 @@ jobs:
           apt-get install -y git
       - name: Get latest ansible scripts from repo
         run: |
-          git clone "https://gitea-deploy:$GIT_PASS@gitea.skni.umcs.pl/picto/picto-install.git"
+          git clone "https://gitea-deploy:${{ secrets.GIT_PASS }}@gitea.skni.umcs.pl/picto/picto-install.git"
       - name: ls
         run: |
           ls
