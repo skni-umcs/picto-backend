@@ -44,7 +44,8 @@ public class RoundController {
   }
 
   @GetMapping("{roundId}/result/{userId}")
-  public RoundResult getRoundResult(@PathVariable Long roundId, @PathVariable Long userId) throws IOException {
+  public RoundResult getRoundResult(@PathVariable Long roundId, @PathVariable Long userId)
+      throws IOException {
     return roundService.getRoundResult(roundId, userId);
   }
 }

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
-
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,7 +36,9 @@ public class GameService {
   @Autowired private TopologyService topologyService;
 
   @Autowired private ImageService imageService;
+
   @Autowired private GroupRepository groupRepository;
+
   @Autowired private SymbolRepository symbolRepository;
 
   public Game createGame(@NotNull Game game) {
@@ -71,10 +72,10 @@ public class GameService {
     // TODO: fix this to get symbols from config
     List<Symbol> symbols = symbolRepository.findAll();
     game.setSymbols(new HashSet<>(symbols));
-    for(Symbol symbol : symbols) {
+    for (Symbol symbol : symbols) {
       symbol.setGame(new HashSet<>(List.of(game)));
       symbol.setRounds(new HashSet<>(game.getRounds()));
-//      symbolRepository.save(symbol);
+      //      symbolRepository.save(symbol);
     }
 
     gameRepository.save(game);

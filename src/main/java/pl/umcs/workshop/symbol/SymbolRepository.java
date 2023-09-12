@@ -1,8 +1,6 @@
 package pl.umcs.workshop.symbol;
 
 import java.util.List;
-import java.util.Set;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SymbolRepository extends JpaRepository<Symbol, Long> {

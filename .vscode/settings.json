@@ -1,0 +1,8 @@
+{
+    "yaml.schemas": {
+        "https://json.schemastore.org/github-action.json": [
+            "file:///home/jasieqb/code/skni/picto/backend/.gitea/workflows/demo.yml"
+        ],
+        "https://json.schemastore.org/github-workflow.json": "file:///home/jasieqb/code/skni/picto/backend/.gitea/workflows/dev-push.yml"
+    }
+}

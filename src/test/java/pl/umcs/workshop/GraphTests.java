@@ -26,7 +26,8 @@ public class GraphTests {
 
   @BeforeEach
   public void setup() {
-    user1 = User.builder()
+    user1 =
+        User.builder()
             .id(1L)
             .game(mock(Game.class))
             .score(6)
@@ -34,7 +35,8 @@ public class GraphTests {
             .lastSeen(LocalDateTime.now())
             .cookie(JwtCookieHandler.createToken(1L, 1L))
             .build();
-    user2 = User.builder()
+    user2 =
+        User.builder()
             .id(2L)
             .game(mock(Game.class))
             .score(4)

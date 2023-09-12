@@ -2,8 +2,6 @@ package pl.umcs.workshop.group;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.Set;
 import lombok.*;
@@ -28,15 +26,11 @@ public class Group {
 
   // Relations
   @OneToMany(mappedBy = "group")
-  //  @JsonManagedReference(value = "group-games-reference")
-  //  @JsonIgnoreProperties({""}) // TODO: finish
   @JsonIgnore
   private Set<Game> games;
 
   @ManyToMany
   @JoinColumn(name = "image_id")
-  //  @JsonBackReference(value = "group-images-reference")
-  //  @JsonIgnoreProperties({"imageUserRoundRelations", "topics", "imagesSelected", "groups"})
   @JsonIgnore
   private Set<Image> images;
 

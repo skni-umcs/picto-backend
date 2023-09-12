@@ -1,7 +1,11 @@
 package pl.umcs.workshop.round;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,6 +43,10 @@ public class RoundService {
     Game game = gameService.getGame(user.getGame().getId());
     Round round =
         roundRepository.getNextRound(user.getGame().getId(), userId, user.getGeneration() + 1);
+
+    if (round == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Round not found");
+    }
 
     user.setGeneration(user.getGeneration() + 1);
     userRepository.save(user);
@@ -78,7 +86,8 @@ public class RoundService {
       return symbolMatrix;
     }
 
-    return Collections.singletonList(symbolRepository.findAllByUsersId(roundId));
+    List<Symbol> selectedSymbols = new ArrayList<>(round.getSymbols());
+    return Collections.singletonList(selectedSymbols);
   }
 
   public Round saveRoundSpeakerInfo(@NotNull UserInfo userInfo) throws IOException {
@@ -86,10 +95,23 @@ public class RoundService {
     round.setUserOneAnswerTime(userInfo.getAnswerTime());
 
     User speaker = userService.getUser(userInfo.getUserId());
-    userService.updateUserLastSeen(userInfo.getUserId());
+    speaker.setLastSeen(LocalDateTime.now());
+    userRepository.save(speaker);
+
+    List<Symbol> selectedSymbolIds = userInfo.getSymbolsSelected();
+    Set<Symbol> symbolsSelected = new HashSet<>();
+    for (Symbol symbol : selectedSymbolIds) {
+      Symbol symbolData = symbolRepository.findById(symbol.getId()).orElse(null);
+
+      if (symbolData == null) {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Symbol not found");
+      }
+
+      symbolsSelected.add(symbolData);
+    }
 
     User listener = round.getUserTwo();
-
+    round.setSymbols(symbolsSelected);
     Round saveRound = roundRepository.save(round);
 
     SseService.emitEventForUser(speaker, SseService.EventType.SPEAKER_HOLD);
@@ -108,7 +130,6 @@ public class RoundService {
     userService.updateUserLastSeen(userInfo.getUserId());
 
     User speaker = round.getUserOne();
-
     Round saveRound = roundRepository.save(round);
 
     try {
@@ -121,18 +142,31 @@ public class RoundService {
     return saveRound;
   }
 
-  public RoundResult getRoundResult(Long roundId, Long userId) throws IOException {
+  public RoundResult getRoundResult(Long roundId, Long userId) {
     Round round = getRound(roundId);
     Game game = gameService.getGame(round.getGame().getId());
-
     User user = userService.getUser(userId);
-    User userTwo = userService.getUser(round.getUserTwo().getId());
 
-    SseService.emitEventForUser(user, SseService.EventType.AWAITING_ROUND);
+    // Multithreading
+    ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    scheduler.schedule(() -> {
+      try {
+        SseService.emitEventForUser(user, SseService.EventType.AWAITING_ROUND);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }, 5, TimeUnit.SECONDS);
 
+    // Return result
     if (isImageCorrect(round)) {
+      user.setScore(user.getScore() + game.getCorrectAnswerPoints());
+      userRepository.save(user);
+
       return new RoundResult(RoundResult.Result.CORRECT, game.getCorrectAnswerPoints());
     }
+
+    user.setScore(user.getScore() + game.getWrongAnswerPoints());
+    userRepository.save(user);
 
     return new RoundResult(RoundResult.Result.WRONG, game.getWrongAnswerPoints());
   }

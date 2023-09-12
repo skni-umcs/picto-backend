@@ -1,6 +1,7 @@
 package pl.umcs.workshop.round;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.Set;
@@ -54,12 +55,12 @@ public class Round {
 
   @ManyToOne
   @JoinColumn(name = "topic")
-  @JsonBackReference(value = "round-topic-reference")
+  @JsonIgnoreProperties({"imageUserRoundRelations", "imageSelected", "groups", "topics"})
   private Image topic;
 
   @ManyToOne
   @JoinColumn(name = "image_selected")
-  @JsonBackReference(value = "round-image-selected-reference")
+  @JsonIgnoreProperties({"imageUserRoundRelations", "imageSelected", "groups", "topics"})
   private Image imageSelected;
 
   @ManyToMany
