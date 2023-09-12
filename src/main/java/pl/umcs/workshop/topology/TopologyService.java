@@ -28,7 +28,7 @@ public class TopologyService {
 
     RoundGenerator roundGenerator =
         RoundGenerator.builder().roundList(new ArrayList<>()).graph(graph).game(game).build();
-    List<Round> rounds = roundGenerator.generateGenerations(5);
+    List<Round> rounds = roundGenerator.generateGenerations(game.getNumberOfGenerations());
 
     return roundRepository.saveAll(rounds);
   }

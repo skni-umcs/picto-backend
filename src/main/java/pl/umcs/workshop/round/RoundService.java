@@ -2,6 +2,11 @@ package pl.umcs.workshop.round;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,6 +44,10 @@ public class RoundService {
     Game game = gameService.getGame(user.getGame().getId());
     Round round =
         roundRepository.getNextRound(user.getGame().getId(), userId, user.getGeneration() + 1);
+
+    if (round == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Round not found");
+    }
 
     user.setGeneration(user.getGeneration() + 1);
     userRepository.save(user);
@@ -121,18 +130,31 @@ public class RoundService {
     return saveRound;
   }
 
-  public RoundResult getRoundResult(Long roundId, Long userId) throws IOException {
+  public RoundResult getRoundResult(Long roundId, Long userId) {
     Round round = getRound(roundId);
     Game game = gameService.getGame(round.getGame().getId());
-
     User user = userService.getUser(userId);
-    User userTwo = userService.getUser(round.getUserTwo().getId());
 
-    SseService.emitEventForUser(user, SseService.EventType.AWAITING_ROUND);
+    // Multithreading
+    ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    scheduler.schedule(() -> {
+      try {
+        SseService.emitEventForUser(user, SseService.EventType.AWAITING_ROUND);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }, 5, TimeUnit.SECONDS);
 
+    // Return result
     if (isImageCorrect(round)) {
+      user.setScore(user.getScore() + game.getCorrectAnswerPoints());
+      userRepository.save(user);
+
       return new RoundResult(RoundResult.Result.CORRECT, game.getCorrectAnswerPoints());
     }
+
+    user.setScore(user.getScore() + game.getWrongAnswerPoints());
+    userRepository.save(user);
 
     return new RoundResult(RoundResult.Result.WRONG, game.getWrongAnswerPoints());
   }
