@@ -99,8 +99,9 @@ public class RoundService {
     speaker.setLastSeen(LocalDateTime.now());
     userRepository.save(speaker);
 
+    List<Symbol> selectedSymbolIds = userInfo.getSymbolsSelected();
     Set<Symbol> symbolsSelected = new HashSet<>();
-    for (Symbol symbol : userInfo.getSymbolsSelected()) {
+    for (Symbol symbol : selectedSymbolIds) {
       Symbol symbolData = symbolRepository.findById(symbol.getId()).orElse(null);
 
       if (symbolData == null) {
