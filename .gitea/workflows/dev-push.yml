@@ -14,9 +14,6 @@ jobs:
         run: |
           apt-get update
           apt-get install -y iputils-ping
-      - name: ping yuumi
-        run: |
-          ping -c 4 yuumi.skni.umcs.pl
       - name: Prepare environment
         run: |
           apt-get update
