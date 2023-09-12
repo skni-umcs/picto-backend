@@ -2,6 +2,11 @@ package pl.umcs.workshop.round;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -128,8 +133,17 @@ public class RoundService {
     User user = userService.getUser(userId);
     User userTwo = userService.getUser(round.getUserTwo().getId());
 
-    SseService.emitEventForUser(user, SseService.EventType.AWAITING_ROUND);
+    // Multithreading
+    ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    ScheduledFuture<?> countdown = scheduler.schedule(() -> {
+      try {
+        SseService.emitEventForUser(user, SseService.EventType.AWAITING_ROUND);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }, 5, TimeUnit.SECONDS);
 
+    // Return result
     if (isImageCorrect(round)) {
       return new RoundResult(RoundResult.Result.CORRECT, game.getCorrectAnswerPoints());
     }
