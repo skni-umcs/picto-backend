@@ -29,4 +29,4 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
       - name: Deploy to dev server
         run: |
-          ansible-playbook -i hosts.ini -e 'gitea_password=${{ secrets.GIT_PASS }}'
+          ansible-playbook -i hosts.ini -e 'gitea_password=${{ secrets.GIT_PASS }}' update.yml
