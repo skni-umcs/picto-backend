@@ -10,10 +10,6 @@ jobs:
   Deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: isntall ping
-        run: |
-          apt-get update
-          apt-get install -y iputils-ping
       - name: Prepare environment
         run: |
           apt-get update
