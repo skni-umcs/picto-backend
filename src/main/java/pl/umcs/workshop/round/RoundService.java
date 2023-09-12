@@ -97,7 +97,19 @@ public class RoundService {
 
     User speaker = userService.getUser(userInfo.getUserId());
     speaker.setLastSeen(LocalDateTime.now());
-    speaker.setSymbols(new HashSet<>(userInfo.getSymbolsSelected()));
+
+    Set<Symbol> symbolsSelected = new HashSet<>();
+    for (Symbol symbol : userInfo.getSymbolsSelected()) {
+      Symbol symbolData = symbolRepository.findById(symbol.getId()).orElse(null);
+
+      if (symbolData == null) {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Symbol not found");
+      }
+
+      symbolsSelected.add(symbolData);
+    }
+
+    speaker.setSymbols(symbolsSelected);
     userRepository.save(speaker);
 
     User listener = round.getUserTwo();
