@@ -19,7 +19,7 @@ jobs:
       - name: Get latest ansible scripts from repo
         run: |
           git clone "https://gitea-deploy:${{ secrets.GIT_PASS }}@gitea.skni.umcs.pl/picto/picto-install.git"
-      - name: change directory
+      - name: Change directory
         run: |
           cd picto-install
       - name: Add ssh key from secrets
@@ -27,4 +27,7 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H
+          
+        - name : Deploy to dev server
+          run: |
+            ansible-playbook -i hosts.ini -e 'gitea_password=${{ secrets.GIT_PASS }}'
