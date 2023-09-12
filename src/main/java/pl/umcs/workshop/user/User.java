@@ -48,12 +48,12 @@ public class User {
   @JsonManagedReference(value = "round-user-two-reference")
   private Set<Round> userTwoRounds;
 
-  @ManyToOne
+  @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "game_id")
   @JsonBackReference(value = "user-game-reference")
   private Game game;
 
-  @ManyToMany
+  @ManyToMany(cascade = CascadeType.ALL)
   @JoinColumn(name = "symbol_id")
   @JsonBackReference(value = "symbols-users-id")
   private Set<Symbol> symbols;
