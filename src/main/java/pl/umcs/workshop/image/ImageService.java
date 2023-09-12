@@ -33,26 +33,32 @@ public class ImageService {
 
   @Autowired private ImageUserRoundRelationRepository imageUserRoundRelationRepository;
 
-  private static int getRandomized(int numberOfImages) {
-    Random rand = new Random();
-
+  private static double getRandomized(int numberOfImages) {
     int mean = numberOfImages / 2;
     int variance = numberOfImages / 10;
+    Random rand = new Random();
 
     double randomized = rand.nextGaussian() * variance + mean;
-    while (randomized < 0 || randomized > numberOfImages) {
-      randomized = rand.nextGaussian() * variance + mean;
-    }
 
-    return (int) randomized;
+    return Math.atan(randomized);
   }
 
-  public List<Image> generateImagesForRoundForUser(Long groupId) {
+  private static int getIndex(int numberOfImages, double x0) {
+    int k = 1;
+    while (x0 > ((double) k / numberOfImages)) {
+      k++;
+    }
+
+    return k;
+  }
+
+  public @NotNull List<Image> generateImagesForRoundForUser(Long groupId) {
     List<Image> images = imageRepository.findAllByGroupsId(groupId);
     List<Image> roundImages = new ArrayList<>();
 
     for (int i = 0; i < images.size(); i++) {
-      Image generatedImage = images.get(getRandomized(images.size()));
+      int index = getIndex(images.size(), getRandomized(images.size()));
+      Image generatedImage = images.get(index);
 
       roundImages.add(generatedImage);
       images.remove(generatedImage);
@@ -83,7 +89,7 @@ public class ImageService {
   }
 
   public Image getTopic(@NotNull List<Image> userImages) {
-    return userImages.get(getRandomized(userImages.size()));
+    return userImages.get(getIndex(userImages.size(), getRandomized(userImages.size())));
   }
 
   public void addImages() {

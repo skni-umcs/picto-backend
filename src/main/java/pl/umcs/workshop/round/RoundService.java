@@ -87,7 +87,7 @@ public class RoundService {
       return symbolMatrix;
     }
 
-    return Collections.singletonList(symbolRepository.findAllByUsersId(roundId));
+    return Collections.singletonList(symbolRepository.findAllByUsersId(userId));
   }
 
   public Round saveRoundSpeakerInfo(@NotNull UserInfo userInfo) throws IOException {
