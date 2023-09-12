@@ -24,9 +24,6 @@ public class Topology {
   @Column(name = "max_vertex_degree")
   private int maxVertexDegree;
 
-  @Column(name = "number_of_generations")
-  private int numberOfGenerations;
-
   // Relations
   @OneToMany(mappedBy = "topology", cascade = CascadeType.ALL)
   @JsonManagedReference(value = "topology-game-reference")

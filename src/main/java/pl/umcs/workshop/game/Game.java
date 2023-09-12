@@ -42,6 +42,9 @@ public class Game {
   @Column(name = "symbols_in_group_amount", nullable = false)
   private int symbolsInGroupAmount;
 
+  @Column(name = "number_of_generations")
+  private int numberOfGenerations;
+
   @Column(name = "correct_answer_points", nullable = false)
   private int correctAnswerPoints;
 
