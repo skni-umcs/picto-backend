@@ -10,6 +10,10 @@ jobs:
   Deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: isntall ping
+        run: |
+          apt-get update
+          apt-get install -y iputils-ping
       - name: ping yuumi
         run: |
           ping -c 4 yuumi.skni.umcs.pl
