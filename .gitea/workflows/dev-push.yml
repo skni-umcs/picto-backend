@@ -19,6 +19,12 @@ jobs:
       - name: Get latest ansible scripts from repo
         run: |
           git clone "https://gitea-deploy:${{ secrets.GIT_PASS }}@gitea.skni.umcs.pl/picto/picto-install.git"
-      - name: ls
+      - name: change directory
         run: |
-          ls
+          cd picto-install
+      - name: Add ssh key from secrets
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H
