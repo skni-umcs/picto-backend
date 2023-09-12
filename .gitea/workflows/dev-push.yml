@@ -10,8 +10,8 @@ jobs:
   Deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: ping yuumi:
-        run : |
+      - name: ping yuumi
+        run: |
           ping -c 4 yuumi.skni.umcs.pl
       - name: Prepare environment
         run: |
