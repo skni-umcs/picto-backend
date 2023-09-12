@@ -5,9 +5,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -132,7 +130,6 @@ public class RoundService {
     userService.updateUserLastSeen(userInfo.getUserId());
 
     User speaker = round.getUserOne();
-
     Round saveRound = roundRepository.save(round);
 
     try {

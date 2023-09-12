@@ -115,11 +115,7 @@ public class ImageService {
     group = groupRepository.save(group);
 
     for (String symbolPath : symbols) {
-      Symbol symbol =
-              Symbol.builder()
-                      .path(symbolPath)
-                      .group(group)
-                      .build();
+      Symbol symbol = Symbol.builder().path(symbolPath).group(group).build();
       symbolRepository.save(symbol);
     }
   }
