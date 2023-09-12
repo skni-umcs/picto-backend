@@ -126,16 +126,15 @@ public class RoundService {
     return saveRound;
   }
 
-  public RoundResult getRoundResult(Long roundId, Long userId) throws IOException {
+  public RoundResult getRoundResult(Long roundId, Long userId) {
     Round round = getRound(roundId);
     Game game = gameService.getGame(round.getGame().getId());
 
     User user = userService.getUser(userId);
-    User userTwo = userService.getUser(round.getUserTwo().getId());
 
     // Multithreading
     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-    ScheduledFuture<?> countdown = scheduler.schedule(() -> {
+    scheduler.schedule(() -> {
       try {
         SseService.emitEventForUser(user, SseService.EventType.AWAITING_ROUND);
       } catch (IOException e) {
@@ -145,8 +144,14 @@ public class RoundService {
 
     // Return result
     if (isImageCorrect(round)) {
+      user.setScore(user.getScore() + game.getCorrectAnswerPoints());
+      userRepository.save(user);
+
       return new RoundResult(RoundResult.Result.CORRECT, game.getCorrectAnswerPoints());
     }
+
+    user.setScore(user.getScore() + game.getWrongAnswerPoints());
+    userRepository.save(user);
 
     return new RoundResult(RoundResult.Result.WRONG, game.getWrongAnswerPoints());
   }
