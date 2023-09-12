@@ -10,11 +10,14 @@ import pl.umcs.workshop.round.Round;
 import pl.umcs.workshop.round.RoundRepository;
 import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.utils.Graph;
+import pl.umcs.workshop.utils.GraphEntity;
+import pl.umcs.workshop.utils.GraphRepository;
 import pl.umcs.workshop.utils.RoundGenerator;
 
 @Service
 public class TopologyService {
   @Autowired private RoundRepository roundRepository;
+  @Autowired private GraphRepository graphRepository;
 
   public List<Round> generateRoundsForGame(@NotNull Game game, List<User> users) {
     Topology topology = game.getTopology();
@@ -24,7 +27,19 @@ public class TopologyService {
             .k(topology.getMaxVertexDegree())
             .p(topology.getProbabilityOfEdgeRedrawing())
             .build();
-    graph.generateGraph();
+    List<Map.Entry<User, User>> edges = graph.generateGraph();
+
+    // Save graph to db
+    List<GraphEntity> graphToSave = new ArrayList<>();
+    for (Map.Entry<User, User> edge : edges) {
+      graphToSave.add(
+          GraphEntity.builder()
+              .gameId(game.getId())
+              .userOneId(edge.getKey().getId())
+              .userTwoId(edge.getValue().getId())
+              .build());
+    }
+    graphRepository.saveAll(graphToSave);
 
     RoundGenerator roundGenerator =
         RoundGenerator.builder().roundList(new ArrayList<>()).graph(graph).game(game).build();

@@ -6,6 +6,7 @@ import java.util.*;
 import lombok.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
 import pl.umcs.workshop.user.User;
 
 @Builder
@@ -18,7 +19,7 @@ public class Graph {
   private CircularDoublyLinkedList circularUsers;
   private List<User> users;
 
-  public List<User> getAdjVertices(User user) {
+  public @NotNull List<User> getAdjVertices(User user) {
     List<User> neighbors = new ArrayList<>();
 
     for (Map.Entry<User, User> edge : edges) {
