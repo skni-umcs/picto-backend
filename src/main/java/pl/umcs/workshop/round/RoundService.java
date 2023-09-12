@@ -88,7 +88,8 @@ public class RoundService {
       return symbolMatrix;
     }
 
-    return Collections.singletonList(symbolRepository.findAllByRoundsId(roundId));
+    List<Symbol> selectedSymbols = new ArrayList<>(round.getSymbols());
+    return Collections.singletonList(selectedSymbols);
   }
 
   public Round saveRoundSpeakerInfo(@NotNull UserInfo userInfo) throws IOException {
