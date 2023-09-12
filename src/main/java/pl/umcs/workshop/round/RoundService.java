@@ -129,7 +129,6 @@ public class RoundService {
   public RoundResult getRoundResult(Long roundId, Long userId) {
     Round round = getRound(roundId);
     Game game = gameService.getGame(round.getGame().getId());
-
     User user = userService.getUser(userId);
 
     // Multithreading
