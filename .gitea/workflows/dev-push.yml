@@ -27,7 +27,6 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          
-        - name : Deploy to dev server
-          run: |
-            ansible-playbook -i hosts.ini -e 'gitea_password=${{ secrets.GIT_PASS }}'
+      - name: Deploy to dev server
+        run: |
+          ansible-playbook -i hosts.ini -e 'gitea_password=${{ secrets.GIT_PASS }}'
