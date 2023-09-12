@@ -88,7 +88,7 @@ public class RoundService {
       return symbolMatrix;
     }
 
-    return Collections.singletonList(symbolRepository.findAllByUsersId(round.getUserOne().getId()));
+    return Collections.singletonList(symbolRepository.findAllByRoundsId(roundId));
   }
 
   public Round saveRoundSpeakerInfo(@NotNull UserInfo userInfo) throws IOException {
@@ -97,6 +97,7 @@ public class RoundService {
 
     User speaker = userService.getUser(userInfo.getUserId());
     speaker.setLastSeen(LocalDateTime.now());
+    userRepository.save(speaker);
 
     Set<Symbol> symbolsSelected = new HashSet<>();
     for (Symbol symbol : userInfo.getSymbolsSelected()) {
@@ -109,10 +110,8 @@ public class RoundService {
       symbolsSelected.add(symbolData);
     }
 
-    speaker.setSymbols(symbolsSelected);
-    userRepository.save(speaker);
-
     User listener = round.getUserTwo();
+    round.setSymbols(symbolsSelected);
     Round saveRound = roundRepository.save(round);
 
     SseService.emitEventForUser(speaker, SseService.EventType.SPEAKER_HOLD);
