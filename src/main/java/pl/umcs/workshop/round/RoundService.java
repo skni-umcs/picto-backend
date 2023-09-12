@@ -1,6 +1,7 @@
 package pl.umcs.workshop.round;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -95,10 +96,11 @@ public class RoundService {
     round.setUserOneAnswerTime(userInfo.getAnswerTime());
 
     User speaker = userService.getUser(userInfo.getUserId());
-    userService.updateUserLastSeen(userInfo.getUserId());
+    speaker.setLastSeen(LocalDateTime.now());
+    speaker.setSymbols(new HashSet<>(userInfo.getSymbolsSelected()));
+    userRepository.save(speaker);
 
     User listener = round.getUserTwo();
-
     Round saveRound = roundRepository.save(round);
 
     SseService.emitEventForUser(speaker, SseService.EventType.SPEAKER_HOLD);

@@ -3,6 +3,7 @@ package pl.umcs.workshop.user;
 import java.util.List;
 import lombok.*;
 import pl.umcs.workshop.image.Image;
+import pl.umcs.workshop.symbol.Symbol;
 
 @Getter
 @Setter
@@ -14,5 +15,5 @@ public class UserInfo {
   private Long roundId;
   private int answerTime;
   private Image imageSelected;
-  private List<Image> symbolsSelected;
+  private List<Symbol> symbolsSelected;
 }
