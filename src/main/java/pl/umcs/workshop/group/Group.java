@@ -28,15 +28,11 @@ public class Group {
 
   // Relations
   @OneToMany(mappedBy = "group")
-  //  @JsonManagedReference(value = "group-games-reference")
-  //  @JsonIgnoreProperties({""}) // TODO: finish
   @JsonIgnore
   private Set<Game> games;
 
   @ManyToMany
   @JoinColumn(name = "image_id")
-  //  @JsonBackReference(value = "group-images-reference")
-  //  @JsonIgnoreProperties({"imageUserRoundRelations", "topics", "imagesSelected", "groups"})
   @JsonIgnore
   private Set<Image> images;
 
