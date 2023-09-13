@@ -68,7 +68,13 @@ public class RoundService {
   }
 
   public List<Image> getImages(Long roundId, Long userId) {
-    return imageRepository.findAllImagesForUser(roundId, userId);
+    List<Image> images = imageRepository.findAllImagesForUser(roundId, userId);
+
+    for (Image image : images) {
+      image.setPath("images/" + image.getGroup().getName() + "/" + image.getPath());
+    }
+
+    return images;
   }
 
   public List<List<Symbol>> getSymbols(Long roundId, Long userId) {
@@ -85,13 +91,23 @@ public class RoundService {
       }
 
       for (Long id : groupIds) {
-        symbolMatrix.add(symbolRepository.findAllByRoundsIdAndGroupId(roundId, id));
+        List<Symbol> symbolsFound = symbolRepository.findAllByRoundsIdAndGroupId(roundId, id);
+
+        for (Symbol symbol : symbols) {
+          symbol.setPath("symbols/" + symbol.getGroup().getName() + "/" + symbol.getPath());
+        }
+
+        symbolMatrix.add(symbolsFound);
       }
 
       return symbolMatrix;
     }
 
     List<Symbol> selectedSymbols = new ArrayList<>(round.getSymbols());
+    for (Symbol symbol : selectedSymbols) {
+      symbol.setPath("symbols/" + symbol.getGroup().getName() + "/" + symbol.getPath());
+    }
+
     return Collections.singletonList(selectedSymbols);
   }
 

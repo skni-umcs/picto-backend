@@ -29,7 +29,7 @@ public class Group {
   @JsonIgnore
   private Set<Game> games;
 
-  @ManyToMany
+  @OneToMany
   @JoinColumn(name = "image_id")
   @JsonIgnore
   private Set<Image> images;
