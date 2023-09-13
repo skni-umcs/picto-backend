@@ -33,7 +33,7 @@ public class ImageService {
 
   @Autowired private ImageUserRoundRelationRepository imageUserRoundRelationRepository;
 
-  private static double getRandomized(int numberOfImages) {
+  private static double getRandomizedNormal(int numberOfImages) {
     int mean = numberOfImages / 2;
     int variance = numberOfImages / 10;
     Random rand = new Random();
@@ -41,6 +41,12 @@ public class ImageService {
     double randomized = rand.nextGaussian() * variance + mean;
 
     return Math.atan(randomized);
+  }
+
+  private static double getRandomized(int numberOfImages) {
+    Random rand = new Random();
+
+    return rand.nextInt(numberOfImages);
   }
 
   private static int getIndex(int numberOfImages, double x0) {
@@ -57,7 +63,7 @@ public class ImageService {
     List<Image> roundImages = new ArrayList<>();
 
     for (int i = 0; i < images.size(); i++) {
-      int index = getIndex(images.size(), getRandomized(images.size()));
+      int index = getIndex(images.size(), getRandomizedNormal(images.size()));
       Image generatedImage = images.get(index);
 
       roundImages.add(generatedImage);
