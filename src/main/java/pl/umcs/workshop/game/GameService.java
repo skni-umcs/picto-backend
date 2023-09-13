@@ -57,11 +57,11 @@ public class GameService {
     }
     Group group = groupRepository.findById(game.getGroup().getId()).orElse(null);
     game.setGroup(group);
+    game.setCreateDateTime(LocalDateTime.now());
 
     return gameRepository.save(game);
   }
 
-  // TODO: begin game method
   public Game beginGame(Long gameId) throws IOException {
     Game game = getGame(gameId);
     List<User> users = userRepository.findAllByGame(game);
@@ -75,9 +75,8 @@ public class GameService {
     for (Symbol symbol : symbols) {
       symbol.setGame(new HashSet<>(List.of(game)));
       symbol.setRounds(new HashSet<>(game.getRounds()));
-      //      symbolRepository.save(symbol);
     }
-
+    symbolRepository.saveAll(symbols);
     gameRepository.save(game);
 
     SseService.emitEventForAll(game.getId(), SseService.EventType.GAME_BEGIN);

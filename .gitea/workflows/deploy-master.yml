@@ -29,7 +29,7 @@ jobs:
           echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           # ssh-add ~/.ssh/id_rsa
-      - name: Deploy to dev server
+      - name: Deploy to prod server
         working-directory: ./picto-install
         run: |
           ansible-playbook -i hosts.ini -e 'gitea_password=${{ secrets.GIT_PASS }}' -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"' -l prod --key-file '~/.ssh/id_rsa' update.yml

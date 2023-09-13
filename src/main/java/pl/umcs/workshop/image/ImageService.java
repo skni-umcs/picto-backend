@@ -33,7 +33,7 @@ public class ImageService {
 
   @Autowired private ImageUserRoundRelationRepository imageUserRoundRelationRepository;
 
-  private static double getRandomized(int numberOfImages) {
+  private static double getRandomizedNormal(int numberOfImages) {
     int mean = numberOfImages / 2;
     int variance = numberOfImages / 10;
     Random rand = new Random();
@@ -41,6 +41,12 @@ public class ImageService {
     double randomized = rand.nextGaussian() * variance + mean;
 
     return Math.atan(randomized);
+  }
+
+  private static int getRandomized(int numberOfImages) {
+    Random rand = new Random();
+
+    return rand.nextInt(numberOfImages);
   }
 
   private static int getIndex(int numberOfImages, double x0) {
@@ -57,7 +63,7 @@ public class ImageService {
     List<Image> roundImages = new ArrayList<>();
 
     for (int i = 0; i < images.size(); i++) {
-      int index = getIndex(images.size(), getRandomized(images.size()));
+      int index = getIndex(images.size(), getRandomizedNormal(images.size()));
       Image generatedImage = images.get(index);
 
       roundImages.add(generatedImage);
@@ -70,6 +76,9 @@ public class ImageService {
   public void generateImagesForGame(Game game) {
     List<Round> rounds = roundRepository.findAllByGame(game);
 
+    List<ImageUserRoundRelation> relations = new ArrayList<>();
+    List<Round> roundsToSave = new ArrayList<>();
+
     for (Round round : rounds) {
       for (User user : new User[] {round.getUserOne(), round.getUserTwo()}) {
         List<Image> images = generateImagesForRoundForUser(game.getGroup().getId());
@@ -79,17 +88,20 @@ public class ImageService {
           ImageUserRoundRelation imageUserRoundRelation =
               ImageUserRoundRelation.builder().round(round).user(user).image(image).build();
 
-          imageUserRoundRelationRepository.save(imageUserRoundRelation);
+          relations.add(imageUserRoundRelation);
         }
 
         round.setTopic(topic);
-        roundRepository.save(round);
+        roundsToSave.add(round);
       }
     }
+
+    imageUserRoundRelationRepository.saveAll(relations);
+    roundRepository.saveAll(roundsToSave);
   }
 
   public Image getTopic(@NotNull List<Image> userImages) {
-    return userImages.get(getIndex(userImages.size(), getRandomized(userImages.size())));
+    return userImages.get(getRandomized(userImages.size()));
   }
 
   public void addImages() {

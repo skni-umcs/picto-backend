@@ -10,16 +10,16 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GraphEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(name = "game_id")
-    private Long gameId;
+  @Column(name = "game_id")
+  private Long gameId;
 
-    @Column(name = "user_1")
-    private Long userOneId;
+  @Column(name = "user_1")
+  private Long userOneId;
 
-    @Column(name = "user_2")
-    private Long userTwoId;
+  @Column(name = "user_2")
+  private Long userTwoId;
 }
