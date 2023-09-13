@@ -75,9 +75,8 @@ public class GameService {
     for (Symbol symbol : symbols) {
       symbol.setGame(new HashSet<>(List.of(game)));
       symbol.setRounds(new HashSet<>(game.getRounds()));
-      //      symbolRepository.save(symbol);
     }
-
+    symbolRepository.saveAll(symbols);
     gameRepository.save(game);
 
     SseService.emitEventForAll(game.getId(), SseService.EventType.GAME_BEGIN);
