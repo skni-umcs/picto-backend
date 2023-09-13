@@ -57,6 +57,7 @@ public class GameService {
     }
     Group group = groupRepository.findById(game.getGroup().getId()).orElse(null);
     game.setGroup(group);
+    game.setCreateDateTime(LocalDateTime.now());
 
     return gameRepository.save(game);
   }
