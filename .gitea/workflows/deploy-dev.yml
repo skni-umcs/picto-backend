@@ -13,8 +13,8 @@ jobs:
     steps:
       - name: Prepare environment
         run: |
+          apt-get update
           apt-get install -y git
-      #     apt-get update
       #     apt-get install -y ansible
       #     apt-get install -y sshpass
       - name: Get latest ansible scripts from repo
