@@ -142,7 +142,7 @@ public class ImageService {
       for (String symbolPath : symbols) {
         Symbol symbol =
             Symbol.builder()
-                .path(symbolPath)
+                .path("symbols/" + group.getName() + "/" + symbolPath)
                 .group(group)
                 .build();
         symbolRepository.save(symbol);

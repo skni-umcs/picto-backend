@@ -100,10 +100,6 @@ public class RoundService {
       for (Long id : groupIds) {
         List<Symbol> symbolsFound = symbolRepository.findAllByRoundsIdAndGroupId(roundId, id);
 
-        for (Symbol symbol : symbols) {
-          symbol.setPath("symbols/" + symbol.getGroup().getName() + "/" + symbol.getPath());
-        }
-
         symbolMatrix.add(symbolsFound);
       }
 
@@ -111,10 +107,6 @@ public class RoundService {
     }
 
     List<Symbol> selectedSymbols = new ArrayList<>(round.getSymbols());
-    for (Symbol symbol : selectedSymbols) {
-      symbol.setPath("symbols/" + symbol.getGroup().getName() + "/" + symbol.getPath());
-    }
-
     return Collections.singletonList(selectedSymbols);
   }
 
