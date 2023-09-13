@@ -13,13 +13,14 @@ services:
       - PICTO_DB_NAME=picto
       - PICTO_DB_USER=picto
       - PICTO_DB_PASSWORD=picto
+      - SPRING_PROFILES_ACTIVE=prod
     depends_on:
       db:
         condition: service_healthy
   db:
     image: postgres
-    # ports:
-      # - "10.169.160.3:5434:5432"
+    ports:
+      - "127.0.0.1:5432:5432"
     environment:
       POSTGRES_PASSWORD: picto
       POSTGRES_USER: picto
