@@ -55,13 +55,12 @@ public class GameService {
       topologyRepository.save(topology);
       game.setTopology(topology);
     }
-    Group group = groupRepository.findById(game.getGroup().getId()).orElse(null);
-    game.setGroup(group);
+//    Group group = groupRepository.findById(game.getGroup().getId()).orElse(null);
+//    game.setGroup(group);
 
     return gameRepository.save(game);
   }
 
-  // TODO: begin game method
   public Game beginGame(Long gameId) throws IOException {
     Game game = getGame(gameId);
     List<User> users = userRepository.findAllByGame(game);

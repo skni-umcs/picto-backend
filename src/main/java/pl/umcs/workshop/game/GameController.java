@@ -22,7 +22,6 @@ public class GameController {
     return gameService.createGame(game);
   }
 
-  // TODO: begin game method
   @PostMapping("{gameId}/admin/begin")
   // Returns list of round ids
   public Game beginGame(@PathVariable Long gameId) throws IOException {
