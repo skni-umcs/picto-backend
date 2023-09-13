@@ -165,7 +165,6 @@ public class RoundService {
         5,
         TimeUnit.SECONDS);
 
-    // Return result
     if (isImageCorrect(round)) {
       user.setScore(user.getScore() + game.getCorrectAnswerPoints());
       userRepository.save(user);
