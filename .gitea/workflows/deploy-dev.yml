@@ -9,7 +9,7 @@ on:
 jobs:
   Deploy:
     runs-on: ubuntu-latest
-    container: geerlingguy/docker-ubuntu2004-ansible
+    container: gitea.skni.umcs.pl/picto/ansible:latest
     steps:
       - name: Prepare environment
         run: |
