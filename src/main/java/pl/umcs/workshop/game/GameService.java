@@ -55,8 +55,8 @@ public class GameService {
       topologyRepository.save(topology);
       game.setTopology(topology);
     }
-//    Group group = groupRepository.findById(game.getGroup().getId()).orElse(null);
-//    game.setGroup(group);
+    Group group = groupRepository.findById(game.getGroup().getId()).orElse(null);
+    game.setGroup(group);
 
     return gameRepository.save(game);
   }
