@@ -1,5 +1,7 @@
 package pl.umcs.workshop.image;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,13 +36,13 @@ public class ImageService {
   @Autowired private ImageUserRoundRelationRepository imageUserRoundRelationRepository;
 
   private static double getRandomizedNormal(int numberOfImages) {
-    int mean = numberOfImages / 2;
-    int variance = numberOfImages / 10;
+    double mean = 0;
+    double variance = 1;
     Random rand = new Random();
 
     double randomized = rand.nextGaussian() * variance + mean;
 
-    return Math.atan(randomized);
+    return Math.atan(randomized)/(Math.PI/2);
   }
 
   private static int getRandomized(int numberOfImages) {
@@ -55,11 +57,11 @@ public class ImageService {
       k++;
     }
 
-    return k - 2;
+    return k - 1;
   }
 
   public @NotNull List<Image> generateImagesForRoundForUser(Long groupId) {
-    List<Image> images = imageRepository.findAllByGroupsId(groupId);
+    List<Image> images = imageRepository.findAllByGroupId(groupId);
     List<Image> roundImages = new ArrayList<>();
 
     for (int i = 0; i < images.size(); i++) {
@@ -105,34 +107,50 @@ public class ImageService {
   }
 
   public void addImages() {
-    Set<String> images = listFiles("src/main/resources/static");
+    File file = new File("src/main/resources/static/images");
+    String[] directories = file.list((current, name) -> new File(current, name).isDirectory());
 
-    Group group = Group.builder().name("Please don't sell my wife").build();
-    group = groupRepository.save(group);
+    assert directories != null;
+    for (String directory : directories) {
+      Set<String> images = listFiles("src/main/resources/static/images/" + directory);
 
-    for (String imagePath : images) {
-      Image image =
-          Image.builder()
-              .path(imagePath)
-              .groups(new HashSet<>(Collections.singleton(group)))
-              .build();
-      imageRepository.save(image);
+      Group group = Group.builder().name(directory).build();
+      group = groupRepository.save(group);
+
+      for (String imagePath : images) {
+        Image image =
+            Image.builder()
+                .path(imagePath)
+                .group(group)
+                .build();
+        imageRepository.save(image);
+      }
     }
   }
 
   public void addSymbols() {
-    Set<String> symbols = listFiles("src/main/resources/static");
+    File file = new File("src/main/resources/static/symbols");
+    String[] directories = file.list((current, name) -> new File(current, name).isDirectory());
 
-    Group group = Group.builder().name("Please don't sell my wife").build();
-    group = groupRepository.save(group);
+    assert directories != null;
+    for (String directory : directories) {
+      Set<String> symbols = listFiles("src/main/resources/static/symbols/" + directory);
 
-    for (String symbolPath : symbols) {
-      Symbol symbol = Symbol.builder().path(symbolPath).group(group).build();
-      symbolRepository.save(symbol);
+      Group group = Group.builder().name(directory).build();
+      group = groupRepository.save(group);
+
+      for (String symbolPath : symbols) {
+        Symbol symbol =
+            Symbol.builder()
+                .path("symbols/" + group.getName() + "/" + symbolPath)
+                .group(group)
+                .build();
+        symbolRepository.save(symbol);
+      }
     }
   }
 
-  public Set<String> listFiles(String dir) {
+  public static Set<String> listFiles(String dir) {
     try (Stream<Path> stream = Files.list(Paths.get(dir))) {
       return stream
           .filter(file -> !Files.isDirectory(file))

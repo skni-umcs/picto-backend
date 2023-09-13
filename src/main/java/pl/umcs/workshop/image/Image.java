@@ -37,7 +37,7 @@ public class Image {
   @JsonIgnore
   private Set<Round> imagesSelected;
 
-  @ManyToMany
+  @ManyToOne
   @JoinColumn(name = "group_id")
-  private Set<Group> groups;
+  private Group group;
 }

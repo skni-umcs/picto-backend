@@ -45,25 +45,43 @@ public class RoundService {
         roundRepository.getNextRound(user.getGame().getId(), userId, user.getGeneration() + 1);
 
     if (round == null) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Round not found");
+      user.setGeneration(user.getGeneration() + 1);
+      round = roundRepository.getNextRound(user.getGame().getId(), userId, user.getGeneration() + 1);
+
+      if (round == null) {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Round not found");
+      }
     }
 
     user.setGeneration(user.getGeneration() + 1);
     userRepository.save(user);
 
+    Long otherUserId = Objects.equals(user.getId(), round.getUserOne().getId()) ? user.getId() : round.getUserTwo().getId();
+    User otherUser = userRepository.findById(otherUserId).orElse(null);
+
+    // TODO: check if users are in the same generation, if not, only hold
+    assert otherUser != null;
     SseService.EventType eventType;
-    if (Objects.equals(round.getUserOne().getId(), userId)) {
-      eventType = SseService.EventType.SPEAKER_READY;
-    } else {
-      eventType = SseService.EventType.LISTENER_HOLD;
+    if (otherUser.getGeneration() == user.getGeneration()) {
+      if (Objects.equals(round.getUserOne().getId(), userId)) {
+        eventType = SseService.EventType.SPEAKER_READY;
+      } else {
+        eventType = SseService.EventType.LISTENER_HOLD;
+      }
+      SseService.emitEventForUser(user, eventType);
     }
-    SseService.emitEventForUser(user, eventType);
 
     return round;
   }
 
   public List<Image> getImages(Long roundId, Long userId) {
-    return imageRepository.findAllImagesForUser(roundId, userId);
+    List<Image> images = imageRepository.findAllImagesForUser(roundId, userId);
+
+    for (Image image : images) {
+      image.setPath("images/" + image.getGroup().getName() + "/" + image.getPath());
+    }
+
+    return images;
   }
 
   public List<List<Symbol>> getSymbols(Long roundId, Long userId) {
@@ -80,7 +98,9 @@ public class RoundService {
       }
 
       for (Long id : groupIds) {
-        symbolMatrix.add(symbolRepository.findAllByRoundsIdAndGroupId(roundId, id));
+        List<Symbol> symbolsFound = symbolRepository.findAllByRoundsIdAndGroupId(roundId, id);
+
+        symbolMatrix.add(symbolsFound);
       }
 
       return symbolMatrix;
@@ -160,7 +180,6 @@ public class RoundService {
         5,
         TimeUnit.SECONDS);
 
-    // Return result
     if (isImageCorrect(round)) {
       user.setScore(user.getScore() + game.getCorrectAnswerPoints());
       userRepository.save(user);
