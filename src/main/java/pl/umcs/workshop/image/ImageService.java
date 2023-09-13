@@ -43,7 +43,7 @@ public class ImageService {
     return Math.atan(randomized);
   }
 
-  private static double getRandomized(int numberOfImages) {
+  private static int getRandomized(int numberOfImages) {
     Random rand = new Random();
 
     return rand.nextInt(numberOfImages);
@@ -101,7 +101,7 @@ public class ImageService {
   }
 
   public Image getTopic(@NotNull List<Image> userImages) {
-    return userImages.get(getIndex(userImages.size(), getRandomized(userImages.size())));
+    return userImages.get(getRandomized(userImages.size()));
   }
 
   public void addImages() {
