@@ -9,7 +9,7 @@ services:
       - ./src:/app/src
     environment:
       - PICTO_DB_HOST=db
-      - PICTO_DB_PORT=5434
+      - PICTO_DB_PORT=5432
       - PICTO_DB_NAME=picto
       - PICTO_DB_USER=picto
       - PICTO_DB_PASSWORD=picto
