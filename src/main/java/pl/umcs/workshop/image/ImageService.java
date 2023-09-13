@@ -70,6 +70,9 @@ public class ImageService {
   public void generateImagesForGame(Game game) {
     List<Round> rounds = roundRepository.findAllByGame(game);
 
+    List<ImageUserRoundRelation> relations = new ArrayList<>();
+    List<Round> roundsToSave = new ArrayList<>();
+
     for (Round round : rounds) {
       for (User user : new User[] {round.getUserOne(), round.getUserTwo()}) {
         List<Image> images = generateImagesForRoundForUser(game.getGroup().getId());
@@ -79,13 +82,16 @@ public class ImageService {
           ImageUserRoundRelation imageUserRoundRelation =
               ImageUserRoundRelation.builder().round(round).user(user).image(image).build();
 
-          imageUserRoundRelationRepository.save(imageUserRoundRelation);
+          relations.add(imageUserRoundRelation);
         }
 
         round.setTopic(topic);
-        roundRepository.save(round);
+        roundsToSave.add(round);
       }
     }
+
+    imageUserRoundRelationRepository.saveAll(relations);
+    roundRepository.saveAll(roundsToSave);
   }
 
   public Image getTopic(@NotNull List<Image> userImages) {
