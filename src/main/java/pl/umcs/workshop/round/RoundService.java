@@ -149,13 +149,16 @@ public class RoundService {
 
     // Multithreading
     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-    scheduler.schedule(() -> {
-      try {
-        SseService.emitEventForUser(user, SseService.EventType.AWAITING_ROUND);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-    }, 5, TimeUnit.SECONDS);
+    scheduler.schedule(
+        () -> {
+          try {
+            SseService.emitEventForUser(user, SseService.EventType.AWAITING_ROUND);
+          } catch (IOException e) {
+            throw new RuntimeException(e);
+          }
+        },
+        5,
+        TimeUnit.SECONDS);
 
     // Return result
     if (isImageCorrect(round)) {

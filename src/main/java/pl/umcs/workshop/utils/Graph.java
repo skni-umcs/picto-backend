@@ -6,7 +6,6 @@ import java.util.*;
 import lombok.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import pl.umcs.workshop.user.User;
 
 @Builder
