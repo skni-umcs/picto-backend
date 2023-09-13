@@ -11,12 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     container: gitea.skni.umcs.pl/picto/ansible:latest
     steps:
-      - name: Prepare environment
-        run: |
-          apt-get update
-          apt-get install -y git
-      #     apt-get install -y ansible
-      #     apt-get install -y sshpass
       - name: Get latest ansible scripts from repo
         run: |
           git clone "https://gitea-deploy:${{ secrets.GIT_PASS }}@gitea.skni.umcs.pl/picto/picto-install.git"
