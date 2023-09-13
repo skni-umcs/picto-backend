@@ -56,6 +56,7 @@ public class RoundService {
     user.setGeneration(user.getGeneration() + 1);
     userRepository.save(user);
 
+    // TODO: check if users are in the same generation, if not, only hold
     SseService.EventType eventType;
     if (Objects.equals(round.getUserOne().getId(), userId)) {
       eventType = SseService.EventType.SPEAKER_READY;
