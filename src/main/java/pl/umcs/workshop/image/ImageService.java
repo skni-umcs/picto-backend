@@ -61,7 +61,7 @@ public class ImageService {
   }
 
   public @NotNull List<Image> generateImagesForRoundForUser(Long groupId) {
-    List<Image> images = imageRepository.findAllByGroupsId(groupId);
+    List<Image> images = imageRepository.findAllByGroupId(groupId);
     List<Image> roundImages = new ArrayList<>();
 
     for (int i = 0; i < images.size(); i++) {
