@@ -6,11 +6,10 @@ on:
     branches:
       - dev
 
-
-
 jobs:
   Deploy:
     runs-on: ubuntu-latest
+    container: geerlingguy/docker-ubuntu2004-ansible
     steps:
       - name: Prepare environment
         run: |
