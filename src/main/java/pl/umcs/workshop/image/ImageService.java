@@ -36,13 +36,13 @@ public class ImageService {
   @Autowired private ImageUserRoundRelationRepository imageUserRoundRelationRepository;
 
   private static double getRandomizedNormal(int numberOfImages) {
-    int mean = numberOfImages / 2;
-    int variance = numberOfImages / 10;
+    double mean = 0;
+    double variance = 1;
     Random rand = new Random();
 
     double randomized = rand.nextGaussian() * variance + mean;
 
-    return Math.atan(randomized);
+    return Math.atan(randomized)/(Math.PI/2);
   }
 
   private static int getRandomized(int numberOfImages) {
@@ -57,7 +57,7 @@ public class ImageService {
       k++;
     }
 
-    return k - 2;
+    return k-1;
   }
 
   public @NotNull List<Image> generateImagesForRoundForUser(Long groupId) {
