@@ -57,7 +57,7 @@ public class ImageService {
       k++;
     }
 
-    return k-1;
+    return k - 1;
   }
 
   public @NotNull List<Image> generateImagesForRoundForUser(Long groupId) {
