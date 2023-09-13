@@ -121,7 +121,7 @@ public class ImageService {
         Image image =
             Image.builder()
                 .path(imagePath)
-                .groups(new HashSet<>(Collections.singleton(group)))
+                .group(group)
                 .build();
         imageRepository.save(image);
       }
