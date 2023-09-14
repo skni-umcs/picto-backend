@@ -4,6 +4,7 @@ import java.util.*;
 import lombok.*;
 import org.jetbrains.annotations.NotNull;
 import pl.umcs.workshop.game.Game;
+import pl.umcs.workshop.graph.Graph;
 import pl.umcs.workshop.round.Round;
 import pl.umcs.workshop.user.User;
 

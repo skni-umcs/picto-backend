@@ -1,4 +1,4 @@
-package pl.umcs.workshop.utils;
+package pl.umcs.workshop.graph;
 
 import static pl.umcs.workshop.utils.CircularDoublyLinkedList.listToCircular;
 
@@ -7,6 +7,7 @@ import lombok.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pl.umcs.workshop.user.User;
+import pl.umcs.workshop.utils.CircularDoublyLinkedList;
 
 @Builder
 @RequiredArgsConstructor
