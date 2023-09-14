@@ -6,6 +6,8 @@ import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import jakarta.transaction.Transactional;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,6 +39,7 @@ public class RoundService {
 
   @Autowired private UserRepository userRepository;
 
+  @Transactional
   public Round getNextRound(Long userId) throws IOException {
     // Check what generation the user is on
     User user = userService.getUser(userId);
@@ -44,18 +47,8 @@ public class RoundService {
     Round round =
         roundRepository.getNextRound(user.getGame().getId(), userId, user.getGeneration() + 1);
 
-    if (round == null) {
-      user.setGeneration(user.getGeneration() + 1);
-      round =
-          roundRepository.getNextRound(user.getGame().getId(), userId, user.getGeneration() + 1);
-
-      if (round == null) {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Round not found");
-      }
-    }
-
-    user.setGeneration(user.getGeneration() + 1);
-    userRepository.saveAndFlush(user);
+    getAndSaveUserGeneration(user, round);
+    System.out.println("\n\n\n\n\n\n\n\n\n\nSAVED USER GENERATION\n\n\n\n\n\n\n\n\n");
 
     Long otherUserId =
         Objects.equals(user.getId(), round.getUserOne().getId())
@@ -82,6 +75,22 @@ public class RoundService {
     }
 
     return round;
+  }
+
+  @Transactional
+  public void getAndSaveUserGeneration(User user, Round round) {
+    if (round == null) {
+      userRepository.incrementGeneration(user.getId());
+      round =
+              roundRepository.getNextRound(user.getGame().getId(), user.getId(), user.getGeneration() + 1);
+
+      if (round == null) {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Round not found");
+      }
+    }
+
+    userRepository.incrementGeneration(user.getId());
+    userRepository.flush();
   }
 
   public List<Image> getImages(Long roundId, Long userId) {
