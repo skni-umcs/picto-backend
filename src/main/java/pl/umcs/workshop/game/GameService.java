@@ -90,8 +90,9 @@ public class GameService {
     User user =
         User.builder().game(game).score(0).generation(0).lastSeen(LocalDateTime.now()).build();
 
-    user.setCookie(JwtCookieHandler.createToken(game.getId(), user.getId()));
     User savedUser = userRepository.save(user);
+    user.setCookie(JwtCookieHandler.createToken(game.getId(), savedUser.getId()));
+    savedUser = userRepository.save(user);
 
     SseService.addUserSession(user);
 
@@ -102,9 +103,11 @@ public class GameService {
     User user = userService.getUser(userId);
     Game game = getGame(gameId);
 
-    user.setCookie(JwtCookieHandler.createToken(game.getId(), user.getId()));
+    User savedUser = userRepository.save(user);
+    user.setCookie(JwtCookieHandler.createToken(game.getId(), savedUser.getId()));
+    savedUser = userRepository.save(user);
 
-    return userRepository.save(user);
+    return savedUser;
   }
 
   public User joinGameWithCookie(String token) {
