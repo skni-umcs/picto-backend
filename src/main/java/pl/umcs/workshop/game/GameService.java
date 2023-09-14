@@ -90,8 +90,8 @@ public class GameService {
     User user =
         User.builder().game(game).score(0).generation(0).lastSeen(LocalDateTime.now()).build();
 
+    user.setCookie(JwtCookieHandler.createToken(game.getId(), user.getId()));
     User savedUser = userRepository.save(user);
-    user.setCookie(JwtCookieHandler.createToken(game.getId(), savedUser.getId()));
 
     SseService.addUserSession(user);
 
