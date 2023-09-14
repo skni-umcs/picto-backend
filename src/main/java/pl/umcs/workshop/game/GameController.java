@@ -23,7 +23,6 @@ public class GameController {
   }
 
   @PostMapping("{gameId}/admin/begin")
-  // Returns list of round ids
   public Game beginGame(@PathVariable Long gameId) throws IOException {
     return gameService.beginGame(gameId);
   }
@@ -50,7 +49,7 @@ public class GameController {
   }
 
   @PostMapping("admin/end/all")
-  public void endAllGames() {
+  public void endAllGames() throws IOException {
     gameService.endAllGames();
   }
 

@@ -130,12 +130,16 @@ public class GameService {
     return savedGame;
   }
 
-  public void endAllGames() {
+  public void endAllGames() throws IOException {
     List<Game> games = gameRepository.findAll();
 
     for (Game game : games) {
       if (game.getEndDateTime() == null) {
         game.setEndDateTime(LocalDateTime.now());
+        deleteUserCookies(game.getId());
+
+        SseService.emitEventForAll(game.getId(), SseService.EventType.END_GAME);
+        SseService.closeSseConnectionForAll(game.getId());
       }
     }
 
