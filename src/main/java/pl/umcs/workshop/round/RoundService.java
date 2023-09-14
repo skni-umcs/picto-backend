@@ -55,7 +55,7 @@ public class RoundService {
     }
 
     user.setGeneration(user.getGeneration() + 1);
-    userRepository.save(user);
+    userRepository.saveAndFlush(user);
 
     Long otherUserId =
         Objects.equals(user.getId(), round.getUserOne().getId())
