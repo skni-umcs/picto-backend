@@ -7,6 +7,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,8 @@ public class RoundService {
   @Autowired private SymbolRepository symbolRepository;
 
   @Autowired private UserRepository userRepository;
+
+  @Autowired private EntityManager entityManager;
 
   @Transactional
   public Round getNextRound(Long userId) throws IOException {
@@ -75,10 +79,10 @@ public class RoundService {
     return round;
   }
 
-  @Transactional
   public User getAndSaveUserGeneration(User user, Round round) {
+    entityManager.getTransaction().begin();
     if (round == null) {
-      userRepository.incrementGeneration(user.getId());
+      user.setGeneration(user.getGeneration() + 1);
       round =
               roundRepository.getNextRound(user.getGame().getId(), user.getId(), user.getGeneration() + 1);
 
@@ -87,8 +91,8 @@ public class RoundService {
       }
     }
 
-    userRepository.incrementGeneration(user.getId());
-    userRepository.flush();
+    user.setGeneration(user.getGeneration() + 1);
+    entityManager.getTransaction().commit();
 
     return user;
   }
