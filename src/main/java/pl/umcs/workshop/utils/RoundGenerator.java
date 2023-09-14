@@ -50,6 +50,7 @@ public class RoundGenerator {
 
   public void generateRounds(int generation) {
     List<Map.Entry<User, User>> edgesLeft = new ArrayList<>(graph.getEdges());
+    Set<User> usersWithoutRounds = game.getUsers();
 
     while (!edgesLeft.isEmpty()) {
       Map.Entry<User, User> randomEdge = getRandomEdge(edgesLeft);
@@ -63,7 +64,21 @@ public class RoundGenerator {
       addNewRound((long) roundList.size() + 1, userOne, userTwo, generation);
       removeAllEdgesWithUser(edgesLeft, userOne);
       removeAllEdgesWithUser(edgesLeft, userTwo);
+
+      usersWithoutRounds.remove(userOne);
+      usersWithoutRounds.remove(userTwo);
     }
+
+    List<User> orderedUsersWithoutRounds = (List<User>) usersWithoutRounds;
+    Collections.shuffle(orderedUsersWithoutRounds);
+    while (orderedUsersWithoutRounds.size() > 1) {
+      User userOne = orderedUsersWithoutRounds.get(0);
+      User userTwo = orderedUsersWithoutRounds.get(1);
+      addNewRound((long) roundList.size() + 1, userOne, userTwo, generation);
+      orderedUsersWithoutRounds.remove(0);
+      orderedUsersWithoutRounds.remove(1);
+    }
+
   }
 
   public List<Round> generateGenerations(int numberOfGenerations) {
