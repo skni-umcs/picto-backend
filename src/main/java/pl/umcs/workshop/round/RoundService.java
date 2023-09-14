@@ -46,7 +46,8 @@ public class RoundService {
 
     if (round == null) {
       user.setGeneration(user.getGeneration() + 1);
-      round = roundRepository.getNextRound(user.getGame().getId(), userId, user.getGeneration() + 1);
+      round =
+          roundRepository.getNextRound(user.getGame().getId(), userId, user.getGeneration() + 1);
 
       if (round == null) {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Round not found");
@@ -56,7 +57,10 @@ public class RoundService {
     user.setGeneration(user.getGeneration() + 1);
     userRepository.save(user);
 
-    Long otherUserId = Objects.equals(user.getId(), round.getUserOne().getId()) ? round.getUserTwo().getId() : round.getUserOne().getId();
+    Long otherUserId =
+        Objects.equals(user.getId(), round.getUserOne().getId())
+            ? round.getUserTwo().getId()
+            : round.getUserOne().getId();
     User otherUser = userRepository.findById(otherUserId).orElse(null);
 
     // TODO: check if users are in the same generation, if not, only hold

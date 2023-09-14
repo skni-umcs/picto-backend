@@ -18,12 +18,7 @@ public class RoundGenerator {
 
   public void addNewRound(User userOne, User userTwo, int generation) {
     Round round =
-        Round.builder()
-            .game(game)
-            .userOne(userOne)
-            .userTwo(userTwo)
-            .generation(generation)
-            .build();
+        Round.builder().game(game).userOne(userOne).userTwo(userTwo).generation(generation).build();
 
     roundList.add(round);
   }

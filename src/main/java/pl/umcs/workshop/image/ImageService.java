@@ -1,7 +1,6 @@
 package pl.umcs.workshop.image;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -55,6 +54,18 @@ public class ImageService {
     }
 
     return k - 1;
+  }
+
+  public static Set<String> listFiles(String dir) {
+    try (Stream<Path> stream = Files.list(Paths.get(dir))) {
+      return stream
+          .filter(file -> !Files.isDirectory(file))
+          .map(Path::getFileName)
+          .map(Path::toString)
+          .collect(Collectors.toSet());
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public @NotNull List<Image> generateImagesForRoundForUser(Long groupId) {
@@ -144,18 +155,6 @@ public class ImageService {
                 .build();
         symbolRepository.save(symbol);
       }
-    }
-  }
-
-  public static Set<String> listFiles(String dir) {
-    try (Stream<Path> stream = Files.list(Paths.get(dir))) {
-      return stream
-          .filter(file -> !Files.isDirectory(file))
-          .map(Path::getFileName)
-          .map(Path::toString)
-          .collect(Collectors.toSet());
-    } catch (IOException e) {
-      throw new RuntimeException(e);
     }
   }
 
