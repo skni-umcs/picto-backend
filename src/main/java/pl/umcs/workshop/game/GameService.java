@@ -122,6 +122,18 @@ public class GameService {
     return savedGame;
   }
 
+  public void endAllGames() {
+    List<Game> games = gameRepository.findAll();
+
+    for (Game game : games) {
+      if (game.getEndDateTime() == null) {
+        game.setEndDateTime(LocalDateTime.now());
+      }
+    }
+
+    gameRepository.saveAll(games);
+  }
+
   // TODO
   public List<Integer> generateGameSummary(Long gameId) {
     // Summarize data from the game using config given as the parameter

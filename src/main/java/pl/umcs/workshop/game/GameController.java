@@ -43,6 +43,11 @@ public class GameController {
     return gameService.endGame(gameId);
   }
 
+  @PostMapping("admin/end/all")
+  public void endAllGames() {
+    gameService.endAllGames();
+  }
+
   // TODO
   @PostMapping("{gameId}/admin/summary")
   // TODO: create summary config entity to pass as a parameter
