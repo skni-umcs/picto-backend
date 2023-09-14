@@ -15,10 +15,9 @@ public class RoundGenerator {
   private Graph graph;
   private Game game;
 
-  public void addNewRound(Long id, User userOne, User userTwo, int generation) {
+  public void addNewRound(User userOne, User userTwo, int generation) {
     Round round =
         Round.builder()
-            .id(id)
             .game(game)
             .userOne(userOne)
             .userTwo(userTwo)
@@ -60,7 +59,7 @@ public class RoundGenerator {
       User userOne = newPair.getKey();
       User userTwo = newPair.getValue();
 
-      addNewRound((long) roundList.size() + 1, userOne, userTwo, generation);
+      addNewRound(userOne, userTwo, generation);
       removeAllEdgesWithUser(edgesLeft, userOne);
       removeAllEdgesWithUser(edgesLeft, userTwo);
     }
