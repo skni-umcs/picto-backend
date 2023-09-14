@@ -16,7 +16,7 @@ public class Graph {
   private final int k;
   private final double p;
   private CircularDoublyLinkedList circularUsers;
-  private List<User> users;
+  @Getter private List<User> users;
 
   public @NotNull List<User> getAdjVertices(User user) {
     List<User> neighbors = new ArrayList<>();
