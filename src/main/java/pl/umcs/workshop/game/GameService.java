@@ -100,13 +100,18 @@ public class GameService {
 
   public User joinGameAsUser(Long gameId, Long userId) {
     User user = userService.getUser(userId);
-
     Game game = getGame(gameId);
-    User savedUser = userRepository.save(user);
 
-    user.setCookie(JwtCookieHandler.createToken(game.getId(), savedUser.getId()));
+    user.setCookie(JwtCookieHandler.createToken(game.getId(), user.getId()));
 
-    return savedUser;
+    return userRepository.save(user);
+  }
+
+  public User joinGameWithCookie(String token) {
+    Long userId = JwtCookieHandler.getUserId(token);
+    Long gameId = JwtCookieHandler.getGameId(token);
+
+    return joinGameAsUser(gameId, userId);
   }
 
   public Game endGame(Long gameId) throws IOException {
