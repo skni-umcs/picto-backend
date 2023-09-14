@@ -73,11 +73,11 @@ public class Game {
 
   @ManyToOne
   @JoinColumn(name = "topology_id")
-  @JsonIgnore
+  @JsonBackReference(value = "topology-game-reference")
   private Topology topology;
 
   @ManyToOne
   @JoinColumn(name = "image_group_id")
-  @JsonIgnore
+  @JsonBackReference(value = "group-games-reference")
   private Group group;
 }

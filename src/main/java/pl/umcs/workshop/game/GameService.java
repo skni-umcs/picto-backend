@@ -42,7 +42,7 @@ public class GameService {
   @Autowired private SymbolRepository symbolRepository;
 
   public Game createGame(@NotNull Game game) {
-    if (gameRepository.existsById(game.getTopology().getId())) {
+    if (topologyRepository.existsById(game.getTopology().getId())) {
       Topology topology = topologyRepository.findById(game.getTopology().getId()).orElse(null);
       game.setTopology(topology);
     } else {
