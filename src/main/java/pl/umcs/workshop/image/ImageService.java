@@ -79,20 +79,20 @@ public class ImageService {
     List<Round> roundsToSave = new ArrayList<>();
 
     for (Round round : rounds) {
-      for (User user : new User[] {round.getUserOne(), round.getUserTwo()}) {
-        List<Image> images = generateImagesForRoundForUser(game.getGroup().getId());
-        Image topic = getTopic(images);
+      List<Image> images = generateImagesForRoundForUser(game.getGroup().getId());
+      Image topic = getTopic(images);
 
-        for (Image image : images) {
+      for (Image image : images) {
+        for (User user : new User[] {round.getUserOne(), round.getUserTwo()}) {
           ImageUserRoundRelation imageUserRoundRelation =
               ImageUserRoundRelation.builder().round(round).user(user).image(image).build();
 
           relations.add(imageUserRoundRelation);
         }
-
-        round.setTopic(topic);
-        roundsToSave.add(round);
       }
+
+      round.setTopic(topic);
+      roundsToSave.add(round);
     }
 
     imageUserRoundRelationRepository.saveAll(relations);
