@@ -47,8 +47,7 @@ public class RoundService {
     Round round =
         roundRepository.getNextRound(user.getGame().getId(), userId, user.getGeneration() + 1);
 
-    getAndSaveUserGeneration(user, round);
-    System.out.println("\n\n\n\n\n\n\n\n\n\nSAVED USER GENERATION\n\n\n\n\n\n\n\n\n");
+    user = getAndSaveUserGeneration(user, round);
 
     Long otherUserId =
         Objects.equals(user.getId(), round.getUserOne().getId())
@@ -56,7 +55,6 @@ public class RoundService {
             : round.getUserOne().getId();
     User otherUser = userRepository.findById(otherUserId).orElse(null);
 
-    // TODO: check if users are in the same generation, if not, only hold
     assert otherUser != null;
 
     SseService.EventType userEventType;
@@ -78,7 +76,7 @@ public class RoundService {
   }
 
   @Transactional
-  public void getAndSaveUserGeneration(User user, Round round) {
+  public User getAndSaveUserGeneration(User user, Round round) {
     if (round == null) {
       userRepository.incrementGeneration(user.getId());
       round =
@@ -91,6 +89,8 @@ public class RoundService {
 
     userRepository.incrementGeneration(user.getId());
     userRepository.flush();
+
+    return user;
   }
 
   public List<Image> getImages(Long roundId, Long userId) {
