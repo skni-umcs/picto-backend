@@ -15,9 +15,10 @@ public class RoundGenerator {
   private Graph graph;
   private Game game;
 
-  public void addNewRound(User userOne, User userTwo, int generation) {
+  public void addNewRound(Long id, User userOne, User userTwo, int generation) {
     Round round =
         Round.builder()
+            .id(id)
             .game(game)
             .userOne(userOne)
             .userTwo(userTwo)
@@ -49,7 +50,6 @@ public class RoundGenerator {
 
   public void generateRounds(int generation) {
     List<Map.Entry<User, User>> edgesLeft = new ArrayList<>(graph.getEdges());
-    List<User> users = graph.getUsers();
 
     while (!edgesLeft.isEmpty()) {
       Map.Entry<User, User> randomEdge = getRandomEdge(edgesLeft);
@@ -60,25 +60,9 @@ public class RoundGenerator {
       User userOne = newPair.getKey();
       User userTwo = newPair.getValue();
 
-      addNewRound(userOne, userTwo, generation);
+      addNewRound((long) roundList.size() + 1, userOne, userTwo, generation);
       removeAllEdgesWithUser(edgesLeft, userOne);
       removeAllEdgesWithUser(edgesLeft, userTwo);
-
-      users.remove(userOne);
-      users.remove(userTwo);
-    }
-
-    Collections.shuffle(users);
-
-    for (int i = users.size() - 1; i > 0; i -= 2) {
-      User userOne = users.get(i);
-      User userTwo = users.get(i - 1);
-
-      Map.Entry<User, User> newPair = randomPair(userOne, userTwo);
-      userOne = newPair.getKey();
-      userTwo = newPair.getValue();
-
-      addNewRound(userOne, userTwo, generation);
     }
   }
 
