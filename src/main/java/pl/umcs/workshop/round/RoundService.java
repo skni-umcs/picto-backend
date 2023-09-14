@@ -1,13 +1,12 @@
 package pl.umcs.workshop.round;
 
+import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import jakarta.transaction.Transactional;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,8 +38,10 @@ public class RoundService {
 
   @Autowired private UserRepository userRepository;
 
+  private static final Map<Long, Integer> userGenerations = new HashMap<>();
+
   @Transactional
-  public Round getNextRound(Long userId) throws IOException {
+  public @NotNull Round getNextRound(Long userId) throws IOException {
     // Check what generation the user is on
     User user = userService.getUser(userId);
     Game game = gameService.getGame(user.getGame().getId());
@@ -48,12 +49,13 @@ public class RoundService {
         roundRepository.getNextRound(user.getGame().getId(), userId, user.getGeneration() + 1);
 
     user = getAndSaveUserGeneration(user, round);
+    userGenerations.put(user.getId(), user.getGeneration());
 
     Long otherUserId =
         Objects.equals(user.getId(), round.getUserOne().getId())
             ? round.getUserTwo().getId()
             : round.getUserOne().getId();
-    User otherUser = userRepository.findById(otherUserId).orElse(null);
+    User otherUser = userService.getUser(otherUserId);
 
     assert otherUser != null;
 
@@ -75,10 +77,9 @@ public class RoundService {
     return round;
   }
 
-  @Transactional
   public User getAndSaveUserGeneration(User user, Round round) {
     if (round == null) {
-      userRepository.incrementGeneration(user.getId());
+      user.setGeneration(user.getGeneration() + 1);
       round =
               roundRepository.getNextRound(user.getGame().getId(), user.getId(), user.getGeneration() + 1);
 
@@ -87,10 +88,9 @@ public class RoundService {
       }
     }
 
-    userRepository.incrementGeneration(user.getId());
-    userRepository.flush();
+    user.setGeneration(user.getGeneration() + 1);
 
-    return user;
+    return userRepository.saveAndFlush(user);
   }
 
   public List<Image> getImages(Long roundId, Long userId) {
