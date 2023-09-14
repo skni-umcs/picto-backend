@@ -61,7 +61,7 @@ public class RoundService {
 
     SseService.EventType userEventType;
     SseService.EventType otherUserEventType;
-    if (otherUser.getGeneration() == user.getGeneration()) {
+    if (Objects.equals(userGenerations.get(userId), userGenerations.get(otherUserId))) {
       if (Objects.equals(round.getUserOne().getId(), userId)) {
         userEventType = SseService.EventType.SPEAKER_READY;
         otherUserEventType = SseService.EventType.LISTENER_HOLD;
@@ -87,7 +87,6 @@ public class RoundService {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Round not found");
       }
     }
-
     user.setGeneration(user.getGeneration() + 1);
 
     return userRepository.saveAndFlush(user);
