@@ -56,19 +56,25 @@ public class RoundService {
     user.setGeneration(user.getGeneration() + 1);
     userRepository.save(user);
 
-    Long otherUserId = Objects.equals(user.getId(), round.getUserOne().getId()) ? user.getId() : round.getUserTwo().getId();
+    Long otherUserId = Objects.equals(user.getId(), round.getUserOne().getId()) ? round.getUserTwo().getId() : round.getUserOne().getId();
     User otherUser = userRepository.findById(otherUserId).orElse(null);
 
     // TODO: check if users are in the same generation, if not, only hold
     assert otherUser != null;
-    SseService.EventType eventType;
+
+    SseService.EventType userEventType;
+    SseService.EventType otherUserEventType;
     if (otherUser.getGeneration() == user.getGeneration()) {
       if (Objects.equals(round.getUserOne().getId(), userId)) {
-        eventType = SseService.EventType.SPEAKER_READY;
+        userEventType = SseService.EventType.SPEAKER_READY;
+        otherUserEventType = SseService.EventType.LISTENER_HOLD;
       } else {
-        eventType = SseService.EventType.LISTENER_HOLD;
+        userEventType = SseService.EventType.LISTENER_HOLD;
+        otherUserEventType = SseService.EventType.SPEAKER_READY;
       }
-      SseService.emitEventForUser(user, eventType);
+
+      SseService.emitEventForUser(user, userEventType);
+      SseService.emitEventForUser(otherUser, otherUserEventType);
     }
 
     return round;
