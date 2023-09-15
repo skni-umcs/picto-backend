@@ -19,10 +19,12 @@ public class SseService {
 
   private static @NotNull SseEmitter createNewSession() {
     SseEmitter emitter = new SseEmitter(-1L);
-    emitter.onTimeout(() -> {
-      emitter.complete();
-      userSessions.values().remove(emitter);
-    });
+    emitter.onTimeout(
+        () -> {
+          emitter.complete();
+          userSessions.values().remove(emitter);
+        });
+    emitter.onError(e -> System.out.println("EMITTER ERROR FOR USER " + e));
 
     return emitter;
   }
