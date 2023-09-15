@@ -23,7 +23,6 @@ public class GameController {
   }
 
   @PostMapping("{gameId}/admin/begin")
-  // Returns list of round ids
   public Game beginGame(@PathVariable Long gameId) throws IOException {
     return gameService.beginGame(gameId);
   }
@@ -38,9 +37,20 @@ public class GameController {
     return gameService.joinGameAsUser(gameId, userId);
   }
 
+  @PostMapping("{gameId}/join/cookie")
+  public User joinGameWithCookie(
+      @RequestHeader("x-session") String token, @PathVariable String gameId) {
+    return gameService.joinGameWithCookie(token);
+  }
+
   @PostMapping("{gameId}/admin/end")
   public Game endGame(@PathVariable Long gameId) throws IOException {
     return gameService.endGame(gameId);
+  }
+
+  @PostMapping("admin/end/all")
+  public void endAllGames() throws IOException {
+    gameService.endAllGames();
   }
 
   // TODO

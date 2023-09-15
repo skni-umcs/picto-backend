@@ -27,10 +27,10 @@ public class Round {
   @Column(name = "generation", nullable = false)
   private int generation;
 
-  @Column(name = "user_1_answer_time")
+  @Column(name = "user_1_answer_time_ms")
   private double userOneAnswerTime;
 
-  @Column(name = "user_2_answer_time")
+  @Column(name = "user_2_answer_time_ms")
   private double userTwoAnswerTime;
 
   // Relations
@@ -40,7 +40,6 @@ public class Round {
 
   @ManyToOne
   @JoinColumn(name = "game_id")
-  @JsonBackReference(value = "game-round-reference")
   private Game game;
 
   @ManyToOne

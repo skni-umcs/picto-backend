@@ -1,7 +1,7 @@
 package pl.umcs.workshop.game;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -59,14 +59,15 @@ public class Game {
 
   // Relations
   @OneToMany(mappedBy = "game")
-  @JsonManagedReference(value = "game-round-reference")
+  @JsonIgnore
   private Set<Round> rounds;
 
   @OneToMany(mappedBy = "game")
-  @JsonManagedReference(value = "user-game-reference")
+  @JsonIgnore
   private Set<User> users;
 
   @ManyToMany(mappedBy = "game")
+  @JsonIgnore
   private Set<Symbol> symbols;
 
   @ManyToOne

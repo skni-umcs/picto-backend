@@ -1,7 +1,6 @@
 package pl.umcs.workshop.image;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,14 +34,11 @@ public class ImageService {
 
   @Autowired private ImageUserRoundRelationRepository imageUserRoundRelationRepository;
 
-  private static double getRandomizedNormal(int numberOfImages) {
-    double mean = 0;
-    double variance = 1;
+  private static double getRandomizedNormal(double mean, double variance) {
     Random rand = new Random();
-
     double randomized = rand.nextGaussian() * variance + mean;
 
-    return Math.atan(randomized)/(Math.PI/2);
+    return Math.atan(randomized) / (Math.PI/2);
   }
 
   private static int getRandomized(int numberOfImages) {
@@ -60,12 +56,24 @@ public class ImageService {
     return k - 1;
   }
 
+  public static Set<String> listFiles(String dir) {
+    try (Stream<Path> stream = Files.list(Paths.get(dir))) {
+      return stream
+          .filter(file -> !Files.isDirectory(file))
+          .map(Path::getFileName)
+          .map(Path::toString)
+          .collect(Collectors.toSet());
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public @NotNull List<Image> generateImagesForRoundForUser(Long groupId) {
     List<Image> images = imageRepository.findAllByGroupId(groupId);
     List<Image> roundImages = new ArrayList<>();
 
     for (int i = 0; i < images.size(); i++) {
-      int index = getIndex(images.size(), getRandomizedNormal(images.size()));
+      int index = getIndex(images.size(), getRandomizedNormal(0, 1));
       Image generatedImage = images.get(index);
 
       roundImages.add(generatedImage);
@@ -82,20 +90,20 @@ public class ImageService {
     List<Round> roundsToSave = new ArrayList<>();
 
     for (Round round : rounds) {
-      for (User user : new User[] {round.getUserOne(), round.getUserTwo()}) {
-        List<Image> images = generateImagesForRoundForUser(game.getGroup().getId());
-        Image topic = getTopic(images);
+      List<Image> images = generateImagesForRoundForUser(game.getGroup().getId());
+      Image topic = getTopic(images);
 
-        for (Image image : images) {
+      for (Image image : images) {
+        for (User user : new User[] {round.getUserOne(), round.getUserTwo()}) {
           ImageUserRoundRelation imageUserRoundRelation =
               ImageUserRoundRelation.builder().round(round).user(user).image(image).build();
 
           relations.add(imageUserRoundRelation);
         }
-
-        round.setTopic(topic);
-        roundsToSave.add(round);
       }
+
+      round.setTopic(topic);
+      roundsToSave.add(round);
     }
 
     imageUserRoundRelationRepository.saveAll(relations);
@@ -150,19 +158,7 @@ public class ImageService {
     }
   }
 
-  public static Set<String> listFiles(String dir) {
-    try (Stream<Path> stream = Files.list(Paths.get(dir))) {
-      return stream
-          .filter(file -> !Files.isDirectory(file))
-          .map(Path::getFileName)
-          .map(Path::toString)
-          .collect(Collectors.toSet());
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  public List<Image> getAllImagesWithGroups() {
+  public List<Image> getAllImagesAndGroups() {
     return imageRepository.findAll();
   }
 }

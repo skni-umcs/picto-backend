@@ -42,7 +42,7 @@ public class GameService {
   @Autowired private SymbolRepository symbolRepository;
 
   public Game createGame(@NotNull Game game) {
-    if (gameRepository.existsById(game.getTopology().getId())) {
+    if (topologyRepository.existsById(game.getTopology().getId())) {
       Topology topology = topologyRepository.findById(game.getTopology().getId()).orElse(null);
       game.setTopology(topology);
     } else {
@@ -92,6 +92,7 @@ public class GameService {
 
     User savedUser = userRepository.save(user);
     user.setCookie(JwtCookieHandler.createToken(game.getId(), savedUser.getId()));
+    savedUser = userRepository.save(user);
 
     SseService.addUserSession(user);
 
@@ -100,13 +101,20 @@ public class GameService {
 
   public User joinGameAsUser(Long gameId, Long userId) {
     User user = userService.getUser(userId);
-
     Game game = getGame(gameId);
-    User savedUser = userRepository.save(user);
 
+    User savedUser = userRepository.save(user);
     user.setCookie(JwtCookieHandler.createToken(game.getId(), savedUser.getId()));
+    savedUser = userRepository.save(user);
 
     return savedUser;
+  }
+
+  public User joinGameWithCookie(String token) {
+    Long userId = JwtCookieHandler.getUserId(token);
+    Long gameId = JwtCookieHandler.getGameId(token);
+
+    return joinGameAsUser(gameId, userId);
   }
 
   public Game endGame(Long gameId) throws IOException {
@@ -120,6 +128,22 @@ public class GameService {
     SseService.closeSseConnectionForAll(savedGame.getId());
 
     return savedGame;
+  }
+
+  public void endAllGames() throws IOException {
+    List<Game> games = gameRepository.findAll();
+
+    for (Game game : games) {
+      if (game.getEndDateTime() == null) {
+        game.setEndDateTime(LocalDateTime.now());
+        deleteUserCookies(game.getId());
+
+        SseService.emitEventForAll(game.getId(), SseService.EventType.END_GAME);
+        SseService.closeSseConnectionForAll(game.getId());
+      }
+    }
+
+    gameRepository.saveAll(games);
   }
 
   // TODO

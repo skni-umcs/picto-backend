@@ -18,8 +18,7 @@ public class SseService {
   private static UserService userService;
 
   private static SseEmitter createNewSession() {
-    Long timeout = 900000L; // 15 minutes
-    return new SseEmitter(timeout);
+    return new SseEmitter(-1L);
   }
 
   public static void addUserSession(@NotNull User user) {
@@ -56,6 +55,7 @@ public class SseService {
 
   public static void closeSseConnection(Long userId) {
     userSessions.get(userId).complete();
+    userSessions.remove(userId);
   }
 
   public static void closeSseConnectionForAll(Long gameId) {

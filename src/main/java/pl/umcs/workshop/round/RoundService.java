@@ -1,5 +1,6 @@
 package pl.umcs.workshop.round;
 
+import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -37,41 +38,58 @@ public class RoundService {
 
   @Autowired private UserRepository userRepository;
 
-  public Round getNextRound(Long userId) throws IOException {
+  private static final Map<Long, Integer> userGenerations = new HashMap<>();
+
+  @Transactional
+  public @NotNull Round getNextRound(Long userId) throws IOException {
     // Check what generation the user is on
     User user = userService.getUser(userId);
     Game game = gameService.getGame(user.getGame().getId());
     Round round =
         roundRepository.getNextRound(user.getGame().getId(), userId, user.getGeneration() + 1);
 
+    user = getAndSaveUserGeneration(user, round);
+    userGenerations.put(user.getId(), user.getGeneration());
+
+    Long otherUserId =
+        Objects.equals(user.getId(), round.getUserOne().getId())
+            ? round.getUserTwo().getId()
+            : round.getUserOne().getId();
+    User otherUser = userService.getUser(otherUserId);
+
+    assert otherUser != null;
+
+    SseService.EventType userEventType;
+    SseService.EventType otherUserEventType;
+    if (Objects.equals(userGenerations.get(userId), userGenerations.get(otherUserId))) {
+      if (Objects.equals(round.getUserOne().getId(), userId)) {
+        userEventType = SseService.EventType.SPEAKER_READY;
+        otherUserEventType = SseService.EventType.LISTENER_HOLD;
+      } else {
+        userEventType = SseService.EventType.LISTENER_HOLD;
+        otherUserEventType = SseService.EventType.SPEAKER_READY;
+      }
+
+      SseService.emitEventForUser(user, userEventType);
+      SseService.emitEventForUser(otherUser, otherUserEventType);
+    }
+
+    return round;
+  }
+
+  public User getAndSaveUserGeneration(User user, Round round) {
     if (round == null) {
       user.setGeneration(user.getGeneration() + 1);
-      round = roundRepository.getNextRound(user.getGame().getId(), userId, user.getGeneration() + 1);
+      round =
+              roundRepository.getNextRound(user.getGame().getId(), user.getId(), user.getGeneration() + 1);
 
       if (round == null) {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Round not found");
       }
     }
-
     user.setGeneration(user.getGeneration() + 1);
-    userRepository.save(user);
 
-    Long otherUserId = Objects.equals(user.getId(), round.getUserOne().getId()) ? user.getId() : round.getUserTwo().getId();
-    User otherUser = userRepository.findById(otherUserId).orElse(null);
-
-    // TODO: check if users are in the same generation, if not, only hold
-    assert otherUser != null;
-    SseService.EventType eventType;
-    if (otherUser.getGeneration() == user.getGeneration()) {
-      if (Objects.equals(round.getUserOne().getId(), userId)) {
-        eventType = SseService.EventType.SPEAKER_READY;
-      } else {
-        eventType = SseService.EventType.LISTENER_HOLD;
-      }
-      SseService.emitEventForUser(user, eventType);
-    }
-
-    return round;
+    return userRepository.saveAndFlush(user);
   }
 
   public List<Image> getImages(Long roundId, Long userId) {

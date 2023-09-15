@@ -1,4 +1,4 @@
-package pl.umcs.workshop.utils;
+package pl.umcs.workshop.graph;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
