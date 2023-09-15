@@ -64,7 +64,7 @@ public class RoundGenerator {
       usersWithoutRounds.remove(userTwo);
     }
 
-    List<User> orderedUsersWithoutRounds = (List<User>) usersWithoutRounds;
+    List<User> orderedUsersWithoutRounds = new ArrayList<>(usersWithoutRounds);
     Collections.shuffle(orderedUsersWithoutRounds);
     while (orderedUsersWithoutRounds.size() > 1) {
       User userOne = orderedUsersWithoutRounds.get(0);
