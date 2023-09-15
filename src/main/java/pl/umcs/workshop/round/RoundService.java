@@ -208,7 +208,7 @@ public class RoundService {
                         throw new RuntimeException(e);
                     }
                 },
-                5,
+                1,
                 TimeUnit.SECONDS);
 
         if (isImageCorrect(round)) {
