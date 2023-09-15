@@ -40,7 +40,6 @@ public class Round {
 
   @ManyToOne
   @JoinColumn(name = "game_id")
-  @JsonBackReference(value = "game-round-reference")
   private Game game;
 
   @ManyToOne
