@@ -48,6 +48,10 @@ public class RoundService {
     Round round =
         roundRepository.getNextRound(user.getGame().getId(), userId, user.getGeneration() + 1);
 
+    if (round == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Round not found");
+    }
+
     user = getAndSaveUserGeneration(user, round);
     userGenerations.put(user.getId(), user.getGeneration());
 
