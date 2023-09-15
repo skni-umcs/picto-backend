@@ -13,8 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.umcs.workshop.game.Game;
+import pl.umcs.workshop.graph.Graph;
 import pl.umcs.workshop.user.User;
-import pl.umcs.workshop.utils.Graph;
 import pl.umcs.workshop.utils.JwtCookieHandler;
 
 @ExtendWith(MockitoExtension.class)

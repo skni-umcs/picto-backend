@@ -20,6 +20,6 @@ public class ImageController {
 
   @GetMapping("all")
   public List<Image> getAllImagesWithGroups() {
-    return imageService.getAllImagesWithGroups();
+    return imageService.getAllImagesAndGroups();
   }
 }

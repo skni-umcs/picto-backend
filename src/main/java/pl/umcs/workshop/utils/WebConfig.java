@@ -14,7 +14,12 @@ public class WebConfig implements WebMvcConfigurer {
   public void addCorsMappings(@NotNull CorsRegistry registry) {
     registry
         .addMapping("/**")
-        .allowedOrigins("https://pictodev.skni.umcs.pl", "https://picto.skni.umcs.pl", "http://localhost:3000")
+        .allowedOrigins(
+            "https://pictodev.skni.umcs.pl",
+            "https://picto.skni.umcs.pl",
+            "http://localhost:3000",
+            "http://yuumi.skni.umcs.pl:8080/",
+            "http://yuumi.skni.umcs.pl:8083/")
         .allowedHeaders("*")
         .allowCredentials(true);
   }
