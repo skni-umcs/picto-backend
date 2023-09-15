@@ -69,7 +69,7 @@ public class RoundGenerator {
     while (orderedUsersWithoutRounds.size() > 1) {
       User userOne = orderedUsersWithoutRounds.get(0);
       User userTwo = orderedUsersWithoutRounds.get(1);
-      addNewRound((long) roundList.size() + 1, userOne, userTwo, generation);
+      addNewRound(userOne, userTwo, generation);
       orderedUsersWithoutRounds.remove(0);
       orderedUsersWithoutRounds.remove(1);
     }
