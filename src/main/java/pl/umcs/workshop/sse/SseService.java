@@ -18,7 +18,7 @@ public class SseService {
   private static UserService userService;
 
   private static @NotNull SseEmitter createNewSession() {
-    SseEmitter emitter = new SseEmitter(-1L);
+    SseEmitter emitter = new SseEmitter(1800000L); // 30 minutes
     emitter.onTimeout(
         () -> {
           emitter.complete();
