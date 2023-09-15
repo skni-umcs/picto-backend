@@ -41,7 +41,18 @@ public class SseService {
             .id(String.valueOf(user.getId()))
             .name(eventType.toString())
             .data(eventType);
-    emitter.send(event);
+
+    try {
+      emitter.send(event);
+    } catch (Exception e) {
+      try {
+        Thread.sleep(200);
+      } catch (InterruptedException ex) {
+        throw new RuntimeException(ex);
+      }
+
+      emitEventForUser(user, eventType);
+    }
   }
 
   public static void emitEventForAll(Long gameId, EventType eventType) throws IOException {
