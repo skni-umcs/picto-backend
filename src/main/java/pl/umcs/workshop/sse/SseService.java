@@ -17,8 +17,14 @@ public class SseService {
 
   private static UserService userService;
 
-  private static SseEmitter createNewSession() {
-    return new SseEmitter(-1L);
+  private static @NotNull SseEmitter createNewSession() {
+    SseEmitter emitter = new SseEmitter(-1L);
+    emitter.onTimeout(() -> {
+      emitter.complete();
+      userSessions.values().remove(emitter);
+    });
+
+    return emitter;
   }
 
   public static void addUserSession(@NotNull User user) {
