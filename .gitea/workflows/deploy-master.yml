@@ -1,5 +1,5 @@
 name: Deploy to Dev server
-run-name: ${{ gitea.actor }} is deploying to Dev server from ${{ gitea.ref }} 🚀
+run-name: ${{ gitea.actor }} is deploying to Master server from ${{ gitea.ref }} 🚀
 
 on:
   push:
@@ -9,13 +9,8 @@ on:
 jobs:
   Deploy:
     runs-on: ubuntu-latest
+    container: gitea.skni.umcs.pl/picto/ansible:latest
     steps:
-      - name: Prepare environment
-        run: |
-          apt-get update
-          apt-get install -y ansible
-          apt-get install -y sshpass
-          apt-get install -y git
       - name: Get latest ansible scripts from repo
         run: |
           git clone "https://gitea-deploy:${{ secrets.GIT_PASS }}@gitea.skni.umcs.pl/picto/picto-install.git"
@@ -32,4 +27,4 @@ jobs:
       - name: Deploy to prod server
         working-directory: ./picto-install
         run: |
-          ansible-playbook -i hosts.ini -e 'gitea_password=${{ secrets.GIT_PASS }}' -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"' -l prod --key-file '~/.ssh/id_rsa' update.yml
+          ansible-playbook -i hosts.ini -e 'origin=backend' -e 'gitea_password=${{ secrets.GIT_PASS }}' -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"' -l prod --key-file '~/.ssh/id_rsa' update.yml
