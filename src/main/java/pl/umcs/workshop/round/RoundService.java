@@ -57,9 +57,10 @@ public class RoundService {
 
         user.setGeneration(user.getGeneration() + 1);
         if (round == null) {
-            round = getAndSaveUserGeneration(user);
+            round = roundRepository.getNextRound(user.getGame().getId(), user.getId(), user.getGeneration() + 1);
+            user.setGeneration(user.getGeneration() + 1);
         }
-        userGenerations.put(user.getId(), user.getGeneration() + 1);
+        userGenerations.put(user.getId(), user.getGeneration());
 
         Long otherUserId =
                 Objects.equals(user.getId(), round.getUserOne().getId())
@@ -83,30 +84,6 @@ public class RoundService {
             SseService.emitEventForUser(user, userEventType);
             SseService.emitEventForUser(otherUser, otherUserEventType);
         }
-
-        return round;
-    }
-
-    public Round getAndSaveUserGeneration(@NotNull User user) {
-        user.setGeneration(user.getGeneration() + 1);
-        Round round =
-                roundRepository.getNextRound(user.getGame().getId(), user.getId(), user.getGeneration());
-
-        if (round == null) {
-            List<Round> userRounds = roundRepository.findAllByUserId(user.getId());
-            if (userRounds.isEmpty()) {
-                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "User has no rounds");
-            }
-        }
-
-        while (round == null) {
-            if(user.getGeneration()>user.getGame().getNumberOfGenerations()) {
-                break;
-            }
-            user.setGeneration(user.getGeneration() + 1);
-            round = roundRepository.getNextRound(user.getGame().getId(), user.getId(), user.getGeneration());
-        }
-        userRepository.saveAndFlush(user);
 
         return round;
     }
