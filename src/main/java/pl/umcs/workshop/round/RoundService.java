@@ -56,6 +56,7 @@ public class RoundService {
         Round round = roundRepository.getNextRound(user.getGame().getId(), user.getId(), user.getGeneration() + 1);
 
         if (round == null) {
+            user.setGeneration(user.getGeneration() + 1);
             round = getAndSaveUserGeneration(user);
         }
         userGenerations.put(user.getId(), user.getGeneration() + 1);
@@ -91,9 +92,11 @@ public class RoundService {
         Round round =
                 roundRepository.getNextRound(user.getGame().getId(), user.getId(), user.getGeneration());
 
-        List<Round> userRounds = roundRepository.findAllByUserId(user.getId());
-        if (userRounds.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "User has no rounds");
+        if (round == null) {
+            List<Round> userRounds = roundRepository.findAllByUserId(user.getId());
+            if (userRounds.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "User has no rounds");
+            }
         }
 
         while (round == null) {
