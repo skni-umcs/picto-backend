@@ -100,6 +100,9 @@ public class RoundService {
         }
 
         while (round == null) {
+            if(user.getGeneration()>user.getGame().getNumberOfGenerations()) {
+                break;
+            }
             user.setGeneration(user.getGeneration() + 1);
             round = roundRepository.getNextRound(user.getGame().getId(), user.getId(), user.getGeneration());
         }
