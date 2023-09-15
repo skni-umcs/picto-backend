@@ -174,17 +174,18 @@ public class RoundService {
         User user = userService.getUser(userId);
 
         // Multithreading
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.schedule(
-                () -> {
-                    try {
-                        SseService.emitEventForUser(user, SseService.EventType.AWAITING_ROUND);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                },
-                1,
-                TimeUnit.SECONDS);
+        try (ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1)) {
+            scheduler.schedule(
+                    () -> {
+                        try {
+                            SseService.emitEventForUser(user, SseService.EventType.AWAITING_ROUND);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    },
+                    1,
+                    TimeUnit.SECONDS);
+        }
 
         if (isImageCorrect(round)) {
             user.setScore(user.getScore() + game.getCorrectAnswerPoints());
