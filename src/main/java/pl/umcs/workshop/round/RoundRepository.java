@@ -17,4 +17,10 @@ public interface RoundRepository extends JpaRepository<Round, Long> {
   }
 
   List<Round> findAllByGame(Game game);
+
+  List<Round> findAllByUserOneIdOrUserTwoId(Long userOneId, Long userTwoId);
+
+  default List<Round> findAllByUserId(Long userId) {
+    return findAllByUserOneIdOrUserTwoId(userId, userId);
+  }
 }
