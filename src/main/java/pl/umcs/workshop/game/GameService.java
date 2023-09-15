@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.umcs.workshop.group.Group;
 import pl.umcs.workshop.group.GroupRepository;
+import pl.umcs.workshop.image.Image;
 import pl.umcs.workshop.image.ImageService;
 import pl.umcs.workshop.sse.SseService;
 import pl.umcs.workshop.symbol.Symbol;
@@ -42,6 +43,12 @@ public class GameService {
   @Autowired private SymbolRepository symbolRepository;
 
   public Game createGame(@NotNull Game game) {
+    List<Image> images = imageService.getAllImagesAndGroups();
+    if (images.isEmpty()) {
+      imageService.addImages();
+      imageService.addSymbols();
+    }
+
     if (topologyRepository.existsById(game.getTopology().getId())) {
       Topology topology = topologyRepository.findById(game.getTopology().getId()).orElse(null);
       game.setTopology(topology);
