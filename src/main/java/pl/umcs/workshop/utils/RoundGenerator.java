@@ -70,10 +70,11 @@ public class RoundGenerator {
       User userOne = orderedUsersWithoutRounds.get(0);
       User userTwo = orderedUsersWithoutRounds.get(1);
       addNewRound(userOne, userTwo, generation);
-      orderedUsersWithoutRounds.remove(0);
-      orderedUsersWithoutRounds.remove(1);
-    }
 
+      // Has to be this order, otherwise IndexOutOfBoundsException may occur
+      orderedUsersWithoutRounds.remove(1);
+      orderedUsersWithoutRounds.remove(0);
+    }
   }
 
   public List<Round> generateGenerations(int numberOfGenerations) {
