@@ -38,7 +38,7 @@ public class ImageService {
     Random rand = new Random();
     double randomized = rand.nextGaussian() * variance + mean;
 
-    return Math.atan(randomized) / (Math.PI/2);
+    return Math.atan(randomized) / (Math.PI / 2);
   }
 
   private static int getRandomized(int numberOfImages) {
@@ -126,11 +126,7 @@ public class ImageService {
       group = groupRepository.save(group);
 
       for (String imagePath : images) {
-        Image image =
-            Image.builder()
-                .path(imagePath)
-                .group(group)
-                .build();
+        Image image = Image.builder().path(imagePath).group(group).build();
         imageRepository.save(image);
       }
     }

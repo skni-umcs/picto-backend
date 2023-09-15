@@ -1,14 +1,12 @@
 package pl.umcs.workshop.round;
 
 import jakarta.transaction.Transactional;
-
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,25 +26,19 @@ import pl.umcs.workshop.user.UserService;
 
 @Service
 public class RoundService {
+    private static final Map<Long, Integer> userGenerations = new HashMap<>();
     @Autowired
     private RoundRepository roundRepository;
-
     @Autowired
     private ImageRepository imageRepository;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private GameService gameService;
-
     @Autowired
     private SymbolRepository symbolRepository;
-
     @Autowired
     private UserRepository userRepository;
-
-    private static final Map<Long, Integer> userGenerations = new HashMap<>();
 
     @Transactional
     public @NotNull Round getNextRound(Long userId) throws IOException {
