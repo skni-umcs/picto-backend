@@ -1,4 +1,4 @@
-name: Deploy to Dev server
+name: Deploy backend to Dev server
 run-name: ${{ gitea.actor }} is deploying to Dev server from ${{ gitea.ref }} 🚀
 
 on:
