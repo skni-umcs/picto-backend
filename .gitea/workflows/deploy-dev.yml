@@ -27,4 +27,4 @@ jobs:
       - name: Deploy to dev server
         working-directory: ./picto-install
         run: |
-          ansible-playbook -i hosts.ini -e 'gitea_password=${{ secrets.GIT_PASS }}' -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"' -l test --key-file '~/.ssh/id_rsa' update.yml
+          ansible-playbook -i hosts.ini -e 'origin=backend' -e 'gitea_password=${{ secrets.GIT_PASS }}' -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"' -l test --key-file '~/.ssh/id_rsa' update.yml
