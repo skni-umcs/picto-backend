@@ -80,8 +80,8 @@ public class GameService {
     List<Symbol> symbols = symbolRepository.findAll();
     game.setSymbols(new HashSet<>(symbols));
     for (Symbol symbol : symbols) {
-      symbol.setGame(new HashSet<>(List.of(game)));
-      symbol.setRounds(new HashSet<>(game.getRounds()));
+      symbol.getGames().add(game);
+      symbol.getRounds().addAll(game.getRounds());
     }
     symbolRepository.saveAll(symbols);
     gameRepository.save(game);

@@ -29,7 +29,7 @@ public class Symbol {
   @ManyToMany
   @JoinColumn(name = "game_id")
   @JsonIgnore
-  private Set<Game> game;
+  private Set<Game> games;
 
   @ManyToMany
   @JoinColumn(name = "round_id")

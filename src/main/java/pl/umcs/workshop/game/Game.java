@@ -66,7 +66,7 @@ public class Game {
   @JsonIgnore
   private Set<User> users;
 
-  @ManyToMany(mappedBy = "game")
+  @ManyToMany(mappedBy = "games")
   @JsonIgnore
   private Set<Symbol> symbols;
 
