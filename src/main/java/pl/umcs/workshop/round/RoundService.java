@@ -48,6 +48,7 @@ public class RoundService {
               user.getGame().getId(), user.getId(), user.getGeneration() + 1);
       user.setGeneration(user.getGeneration() + 1);
     }
+    userRepository.save(user);
     userGenerations.put(user.getId(), user.getGeneration());
 
     Long otherUserId =
