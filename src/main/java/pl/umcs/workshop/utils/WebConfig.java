@@ -15,12 +15,10 @@ public class WebConfig implements WebMvcConfigurer {
     registry
         .addMapping("/**")
         .allowedOrigins(
+            "https://picto.skni.umcs.pl",
             "https://pictodev.skni.umcs.pl",
             "https://pictodev2.skni.umcs.pl",
-            "https://picto.skni.umcs.pl",
-            "http://localhost:3000",
-            "http://yuumi.skni.umcs.pl:8080/",
-            "http://yuumi.skni.umcs.pl:8083/")
+            "http://localhost:3000")
         .allowedHeaders("*")
         .allowCredentials(true);
   }
