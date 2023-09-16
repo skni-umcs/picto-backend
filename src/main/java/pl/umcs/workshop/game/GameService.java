@@ -108,13 +108,9 @@ public class GameService {
 
   public User joinGameAsUser(Long gameId, Long userId) {
     User user = userService.getUser(userId);
-    Game game = getGame(gameId);
+    getGame(gameId);
 
-    User savedUser = userRepository.save(user);
-    user.setCookie(JwtCookieHandler.createToken(game.getId(), savedUser.getId()));
-    savedUser = userRepository.save(user);
-
-    return savedUser;
+    return userRepository.save(user);
   }
 
   public User joinGameWithCookie(String token) {
