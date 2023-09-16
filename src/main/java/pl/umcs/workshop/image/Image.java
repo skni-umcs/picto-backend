@@ -1,5 +1,6 @@
 package pl.umcs.workshop.image;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -39,6 +40,6 @@ public class Image {
 
   @ManyToOne
   @JoinColumn(name = "group_id")
-  @JsonManagedReference("image_group_reference")
+  @JsonBackReference("image_group_reference")
   private Group group;
 }
