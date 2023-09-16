@@ -143,7 +143,7 @@ public class RoundService {
     return saveRound;
   }
 
-  public Round saveRoundListenerInfo(@NotNull UserInfo userInfo) {
+  public Round saveRoundListenerInfo(@NotNull UserInfo userInfo) throws IOException {
     Round round = getRound(userInfo.getRoundId());
 
     round.setUserTwoAnswerTime(userInfo.getAnswerTime());
@@ -155,12 +155,8 @@ public class RoundService {
     User speaker = round.getUserOne();
     Round saveRound = roundRepository.save(round);
 
-    try {
-      SseService.emitEventForUser(speaker, SseService.EventType.RESULT_READY);
-      SseService.emitEventForUser(listener, SseService.EventType.RESULT_READY);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    SseService.emitEventForUser(speaker, SseService.EventType.RESULT_READY);
+    SseService.emitEventForUser(listener, SseService.EventType.RESULT_READY);
 
     return saveRound;
   }
@@ -171,18 +167,17 @@ public class RoundService {
     User user = userService.getUser(userId);
 
     // Multithreading
-    try (ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1)) {
-      scheduler.schedule(
-          () -> {
-            try {
-              SseService.emitEventForUser(user, SseService.EventType.AWAITING_ROUND);
-            } catch (IOException e) {
-              throw new RuntimeException(e);
-            }
-          },
-          5,
-          TimeUnit.SECONDS);
-    }
+    ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    scheduler.schedule(
+        () -> {
+          try {
+            SseService.emitEventForUser(user, SseService.EventType.AWAITING_ROUND);
+          } catch (IOException e) {
+            throw new RuntimeException(e);
+          }
+        },
+        1,
+        TimeUnit.SECONDS);
 
     if (isImageCorrect(round)) {
       user.setScore(user.getScore() + game.getCorrectAnswerPoints());
