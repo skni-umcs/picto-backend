@@ -42,7 +42,9 @@ public class SseService {
   }
 
   public static void emitEventForAll(Long gameId, EventType eventType) throws IOException {
-    for (Map.Entry<Long, SseEmitter> entry : userSessions.entrySet()) {
+    Set<Map.Entry<Long, SseEmitter>> userSessionEntries = userSessions.entrySet();
+
+    for (Map.Entry<Long, SseEmitter> entry : userSessionEntries) {
       Long userId = entry.getKey();
       User user = userService.getUser(userId);
 
