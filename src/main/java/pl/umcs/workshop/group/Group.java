@@ -32,7 +32,7 @@ public class Group {
 
   @OneToMany
   @JoinColumn(name = "image_id")
-  @JsonIgnore
+  @JsonBackReference("image_group_reference")
   private Set<Image> images;
 
   @OneToMany
