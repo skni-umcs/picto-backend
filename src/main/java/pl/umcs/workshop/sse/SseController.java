@@ -16,7 +16,7 @@ public class SseController {
 
   private SseEmitter emitter;
   @GetMapping("test")
-  public SseEmitter test(@RequestHeader("x-session") String token) throws IOException {
+  public SseEmitter test() throws IOException {
     emitter = new SseEmitter(-1L);
     return emitter;
   }
