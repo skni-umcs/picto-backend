@@ -13,16 +13,4 @@ public class SseController {
   public SseEmitter handleSseConnection(@RequestHeader("x-session") String token) {
     return SseService.handleSseConnection(token);
   }
-
-  private SseEmitter emitter;
-  @GetMapping("test")
-  public SseEmitter test() throws IOException {
-    emitter = new SseEmitter(-1L);
-    return emitter;
-  }
-
-  @GetMapping("test-event")
-  public void testEvent() throws IOException {
-    emitter.send(SseEmitter.event().name("FASDNBGARE").build());
-  }
 }
