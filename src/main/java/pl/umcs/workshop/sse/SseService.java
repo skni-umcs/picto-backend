@@ -37,6 +37,7 @@ public class SseService {
             .data(eventType);
 
     emitter.send(event);
+    System.out.println("Emitted event " + eventType + " for user " + user.getId());
   }
 
   public static void emitEventForAll(Long gameId, EventType eventType) throws IOException {
