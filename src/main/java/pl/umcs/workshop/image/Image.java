@@ -26,7 +26,7 @@ public class Image {
 
   // Relations
   @OneToMany(mappedBy = "image")
-  @JsonBackReference(value = "round-image-user-image-reference")
+  @JsonIgnore
   private Set<ImageUserRoundRelation> imageUserRoundRelations;
 
   @OneToMany(mappedBy = "topic")

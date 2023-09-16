@@ -18,15 +18,7 @@ public class SseService {
   private static UserService userService;
 
   private static @NotNull SseEmitter createNewSession() {
-    SseEmitter emitter = new SseEmitter(1800000L); // 30 minutes
-    emitter.onTimeout(
-        () -> {
-          emitter.complete();
-          userSessions.values().remove(emitter);
-        });
-    emitter.onError(e -> System.out.println("EMITTER ERROR FOR USER " + e));
-
-    return emitter;
+      return new SseEmitter(-1L);
   }
 
   public static void addUserSession(@NotNull User user) {
@@ -42,17 +34,7 @@ public class SseService {
             .name(eventType.toString())
             .data(eventType);
 
-    try {
-      emitter.send(event);
-    } catch (Exception e) {
-      try {
-        Thread.sleep(200);
-      } catch (InterruptedException ex) {
-        throw new RuntimeException(ex);
-      }
-
-      emitEventForUser(user, eventType);
-    }
+    emitter.send(event);
   }
 
   public static void emitEventForAll(Long gameId, EventType eventType) throws IOException {

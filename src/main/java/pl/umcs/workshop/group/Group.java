@@ -2,6 +2,7 @@ package pl.umcs.workshop.group;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.Set;
 import lombok.*;
@@ -26,7 +27,7 @@ public class Group {
 
   // Relations
   @OneToMany(mappedBy = "group")
-  @JsonIgnore
+  @JsonManagedReference(value = "group-games-reference")
   private Set<Game> games;
 
   @OneToMany

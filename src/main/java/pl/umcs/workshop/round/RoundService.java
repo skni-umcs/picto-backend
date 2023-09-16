@@ -40,7 +40,6 @@ public class RoundService {
     @Autowired
     private UserRepository userRepository;
 
-    @Transactional
     public @NotNull Round getNextRound(Long userId) throws IOException {
         // Check what generation the user is on
         User user = userService.getUser(userId);
