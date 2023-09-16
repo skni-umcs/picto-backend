@@ -51,6 +51,9 @@ public class Game {
   @Column(name = "wrong_answer_points", nullable = false)
   private int wrongAnswerPoints;
 
+  @Column(name = "result_screen_time_s")
+  private Long showResultScreenTime;
+
   @Column(name = "create_date_time", nullable = false)
   private LocalDateTime createDateTime;
 

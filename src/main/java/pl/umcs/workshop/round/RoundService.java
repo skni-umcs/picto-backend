@@ -176,7 +176,7 @@ public class RoundService {
             throw new RuntimeException(e);
           }
         },
-        1,
+        game.getShowResultScreenTime(),
         TimeUnit.SECONDS);
 
     if (isImageCorrect(round)) {
