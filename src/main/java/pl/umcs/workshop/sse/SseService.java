@@ -20,7 +20,7 @@ public class SseService {
   private static UserService userService;
 
   private static @NotNull SseEmitter createNewSession() {
-      return new SseEmitter(-1L);
+    return new SseEmitter(-1L);
   }
 
   public static void addUserSession(@NotNull User user) {
