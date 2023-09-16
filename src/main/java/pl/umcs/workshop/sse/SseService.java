@@ -3,6 +3,9 @@ package pl.umcs.workshop.sse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +20,7 @@ public class SseService {
 
   private static UserService userService;
 
-  private static SseEmitter createNewSession() {
+  private static @NotNull SseEmitter createNewSession() {
     return new SseEmitter(-1L);
   }
 
@@ -33,7 +36,9 @@ public class SseService {
             .id(String.valueOf(user.getId()))
             .name(eventType.toString())
             .data(eventType);
+
     emitter.send(event);
+    System.out.println("Emitted event " + eventType + " for user " + user.getId());
   }
 
   public static void emitEventForAll(Long gameId, EventType eventType) throws IOException {
@@ -59,7 +64,9 @@ public class SseService {
   }
 
   public static void closeSseConnectionForAll(Long gameId) {
-    for (Map.Entry<Long, SseEmitter> entry : userSessions.entrySet()) {
+    Set<Map.Entry<Long, SseEmitter>> userSessionEntries = userSessions.entrySet();
+
+    for (Map.Entry<Long, SseEmitter> entry : userSessionEntries) {
       Long userId = entry.getKey();
       User user = userService.getUser(userId);
 

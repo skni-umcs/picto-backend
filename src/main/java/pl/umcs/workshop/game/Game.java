@@ -51,6 +51,9 @@ public class Game {
   @Column(name = "wrong_answer_points", nullable = false)
   private int wrongAnswerPoints;
 
+  @Column(name = "result_screen_time_s")
+  private Long showResultScreenTime;
+
   @Column(name = "create_date_time", nullable = false)
   private LocalDateTime createDateTime;
 
@@ -66,7 +69,7 @@ public class Game {
   @JsonIgnore
   private Set<User> users;
 
-  @ManyToMany(mappedBy = "game")
+  @ManyToMany(mappedBy = "games")
   @JsonIgnore
   private Set<Symbol> symbols;
 

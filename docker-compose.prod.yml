@@ -13,10 +13,22 @@ services:
       - PICTO_DB_NAME=picto
       - PICTO_DB_USER=picto
       - PICTO_DB_PASSWORD=picto
-      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-prod}
     depends_on:
       db:
         condition: service_healthy
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "127.0.0.1:5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    depends_on:
+      db:
+        condition: service_healthy
+    # volumes:
+      # - ./pgadmin_data:/var/lib/pgadmin
   db:
     image: postgres
     ports:

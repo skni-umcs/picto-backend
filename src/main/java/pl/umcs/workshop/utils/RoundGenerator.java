@@ -36,6 +36,7 @@ public class RoundGenerator {
   public Map.Entry<User, User> randomPair(User candidateOne, User candidateTwo) {
     Random random = new Random();
     int whichUser = random.nextInt(2);
+
     if (whichUser == 0) {
       return new AbstractMap.SimpleEntry<>(candidateOne, candidateTwo);
     } else {
@@ -43,9 +44,14 @@ public class RoundGenerator {
     }
   }
 
-  public void generateRounds(int generation) {
+  public void generateRounds(int generation, User noPairUser) {
     List<Map.Entry<User, User>> edgesLeft = new ArrayList<>(graph.getEdges());
-    Set<User> usersWithoutRounds = game.getUsers();
+    Set<User> usersWithoutRounds = new HashSet<>(game.getUsers());
+
+    if (noPairUser != null) {
+      usersWithoutRounds.remove(noPairUser);
+      removeAllEdgesWithUser(edgesLeft, noPairUser);
+    }
 
     while (!edgesLeft.isEmpty()) {
       Map.Entry<User, User> randomEdge = getRandomEdge(edgesLeft);
@@ -66,19 +72,29 @@ public class RoundGenerator {
 
     List<User> orderedUsersWithoutRounds = new ArrayList<>(usersWithoutRounds);
     Collections.shuffle(orderedUsersWithoutRounds);
+
     while (orderedUsersWithoutRounds.size() > 1) {
       User userOne = orderedUsersWithoutRounds.get(0);
       User userTwo = orderedUsersWithoutRounds.get(1);
       addNewRound(userOne, userTwo, generation);
-      orderedUsersWithoutRounds.remove(0);
-      orderedUsersWithoutRounds.remove(1);
-    }
 
+      // Has to be this order, otherwise IndexOutOfBoundsException may occur
+      orderedUsersWithoutRounds.remove(1);
+      orderedUsersWithoutRounds.remove(0);
+    }
   }
 
   public List<Round> generateGenerations(int numberOfGenerations) {
+    List<User> users = new ArrayList<>(game.getUsers());
+
     for (int generation = 1; generation <= numberOfGenerations; generation++) {
-      generateRounds(generation);
+      User noPairUser = null;
+
+      if (users.size() % 2 == 1) {
+        noPairUser = users.get(generation % users.size());
+      }
+
+      generateRounds(generation, noPairUser);
     }
 
     return roundList;

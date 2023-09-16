@@ -1,6 +1,5 @@
 package pl.umcs.workshop.round;
 
-import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -26,29 +25,30 @@ import pl.umcs.workshop.user.UserService;
 
 @Service
 public class RoundService {
+  private static final Map<Long, Integer> userGenerations = new HashMap<>();
   @Autowired private RoundRepository roundRepository;
-
   @Autowired private ImageRepository imageRepository;
-
   @Autowired private UserService userService;
-
   @Autowired private GameService gameService;
-
   @Autowired private SymbolRepository symbolRepository;
-
   @Autowired private UserRepository userRepository;
 
-  private static final Map<Long, Integer> userGenerations = new HashMap<>();
-
-  @Transactional
   public @NotNull Round getNextRound(Long userId) throws IOException {
     // Check what generation the user is on
     User user = userService.getUser(userId);
     Game game = gameService.getGame(user.getGame().getId());
     Round round =
-        roundRepository.getNextRound(user.getGame().getId(), userId, user.getGeneration() + 1);
+        roundRepository.getNextRound(
+            user.getGame().getId(), user.getId(), user.getGeneration() + 1);
 
-    user = getAndSaveUserGeneration(user, round);
+    user.setGeneration(user.getGeneration() + 1);
+    if (round == null) {
+      round =
+          roundRepository.getNextRound(
+              user.getGame().getId(), user.getId(), user.getGeneration() + 1);
+      user.setGeneration(user.getGeneration() + 1);
+    }
+    userRepository.save(user);
     userGenerations.put(user.getId(), user.getGeneration());
 
     Long otherUserId =
@@ -77,21 +77,6 @@ public class RoundService {
     return round;
   }
 
-  public User getAndSaveUserGeneration(User user, Round round) {
-    if (round == null) {
-      user.setGeneration(user.getGeneration() + 1);
-      round =
-              roundRepository.getNextRound(user.getGame().getId(), user.getId(), user.getGeneration() + 1);
-
-      if (round == null) {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Round not found");
-      }
-    }
-    user.setGeneration(user.getGeneration() + 1);
-
-    return userRepository.saveAndFlush(user);
-  }
-
   public List<Image> getImages(Long roundId, Long userId) {
     List<Image> images = imageRepository.findAllImagesForUser(roundId, userId);
 
@@ -104,7 +89,7 @@ public class RoundService {
 
   public List<List<Symbol>> getSymbols(Long roundId, Long userId) {
     Round round = getRound(roundId);
-    List<Symbol> symbols = symbolRepository.findAllByGameId(round.getGame().getId());
+    List<Symbol> symbols = symbolRepository.findAllByGamesId(round.getGame().getId());
 
     if (Objects.equals(round.getUserOne().getId(), userId)) {
       List<List<Symbol>> symbolMatrix = new ArrayList<>();
@@ -158,7 +143,7 @@ public class RoundService {
     return saveRound;
   }
 
-  public Round saveRoundListenerInfo(@NotNull UserInfo userInfo) {
+  public Round saveRoundListenerInfo(@NotNull UserInfo userInfo) throws IOException {
     Round round = getRound(userInfo.getRoundId());
 
     round.setUserTwoAnswerTime(userInfo.getAnswerTime());
@@ -170,12 +155,8 @@ public class RoundService {
     User speaker = round.getUserOne();
     Round saveRound = roundRepository.save(round);
 
-    try {
-      SseService.emitEventForUser(speaker, SseService.EventType.RESULT_READY);
-      SseService.emitEventForUser(listener, SseService.EventType.RESULT_READY);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    SseService.emitEventForUser(speaker, SseService.EventType.RESULT_READY);
+    SseService.emitEventForUser(listener, SseService.EventType.RESULT_READY);
 
     return saveRound;
   }
@@ -195,7 +176,7 @@ public class RoundService {
             throw new RuntimeException(e);
           }
         },
-        5,
+        game.getShowResultScreenTime(),
         TimeUnit.SECONDS);
 
     if (isImageCorrect(round)) {

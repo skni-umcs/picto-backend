@@ -39,7 +39,7 @@ public class RoundController {
   }
 
   @PostMapping("{roundId}/listener")
-  public Round saveRoundListenerInfo(@RequestBody UserInfo userInfo) {
+  public Round saveRoundListenerInfo(@RequestBody UserInfo userInfo) throws IOException {
     return roundService.saveRoundListenerInfo(userInfo);
   }
 

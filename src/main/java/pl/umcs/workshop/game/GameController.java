@@ -37,9 +37,8 @@ public class GameController {
     return gameService.joinGameAsUser(gameId, userId);
   }
 
-  @PostMapping("{gameId}/join/cookie")
-  public User joinGameWithCookie(
-      @RequestHeader("x-session") String token, @PathVariable String gameId) {
+  @PostMapping("cookie/join")
+  public User joinGameWithCookie(@RequestHeader("x-session") String token) {
     return gameService.joinGameWithCookie(token);
   }
 

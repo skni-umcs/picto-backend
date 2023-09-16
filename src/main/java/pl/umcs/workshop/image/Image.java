@@ -2,6 +2,7 @@ package pl.umcs.workshop.image;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.Set;
 import lombok.*;
@@ -26,7 +27,7 @@ public class Image {
 
   // Relations
   @OneToMany(mappedBy = "image")
-  @JsonBackReference(value = "round-image-user-image-reference")
+  @JsonIgnore
   private Set<ImageUserRoundRelation> imageUserRoundRelations;
 
   @OneToMany(mappedBy = "topic")
@@ -39,5 +40,6 @@ public class Image {
 
   @ManyToOne
   @JoinColumn(name = "group_id")
+  @JsonBackReference("image_group_reference")
   private Group group;
 }

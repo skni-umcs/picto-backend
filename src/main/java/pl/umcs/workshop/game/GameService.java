@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.umcs.workshop.group.Group;
 import pl.umcs.workshop.group.GroupRepository;
+import pl.umcs.workshop.image.Image;
 import pl.umcs.workshop.image.ImageService;
 import pl.umcs.workshop.sse.SseService;
 import pl.umcs.workshop.symbol.Symbol;
@@ -42,6 +43,12 @@ public class GameService {
   @Autowired private SymbolRepository symbolRepository;
 
   public Game createGame(@NotNull Game game) {
+    List<Image> images = imageService.getAllImagesAndGroups();
+    if (images.isEmpty()) {
+      imageService.addImages();
+      imageService.addSymbols();
+    }
+
     if (topologyRepository.existsById(game.getTopology().getId())) {
       Topology topology = topologyRepository.findById(game.getTopology().getId()).orElse(null);
       game.setTopology(topology);
@@ -73,8 +80,8 @@ public class GameService {
     List<Symbol> symbols = symbolRepository.findAll();
     game.setSymbols(new HashSet<>(symbols));
     for (Symbol symbol : symbols) {
-      symbol.setGame(new HashSet<>(List.of(game)));
-      symbol.setRounds(new HashSet<>(game.getRounds()));
+      symbol.getGames().add(game);
+      symbol.getRounds().addAll(game.getRounds());
     }
     symbolRepository.saveAll(symbols);
     gameRepository.save(game);
@@ -101,13 +108,9 @@ public class GameService {
 
   public User joinGameAsUser(Long gameId, Long userId) {
     User user = userService.getUser(userId);
-    Game game = getGame(gameId);
+    getGame(gameId);
 
-    User savedUser = userRepository.save(user);
-    user.setCookie(JwtCookieHandler.createToken(game.getId(), savedUser.getId()));
-    savedUser = userRepository.save(user);
-
-    return savedUser;
+    return userRepository.save(user);
   }
 
   public User joinGameWithCookie(String token) {
@@ -135,11 +138,7 @@ public class GameService {
 
     for (Game game : games) {
       if (game.getEndDateTime() == null) {
-        game.setEndDateTime(LocalDateTime.now());
-        deleteUserCookies(game.getId());
-
-        SseService.emitEventForAll(game.getId(), SseService.EventType.END_GAME);
-        SseService.closeSseConnectionForAll(game.getId());
+        endGame(game.getId());
       }
     }
 
