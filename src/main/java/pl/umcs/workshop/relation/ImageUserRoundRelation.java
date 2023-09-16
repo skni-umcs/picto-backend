@@ -10,7 +10,7 @@ import pl.umcs.workshop.round.Round;
 import pl.umcs.workshop.user.User;
 
 @Entity
-@Table(name = "images_users_rounds_relation")
+@Table(name = "images_users_rounds_relations")
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Builder
