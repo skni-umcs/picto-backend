@@ -180,7 +180,7 @@ public class RoundService {
               throw new RuntimeException(e);
             }
           },
-          1,
+          2,
           TimeUnit.SECONDS);
     }
 
