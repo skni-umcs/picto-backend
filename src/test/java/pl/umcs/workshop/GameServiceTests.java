@@ -59,34 +59,6 @@ public class GameServiceTests {
             .build();
   }
 
-  //    @Test
-  //    public void givenGameObject_whenCreateGame_thenReturnGameObject() {
-  //        // given
-  //        given(gameRepository.save(game)).willReturn(game);
-  //        given(topologyRepository.save(any(Topology.class))).willReturn();
-  //
-  //        // when
-  //        Game createdGame = gameService.createGame(game);
-  //
-  //        // then
-  //        Assertions.assertThat(createdGame).isNotNull();
-  //        Assertions.assertThat(createdGame.getId()).isEqualTo(1);
-  //    }
-
-  // TODO when beginGame works
-  //    @Test
-  //    public void givenGameId_whenBeginGame_thenReturnListOfIntegers() {
-  //        // given
-  //        given(gameRepository.save(game)).willReturn(game);
-  //
-  //        // when
-  //        Game createdGame = gameService.createGame(game);
-  //
-  //        // then
-  //        Assertions.assertThat(createdGame).isNotNull();
-  //        Assertions.assertThat(createdGame.getId()).isEqualTo(1);
-  //    }
-
   @Test
   public void givenGameId_whenJoinGame_thenReturnUserObject() {
     given(gameRepository.findById(1L)).willReturn(Optional.of(game));

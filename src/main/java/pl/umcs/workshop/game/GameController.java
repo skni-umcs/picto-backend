@@ -60,7 +60,6 @@ public class GameController {
   // @GetMapping("admin/live-data/{gameId}")
   // Used for admin panel live monitoring
   // Contains: userId, score, generation, answer history [x+xx+++]
-  // TODO: PlayerProfile class to store this info, return list of profiles
 
   // TODO: handle exclusion of a player (delete his data, destroy his cookie, log him out)
 }
