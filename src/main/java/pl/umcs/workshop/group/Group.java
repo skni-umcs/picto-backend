@@ -30,12 +30,12 @@ public class Group {
 
   // Relations
   @OneToMany(mappedBy = "group")
-  @JsonManagedReference(value = "group-games-reference")
+  @JsonIgnore
   private Set<Game> games;
 
   @OneToMany
   @JoinColumn(name = "image_id")
-  @JsonManagedReference("image_group_reference")
+  @JsonIgnore
   private Set<Image> images;
 
   @OneToMany
