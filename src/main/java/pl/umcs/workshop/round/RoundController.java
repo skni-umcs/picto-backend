@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.umcs.workshop.image.Image;
 import pl.umcs.workshop.symbol.Symbol;
+import pl.umcs.workshop.user.User;
 import pl.umcs.workshop.user.UserInfo;
 
 @RestController
@@ -47,5 +48,15 @@ public class RoundController {
   public RoundResult getRoundResult(@PathVariable Long roundId, @PathVariable Long userId)
       throws IOException {
     return roundService.getRoundResult(roundId, userId);
+  }
+
+  @PostMapping("{userId}/skip")
+  public User skipUser(@PathVariable Long userId) {
+    return roundService.skipUser(userId);
+  }
+
+  @PostMapping("{userId}/revert")
+  public User revertUser(@PathVariable Long userId) {
+    return roundService.revertUser(userId);
   }
 }
