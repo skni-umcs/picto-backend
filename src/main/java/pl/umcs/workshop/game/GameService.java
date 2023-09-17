@@ -150,7 +150,12 @@ public class GameService {
   }
 
   public String generateGameSummary(Long gameId) {
-    Game game = getGame(gameId);
+    Game game = gameRepository.findById(gameId).orElse(null);
+
+    if (game == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
+    }
+
     StringBuilder data = new StringBuilder("generation,score\n");
 
     for (int generation = 1; generation <= game.getNumberOfGenerations(); generation++) {
