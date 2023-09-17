@@ -110,7 +110,7 @@ public class GameService {
     User user = userService.getUser(userId);
     getGame(gameId);
 
-    return userRepository.save(user);
+    return user;
   }
 
   public User joinGameWithCookie(String token) {

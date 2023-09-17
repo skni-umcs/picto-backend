@@ -19,6 +19,16 @@ public class UserController {
     return userService.updateUser(userId, user);
   }
 
+  @PostMapping("{userId}/skip")
+  public User skipUser(@PathVariable Long userId) {
+    return userService.skipUser(userId);
+  }
+
+  @PostMapping("{userId}/revert")
+  public User revertUser(@PathVariable Long userId) {
+    return userService.revertUser(userId);
+  }
+
   @DeleteMapping("{userId}")
   public void deleteUser(@PathVariable Long userId) {
     userService.deleteUser(userId);
