@@ -149,7 +149,6 @@ public class GameService {
     gameRepository.saveAll(games);
   }
 
-  // TODO
   public String generateGameSummary(Long gameId) {
     Game game = getGame(gameId);
     StringBuilder data = new StringBuilder("generation,score\n");
