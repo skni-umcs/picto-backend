@@ -122,7 +122,7 @@ public class ImageService {
     for (String directory : directories) {
       Set<String> images = listFiles("src/main/resources/static/images/" + directory);
 
-      Group group = Group.builder().name(directory).build();
+      Group group = Group.builder().name(directory).type("image").build();
       group = groupRepository.save(group);
 
       for (String imagePath : images) {
@@ -140,7 +140,7 @@ public class ImageService {
     for (String directory : directories) {
       Set<String> symbols = listFiles("src/main/resources/static/symbols/" + directory);
 
-      Group group = Group.builder().name(directory).build();
+      Group group = Group.builder().name(directory).type("symbol").build();
       group = groupRepository.save(group);
 
       for (String symbolPath : symbols) {
