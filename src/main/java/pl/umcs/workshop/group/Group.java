@@ -25,14 +25,17 @@ public class Group {
   @Column(name = "name")
   private String name;
 
+  @Column(name = "type")
+  private String type;
+
   // Relations
   @OneToMany(mappedBy = "group")
-  @JsonManagedReference(value = "group-games-reference")
+  @JsonIgnore
   private Set<Game> games;
 
   @OneToMany
   @JoinColumn(name = "image_id")
-  @JsonManagedReference("image_group_reference")
+  @JsonIgnore
   private Set<Image> images;
 
   @OneToMany

@@ -209,18 +209,24 @@ public class RoundService {
   public User skipUser(Long userId) {
     User user = userService.getUser(userId);
 
-    user.setGeneration(userGenerations.get(user.getId()) + 1);
-    userGenerations.put(user.getId(), user.getGeneration());
+    try {
+      SseService.emitEventForUser(user, SseService.EventType.AWAITING_ROUND);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
 
-    return userRepository.save(user);
+    return user;
   }
 
   public User revertUser(Long userId) {
     User user = userService.getUser(userId);
 
-    user.setGeneration(userGenerations.get(user.getId()) - 1);
-    userGenerations.put(user.getId(), user.getGeneration());
+    try {
+      SseService.emitEventForUser(user, SseService.EventType.AWAITING_ROUND);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
 
-    return userRepository.save(user);
+    return user;
   }
 }

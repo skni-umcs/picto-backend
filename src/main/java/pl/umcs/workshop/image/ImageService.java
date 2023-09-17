@@ -68,11 +68,11 @@ public class ImageService {
     }
   }
 
-  public @NotNull List<Image> generateImagesForRoundForUser(Long groupId) {
+  public @NotNull List<Image> generateImagesForRoundForUser(Long groupId, int amount) {
     List<Image> images = imageRepository.findAllByGroupId(groupId);
     List<Image> roundImages = new ArrayList<>();
 
-    for (int i = 0; i < images.size(); i++) {
+    for (int i = 0; i < amount; i++) {
       int index = getIndex(images.size(), getRandomizedNormal(0, 1));
       Image generatedImage = images.get(index);
 
@@ -90,7 +90,9 @@ public class ImageService {
     List<Round> roundsToSave = new ArrayList<>();
 
     for (Round round : rounds) {
-      List<Image> images = generateImagesForRoundForUser(game.getGroup().getId());
+      List<Image> images =
+          generateImagesForRoundForUser(
+              game.getGroup().getId(), round.getGame().getUserOneNumberOfImages());
       Image topic = getTopic(images);
 
       for (Image image : images) {
@@ -122,7 +124,7 @@ public class ImageService {
     for (String directory : directories) {
       Set<String> images = listFiles("src/main/resources/static/images/" + directory);
 
-      Group group = Group.builder().name(directory).build();
+      Group group = Group.builder().name(directory).type("image").build();
       group = groupRepository.save(group);
 
       for (String imagePath : images) {
@@ -140,7 +142,7 @@ public class ImageService {
     for (String directory : directories) {
       Set<String> symbols = listFiles("src/main/resources/static/symbols/" + directory);
 
-      Group group = Group.builder().name(directory).build();
+      Group group = Group.builder().name(directory).type("symbol").build();
       group = groupRepository.save(group);
 
       for (String symbolPath : symbols) {
@@ -156,5 +158,9 @@ public class ImageService {
 
   public List<Image> getAllImagesAndGroups() {
     return imageRepository.findAll();
+  }
+
+  public List<Group> getAllImageGroups() {
+    return groupRepository.findAllByType("image");
   }
 }

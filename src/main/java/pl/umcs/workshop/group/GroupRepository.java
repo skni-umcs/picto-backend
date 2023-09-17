@@ -2,4 +2,8 @@ package pl.umcs.workshop.group;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface GroupRepository extends JpaRepository<Group, Long> {}
+import java.util.List;
+
+public interface GroupRepository extends JpaRepository<Group, Long> {
+  List<Group> findAllByType(String symbol);
+}

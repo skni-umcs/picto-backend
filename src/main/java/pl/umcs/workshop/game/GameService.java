@@ -2,6 +2,7 @@ package pl.umcs.workshop.game;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -13,6 +14,8 @@ import pl.umcs.workshop.group.Group;
 import pl.umcs.workshop.group.GroupRepository;
 import pl.umcs.workshop.image.Image;
 import pl.umcs.workshop.image.ImageService;
+import pl.umcs.workshop.round.Round;
+import pl.umcs.workshop.round.RoundRepository;
 import pl.umcs.workshop.sse.SseService;
 import pl.umcs.workshop.symbol.Symbol;
 import pl.umcs.workshop.symbol.SymbolRepository;
@@ -41,6 +44,8 @@ public class GameService {
   @Autowired private GroupRepository groupRepository;
 
   @Autowired private SymbolRepository symbolRepository;
+
+  @Autowired private RoundRepository roundRepository;
 
   public Game createGame(@NotNull Game game) {
     List<Image> images = imageService.getAllImagesAndGroups();
@@ -146,12 +151,16 @@ public class GameService {
   }
 
   // TODO
-  public List<Integer> generateGameSummary(Long gameId) {
-    // Summarize data from the game using config given as the parameter
-    // (e.g. number of generations, players to exclude etc.)
-    // Generate points to use in chart
+  public String generateGameSummary(Long gameId) {
+    Game game = getGame(gameId);
+    List<Round> rounds = roundRepository.findAllByGame(game);
+    String data = "";
 
-    return null;
+    for (Round round : rounds) {
+      System.out.print("xddd");
+    }
+
+    return data;
   }
 
   @NotNull

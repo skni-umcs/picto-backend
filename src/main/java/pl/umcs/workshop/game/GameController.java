@@ -55,7 +55,7 @@ public class GameController {
   // TODO
   @PostMapping("{gameId}/admin/summary")
   // TODO: create summary config entity to pass as a parameter
-  public List<Integer> generateGameSummary(@PathVariable Long gameId) {
+  public String generateGameSummary(@PathVariable Long gameId) {
     return gameService.generateGameSummary(gameId);
   }
 
