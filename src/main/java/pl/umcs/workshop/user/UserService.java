@@ -12,7 +12,6 @@ import pl.umcs.workshop.round.RoundService;
 @Service
 public class UserService {
   @Autowired private UserRepository userRepository;
-  @Autowired private RoundService roundService;
 
   public User getUser(Long userId) {
     User user = userRepository.findById(userId).orElse(null);
@@ -46,11 +45,4 @@ public class UserService {
     userRepository.deleteById(userId);
   }
 
-  public User skipUser(Long userId) {
-    return roundService.skipUser(userId);
-  }
-
-  public User revertUser(Long userId) {
-    return roundService.revertUser(userId);
-  }
 }
