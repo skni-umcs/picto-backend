@@ -205,4 +205,22 @@ public class RoundService {
   public boolean isImageCorrect(@NotNull Round round) {
     return Objects.equals(round.getImageSelected(), round.getTopic());
   }
+
+  public User skipUser(Long userId) {
+    User user = userService.getUser(userId);
+
+    user.setGeneration(userGenerations.get(user.getId()) + 1);
+    userGenerations.put(user.getId(), user.getGeneration());
+
+    return userRepository.save(user);
+  }
+
+  public User revertUser(Long userId) {
+    User user = userService.getUser(userId);
+
+    user.setGeneration(userGenerations.get(user.getId()) - 1);
+    userGenerations.put(user.getId(), user.getGeneration());
+
+    return userRepository.save(user);
+  }
 }

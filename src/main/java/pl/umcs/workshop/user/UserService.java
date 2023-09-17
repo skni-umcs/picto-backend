@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import pl.umcs.workshop.round.RoundService;
 
 @Service
 public class UserService {
   @Autowired private UserRepository userRepository;
+  @Autowired private RoundService roundService;
 
   public User getUser(Long userId) {
     User user = userRepository.findById(userId).orElse(null);
@@ -42,5 +44,13 @@ public class UserService {
 
   public void deleteUser(Long userId) {
     userRepository.deleteById(userId);
+  }
+
+  public User skipUser(Long userId) {
+    return roundService.skipUser(userId);
+  }
+
+  public User revertUser(Long userId) {
+    return roundService.revertUser(userId);
   }
 }
