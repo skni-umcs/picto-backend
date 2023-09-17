@@ -25,6 +25,9 @@ public class Group {
   @Column(name = "name")
   private String name;
 
+  @Column(name = "type")
+  private String type;
+
   // Relations
   @OneToMany(mappedBy = "group")
   @JsonManagedReference(value = "group-games-reference")

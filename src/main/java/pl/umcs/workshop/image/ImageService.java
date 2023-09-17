@@ -157,4 +157,8 @@ public class ImageService {
   public List<Image> getAllImagesAndGroups() {
     return imageRepository.findAll();
   }
+
+  public List<Group> getAllImageGroups() {
+    return groupRepository.findAllByType("symbol");
+  }
 }
