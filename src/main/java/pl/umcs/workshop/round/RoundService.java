@@ -215,7 +215,7 @@ public class RoundService {
       throw new RuntimeException(e);
     }
 
-    return userRepository.save(user);
+    return user;
   }
 
   public User revertUser(Long userId) {
@@ -227,6 +227,6 @@ public class RoundService {
       throw new RuntimeException(e);
     }
 
-    return userRepository.save(user);
+    return user;
   }
 }
