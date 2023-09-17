@@ -31,7 +31,7 @@ public class GameController {
   public User joinGame(@PathVariable Long gameId) {
     return gameService.joinGame(gameId);
   }
-3
+
   @PostMapping("{gameId}/join/{userId}")
   public User joinGameAsUser(@PathVariable Long gameId, @PathVariable Long userId) {
     return gameService.joinGameAsUser(gameId, userId);
