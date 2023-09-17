@@ -152,14 +152,26 @@ public class GameService {
   // TODO
   public String generateGameSummary(Long gameId) {
     Game game = getGame(gameId);
-    List<Round> rounds = roundRepository.findAllByGame(game);
-    String data = "";
+    StringBuilder data = new StringBuilder("generation,score\n");
 
-    for (Round round : rounds) {
-      System.out.print("xddd");
+    for (int generation = 1; generation <= game.getNumberOfGenerations(); generation++) {
+      List<Round> rounds = roundRepository.findAllByGameIdAndGeneration(gameId, generation);
+
+      int correct = 0;
+      int total = 0;
+      for (Round round : rounds) {
+        total++;
+
+        if (round.getTopic() == round.getImageSelected()) {
+          correct++;
+        }
+      }
+
+      double score = (double) correct / total;
+      data.append(String.format("%d,%.1f\n", generation, score * 100));
     }
 
-    return data;
+    return data.toString();
   }
 
   @NotNull
