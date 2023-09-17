@@ -2,7 +2,6 @@ package pl.umcs.workshop.game;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -150,17 +149,33 @@ public class GameService {
     gameRepository.saveAll(games);
   }
 
-  // TODO
   public String generateGameSummary(Long gameId) {
-    Game game = getGame(gameId);
-    List<Round> rounds = roundRepository.findAllByGame(game);
-    String data = "";
+    Game game = gameRepository.findById(gameId).orElse(null);
 
-    for (Round round : rounds) {
-      System.out.print("xddd");
+    if (game == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found");
     }
 
-    return data;
+    StringBuilder data = new StringBuilder("generation,score\n");
+
+    for (int generation = 1; generation <= game.getNumberOfGenerations(); generation++) {
+      List<Round> rounds = roundRepository.findAllByGameIdAndGeneration(gameId, generation);
+
+      int correct = 0;
+      int total = 0;
+      for (Round round : rounds) {
+        total++;
+
+        if (round.getTopic() == round.getImageSelected()) {
+          correct++;
+        }
+      }
+
+      double score = (double) correct / total;
+      data.append(String.format("%d,%.1f\n", generation, score * 100));
+    }
+
+    return data.toString();
   }
 
   @NotNull

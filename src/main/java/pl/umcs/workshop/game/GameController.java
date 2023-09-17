@@ -51,10 +51,8 @@ public class GameController {
   public void endAllGames() throws IOException {
     gameService.endAllGames();
   }
-
-  // TODO
-  @PostMapping("{gameId}/admin/summary")
-  // TODO: create summary config entity to pass as a parameter
+  
+  @GetMapping("{gameId}/admin/summary")
   public String generateGameSummary(@PathVariable Long gameId) {
     return gameService.generateGameSummary(gameId);
   }
@@ -62,7 +60,6 @@ public class GameController {
   // @GetMapping("admin/live-data/{gameId}")
   // Used for admin panel live monitoring
   // Contains: userId, score, generation, answer history [x+xx+++]
-  // TODO: PlayerProfile class to store this info, return list of profiles
 
   // TODO: handle exclusion of a player (delete his data, destroy his cookie, log him out)
 }

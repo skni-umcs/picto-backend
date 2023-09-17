@@ -59,4 +59,9 @@ public class RoundController {
   public User revertUser(@PathVariable Long userId) {
     return roundService.revertUser(userId);
   }
+
+  @PostMapping("{userId}/replay")
+  public User replayUser(@PathVariable Long userId) {
+    return roundService.replayUser(userId);
+  }
 }

@@ -220,6 +220,24 @@ public class RoundService {
 
   public User revertUser(Long userId) {
     User user = userService.getUser(userId);
+    user.setGeneration(user.getGeneration() - 1);
+    userGenerations.put(user.getId(), user.getGeneration());
+    userRepository.save(user);
+
+    try {
+      SseService.emitEventForUser(user, SseService.EventType.AWAITING_ROUND);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
+    return user;
+  }
+
+  public User replayUser(Long userId) {
+    User user = userService.getUser(userId);
+    user.setGeneration(user.getGeneration() - 2);
+    userGenerations.put(user.getId(), user.getGeneration());
+    userRepository.save(user);
 
     try {
       SseService.emitEventForUser(user, SseService.EventType.AWAITING_ROUND);
