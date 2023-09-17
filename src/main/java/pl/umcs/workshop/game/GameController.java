@@ -51,8 +51,7 @@ public class GameController {
   public void endAllGames() throws IOException {
     gameService.endAllGames();
   }
-
-  // TODO
+  
   @GetMapping("{gameId}/admin/summary")
   public String generateGameSummary(@PathVariable Long gameId) {
     return gameService.generateGameSummary(gameId);
