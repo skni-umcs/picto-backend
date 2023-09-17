@@ -221,6 +221,7 @@ public class RoundService {
   public User revertUser(Long userId) {
     User user = userService.getUser(userId);
     user.setGeneration(user.getGeneration() - 1);
+    userGenerations.put(user.getId(), user.getGeneration());
     userRepository.save(user);
 
     try {
