@@ -3,6 +3,7 @@ package pl.umcs.workshop.sse;
 import java.io.IOException;
 import java.util.*;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import pl.umcs.workshop.user.UserService;
 import pl.umcs.workshop.utils.JwtCookieHandler;
 
 @Service
+@Slf4j
 public class SseService {
   private static final HashMap<Long, SseEmitter> userSessions = new HashMap<>();
 
@@ -35,7 +37,7 @@ public class SseService {
             .data(eventType);
 
     emitter.send(event);
-    System.out.println("Emitted event " + eventType + " for user " + user.getId());
+    log.info("Emitted event {} for user {}", eventType, user.getId());
   }
 
   public static void emitEventForAll(Long gameId, EventType eventType) throws IOException {
