@@ -159,6 +159,6 @@ public class ImageService {
   }
 
   public List<Group> getAllImageGroups() {
-    return groupRepository.findAllByType("symbol");
+    return groupRepository.findAllByType("image");
   }
 }
