@@ -81,7 +81,7 @@ public class GameService {
     imageService.generateImagesForGame(game);
 
     // TODO: fix this to get symbols from config
-    List<Symbol> symbols = symbolRepository.findAllByGamesId(gameId);
+    List<Symbol> symbols = symbolRepository.findAll();
     game.setSymbols(new HashSet<>(symbols));
     for (Symbol symbol : symbols) {
       symbol.getGames().add(game);
