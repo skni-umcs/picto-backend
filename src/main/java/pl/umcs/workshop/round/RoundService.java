@@ -220,6 +220,8 @@ public class RoundService {
 
   public User revertUser(Long userId) {
     User user = userService.getUser(userId);
+    user.setGeneration(user.getGeneration() - 1);
+    userRepository.save(user);
 
     try {
       SseService.emitEventForUser(user, SseService.EventType.AWAITING_ROUND);
