@@ -122,7 +122,6 @@ public class GameServiceTests {
             .build();
 
     given(gameRepository.findById(1L)).willReturn(Optional.of(game));
-    given(userRepository.save(user)).willReturn(user);
     given(userService.getUser(user.getId())).willReturn(user);
 
     // when
